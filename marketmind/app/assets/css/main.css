@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@layer components {
+  [data-slot="form-field"] [data-slot="container"] > [data-slot="base"] {
+    width: 100%;
+    display: flex;
+  }
+}

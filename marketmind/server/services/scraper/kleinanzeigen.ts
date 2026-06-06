@@ -1,0 +1,83 @@
+import { load } from "cheerio";
+
+export interface KleinanzeigenListing {
+  title: string;
+  price: number;
+  location: string;
+  date: string;
+  category: string;
+  url: string;
+  platform: "kleinanzeigen";
+}
+
+export function buildKleinanzeigenSearchUrl(query: string, page = 1): string {
+  const slug = query.trim().toLowerCase().replace(/\s+/g, "-");
+  if (page <= 1) {
+    return `https://www.kleinanzeigen.de/s-${encodeURIComponent(slug)}/k0`;
+  }
+  return `https://www.kleinanzeigen.de/s-seite:${page}/${encodeURIComponent(slug)}/k0`;
+}
+
+export function parseKleinanzeigenPrice(text: string): number {
+  if (!text) return 0;
+  const normalized = text.replace(/\s+/g, " ").trim();
+  if (/^vb$/i.test(normalized)) return 0;
+  const match = normalized.match(/([\d.]+(?:,\d{1,2})?)\s*€/);
+  if (match) {
+    return parseFloat(match[1].replace(/\./g, "").replace(",", ".")) || 0;
+  }
+  const fallback = normalized.match(/([\d.,]+)/);
+  if (!fallback) return 0;
+  return parseFloat(fallback[1].replace(/\./g, "").replace(",", ".")) || 0;
+}
+
+function extractPriceText($el: ReturnType<ReturnType<typeof load>>): string {
+  const selectors = [
+    ".aditem-main--middle--price-shipping--price",
+    ".aditem-main--middle--price-shipping",
+    ".aditem-main--middle--price",
+  ];
+  for (const selector of selectors) {
+    const text = $el.find(selector).first().text().trim();
+    if (text) return text;
+  }
+  return "";
+}
+
+export function parseKleinanzeigenHtml(html: string): KleinanzeigenListing[] {
+  const $ = load(html);
+  const items: KleinanzeigenListing[] = [];
+
+  $("article.aditem").each((_, el) => {
+    const $el = $(el);
+    const title = $el.find("h2 a").first().text().trim();
+    if (!title) return;
+
+    const priceText = extractPriceText($el);
+    const price = parseKleinanzeigenPrice(priceText);
+    const location = $el.find(".aditem-main--top--left").first().text().trim();
+    const date = $el.find(".aditem-main--top--right").first().text().trim();
+    const category = $el
+      .find(".aditem-main--middle--description")
+      .first()
+      .text()
+      .trim();
+    const href =
+      $el.attr("data-href") || $el.find("a").first().attr("href") || "";
+    const url = href.startsWith("http")
+      ? href
+      : `https://www.kleinanzeigen.de${href}`;
+
+    items.push({
+      title,
+      price,
+      location,
+      date,
+      category,
+      url,
+      platform: "kleinanzeigen",
+    });
+  });
+
+  return items;
+}
