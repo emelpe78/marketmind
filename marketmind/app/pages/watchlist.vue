@@ -17,7 +17,7 @@ function getPlatformLabel(item: Record<string, unknown>): string | null {
     (item.platform === "ebay" || item.platform === "kleinanzeigen"
       ? item.platform
       : null);
-  return platform ? platformLabels[platform] : null;
+  return platform ? (platformLabels[platform] ?? null) : null;
 }
 
 const newItem = ref({
@@ -41,7 +41,7 @@ const editForm = reactive({
 
 const editPlatformLabel = computed(() => {
   const platform = detectPlatformFromUrl(editForm.url);
-  return platform ? platformLabels[platform] : null;
+  return platform ? (platformLabels[platform] ?? null) : null;
 });
 
 const deleteItem = ref<Record<string, unknown> | null>(null);

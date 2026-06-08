@@ -407,7 +407,7 @@ async function confirmDelete() {
                 :variant="
                   sellForm.sell_platform === option.value ? 'solid' : 'outline'
                 "
-                @click="sellForm.sell_platform = option.value"
+                @click="sellForm.sell_platform = option.value as Platform"
               >
                 {{ option.label }}
               </UButton>

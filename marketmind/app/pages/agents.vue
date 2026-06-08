@@ -1,15 +1,25 @@
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
 
-const { data: agents, refresh } =
-  await useFetch<Array<Record<string, unknown>>>("/api/agents");
+interface Agent {
+  id: number;
+  name: string;
+  type: string;
+  model?: string;
+  system_prompt: string;
+  temperature: number;
+  call_count?: number;
+  total_cost_usd?: number;
+}
+
+const { data: agents, refresh } = await useFetch<Agent[]>("/api/agents");
 const { data: prompts, refresh: refreshPrompts } = await useFetch<
   Array<Record<string, unknown>>
 >("/api/prompt-library");
 const { data: history } =
   await useFetch<Array<Record<string, unknown>>>("/api/agent-history");
 
-const editingAgent = ref<Record<string, unknown> | null>(null);
+const editingAgent = ref<Agent | null>(null);
 const agentModalOpen = computed({
   get: () => editingAgent.value !== null,
   set: (open: boolean) => {

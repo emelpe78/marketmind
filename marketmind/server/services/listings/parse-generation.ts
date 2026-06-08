@@ -13,7 +13,7 @@ export function parsePriceValue(value: unknown): number | null {
     const match = value.match(
       /(\d{1,3}(?:\.\d{3})*(?:,\d{1,2})?|\d+(?:,\d{1,2})?)/,
     );
-    if (!match) return null;
+    if (!match?.[1]) return null;
     const normalized = match[1].replace(/\./g, "").replace(",", ".");
     const num = Number(normalized);
     return Number.isFinite(num) ? num : null;

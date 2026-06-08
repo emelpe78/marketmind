@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from "@nuxt/ui";
 import type { Column } from "@tanstack/vue-table";
-import { getSortedRowModel } from "@tanstack/vue-table";
 
 definePageMeta({ layout: "default" });
 
@@ -302,7 +301,6 @@ const resultColumns: TableColumn<SearchResult>[] = [
         v-model:sorting="sorting"
         :data="results"
         :columns="resultColumns"
-        :sorting-options="{ getSortedRowModel: getSortedRowModel() }"
       >
         <template #title-cell="{ row }">
           <a

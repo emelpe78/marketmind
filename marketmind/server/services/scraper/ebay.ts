@@ -26,10 +26,11 @@ export function buildEbaySearchUrl(query: string, page = 1): string {
 
 export function parseEbayPrice(text: string): number {
   const match = text.match(/([\d.,]+)/);
-  if (!match) return 0;
-  const normalized = match[1].includes(",")
-    ? match[1].replace(/\./g, "").replace(",", ".")
-    : match[1];
+  const raw = match?.[1];
+  if (!raw) return 0;
+  const normalized = raw.includes(",")
+    ? raw.replace(/\./g, "").replace(",", ".")
+    : raw;
   return parseFloat(normalized) || 0;
 }
 

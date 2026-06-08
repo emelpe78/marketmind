@@ -28,16 +28,13 @@ interface SavedResearch {
 }
 
 const route = useRoute();
-const id = computed(() => String(route.params.id ?? ""));
+const savedResearchId = String(route.params.id);
 
 const {
   data: saved,
   pending,
   error,
-} = await useFetch<SavedResearch>(
-  () => (id.value ? `/api/saved-researches/${id.value}` : null),
-  { watch: [id] },
-);
+} = await useFetch<SavedResearch>(`/api/saved-researches/${savedResearchId}`);
 
 const platformLabels: Record<string, string> = {
   ebay: "eBay",

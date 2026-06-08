@@ -1,4 +1,4 @@
-import { getDbPath, initDatabase, getTableNames } from "../database/db";
+import { getDb, getDbPath, initDatabase, getTableNames } from "../database/db";
 import { getSetting, seedDatabase, setSetting } from "../database/seed";
 
 export default defineNitroPlugin(() => {

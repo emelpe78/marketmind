@@ -23,7 +23,10 @@ function median(values: number[]): number {
   if (!values.length) return 0;
   const sorted = [...values].sort((a, b) => a - b);
   const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+  if (sorted.length % 2) return sorted[mid] ?? 0;
+  const low = sorted[mid - 1];
+  const high = sorted[mid];
+  return low != null && high != null ? (low + high) / 2 : 0;
 }
 
 export function analyzePrices(results: SearchResultRow[]): PriceStats {
@@ -68,14 +71,14 @@ export function analyzePrices(results: SearchResultRow[]): PriceStats {
   > = {};
   for (const r of results) {
     const cond = r.condition || "Unbekannt";
-    if (!conditionBreakdown[cond]) {
-      conditionBreakdown[cond] = { count: 0, avgPrice: 0 };
-    }
-    conditionBreakdown[cond].count++;
-    conditionBreakdown[cond].avgPrice += r.price;
+    const condEntry = conditionBreakdown[cond] ?? { count: 0, avgPrice: 0 };
+    conditionBreakdown[cond] = condEntry;
+    condEntry.count++;
+    condEntry.avgPrice += r.price;
   }
   for (const cond of Object.keys(conditionBreakdown)) {
-    conditionBreakdown[cond].avgPrice /= conditionBreakdown[cond].count;
+    const entry = conditionBreakdown[cond];
+    if (entry) entry.avgPrice /= entry.count;
   }
 
   const platformComparison: Record<
@@ -83,14 +86,17 @@ export function analyzePrices(results: SearchResultRow[]): PriceStats {
     { count: number; avgPrice: number }
   > = {};
   for (const r of results) {
-    if (!platformComparison[r.platform]) {
-      platformComparison[r.platform] = { count: 0, avgPrice: 0 };
-    }
-    platformComparison[r.platform].count++;
-    platformComparison[r.platform].avgPrice += r.price;
+    const platformEntry = platformComparison[r.platform] ?? {
+      count: 0,
+      avgPrice: 0,
+    };
+    platformComparison[r.platform] = platformEntry;
+    platformEntry.count++;
+    platformEntry.avgPrice += r.price;
   }
   for (const p of Object.keys(platformComparison)) {
-    platformComparison[p].avgPrice /= platformComparison[p].count;
+    const entry = platformComparison[p];
+    if (entry) entry.avgPrice /= entry.count;
   }
 
   const demandIndicator = results.filter((r) => r.sold === 1).length;

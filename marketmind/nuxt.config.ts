@@ -16,7 +16,6 @@ export default defineNuxtConfig({
   },
   devServer: {
     port: Number(process.env.MM_PORT) || 5666,
-    strictPort: true,
     host: "127.0.0.1",
   },
   runtimeConfig: {

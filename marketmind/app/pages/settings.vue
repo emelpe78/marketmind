@@ -32,9 +32,10 @@ watch(
   { immediate: true },
 );
 
-async function switchAiProvider(value: string) {
-  aiProviderTab.value = value;
-  await updateSetting("ai-provider", value);
+async function switchAiProvider(value: string | number) {
+  const provider = String(value);
+  aiProviderTab.value = provider;
+  await updateSetting("ai-provider", provider);
 }
 
 watch(

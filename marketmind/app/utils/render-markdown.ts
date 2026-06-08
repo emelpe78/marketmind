@@ -39,8 +39,15 @@ function renderTable(rows: string[][]): string {
   let header: string[] | null = null;
   let bodyRows = rows;
 
-  if (rows.length > 1 && isTableSeparatorRow(rows[1])) {
-    header = rows[0];
+  const separatorRow = rows[1];
+  const headerRow = rows[0];
+  if (
+    rows.length > 1 &&
+    separatorRow &&
+    headerRow &&
+    isTableSeparatorRow(separatorRow)
+  ) {
+    header = headerRow;
     bodyRows = rows.slice(2);
   }
 
@@ -82,7 +89,7 @@ export function extractMarkdownTitle(markdown: string): {
   let title: string | null = null;
 
   const titleMatch = text.match(/^##\s+(.+?)(?:\n|$)/);
-  if (titleMatch) {
+  if (titleMatch?.[1]) {
     title = titleMatch[1].trim();
     text = text.slice(titleMatch[0].length).trim();
   }
@@ -119,7 +126,7 @@ export function renderMarkdownBlock(text: string): string {
   }
 
   for (let index = 0; index < lines.length; index++) {
-    const line = lines[index];
+    const line = lines[index] ?? "";
     const trimmed = line.trim();
 
     if (!trimmed) {
@@ -138,8 +145,10 @@ export function renderMarkdownBlock(text: string): string {
       closeList();
       closeTable();
       const quoteLines: string[] = [];
-      while (index < lines.length && lines[index].trim().startsWith(">")) {
-        quoteLines.push(lines[index].trim());
+      while (index < lines.length) {
+        const quoteLine = lines[index] ?? "";
+        if (!quoteLine.trim().startsWith(">")) break;
+        quoteLines.push(quoteLine.trim());
         index++;
       }
       index--;

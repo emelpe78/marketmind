@@ -23,11 +23,11 @@ export function parseKleinanzeigenPrice(text: string): number {
   const normalized = text.replace(/\s+/g, " ").trim();
   if (/^vb$/i.test(normalized)) return 0;
   const match = normalized.match(/([\d.]+(?:,\d{1,2})?)\s*€/);
-  if (match) {
+  if (match?.[1]) {
     return parseFloat(match[1].replace(/\./g, "").replace(",", ".")) || 0;
   }
   const fallback = normalized.match(/([\d.,]+)/);
-  if (!fallback) return 0;
+  if (!fallback?.[1]) return 0;
   return parseFloat(fallback[1].replace(/\./g, "").replace(",", ".")) || 0;
 }
 

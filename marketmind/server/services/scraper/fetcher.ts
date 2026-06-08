@@ -57,9 +57,9 @@ export function getNextUserAgent(
   rotation: boolean,
   index: { current: number } = { current: 0 },
 ): string {
-  if (!rotation) return USER_AGENTS[0];
+  if (!rotation) return USER_AGENTS[0] ?? "";
   index.current = (index.current + 1) % USER_AGENTS.length;
-  return USER_AGENTS[index.current];
+  return USER_AGENTS[index.current] ?? USER_AGENTS[0] ?? "";
 }
 
 function detectPlatform(url: string): "ebay" | "kleinanzeigen" | "unknown" {
