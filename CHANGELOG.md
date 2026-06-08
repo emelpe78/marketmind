@@ -1,0 +1,79 @@
+# Changelog
+
+Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
+
+Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
+
+## [0.1.0] — 2026-06-08
+
+Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisrecherche, Flipping-Kalkulation und KI-gestützte Anzeigen auf eBay.de und Kleinanzeigen.de.
+
+### Hinzugefügt
+
+#### Dashboard
+
+- KPI-Übersicht: gespeicherte Recherchen, Watchlist-Alerts, Gesamtgewinn, Token-Kosten
+- Hinweis zur KI-Provider-Konfiguration nach erstem Start oder Datenbank-Reset
+- Liste gespeicherter Recherchen mit Bearbeiten und Löschen
+- Letzte Suchen und Schnellzugriff auf Preisrecherche, Anzeigen und Flipping
+
+#### Preisrecherche
+
+- Scraper für eBay.de (verkaufte Artikel) und Kleinanzeigen.de (aktive Angebote)
+- Preisstatistiken: Minimum, Maximum, Durchschnitt, Median
+- KI-Marktanalyse pro Plattform mit Markdown-Ausgabe
+- Recherchen speichern und unter `/research/saved/[id]` erneut aufrufen
+- Sortierbare Ergebnistabelle mit Plattform- und Zustandsangaben
+
+#### Anzeigen-Generator
+
+- Plattform-Tabs für Kleinanzeigen und eBay
+- KI-generierte Titel, Beschreibungen, Preisvorschläge und Kategorien
+- Inline-Editor mit Copy-to-Clipboard
+- Gespeicherte Anzeigen: anlegen, laden, bearbeiten und löschen
+
+#### Flipping-Kalkulator
+
+- Live-Berechnung von Netto-Erlös, Rohgewinn, Marge und Flipping-Score
+- Bewertungsstufen von „Sehr lohnenswert“ bis „Nicht empfehlenswert“
+- Optionale KI-Empfehlung über den Analytics Agent
+
+#### Watchlist
+
+- Artikel per Titel, URL und Zielpreis hinzufügen
+- Plattform-Erkennung aus der URL (eBay / Kleinanzeigen)
+- Manuelles und globales Preis-Update per Scraper
+- Preisalarm bei Erreichen des Zielpreises mit visueller Hervorhebung
+- Bearbeiten und Löschen von Einträgen
+
+#### Inventar
+
+- Artikel erfassen mit Einkaufspreis, Datum und Plattform
+- Verkauf erfassen per Modal (Verkaufspreis, Plattform, Datum)
+- Automatische Gewinn-/Verlustberechnung
+- Übersicht: Gesamtgewinn, Durchschnittsmarge, bester und schlechtester Flip
+
+#### Agent-Manager
+
+- Vier vordefinierte Agents: Research, Listing, Analytics, Strategy
+- Bearbeitung von Name, Modell, System-Prompt und Temperatur
+- System-Prompt-Generator mit Speicherung in der Prompt-Bibliothek
+- Anzeige von Aufrufanzahl, Token-Verbrauch und Kosten pro Agent
+- Verlauf der letzten KI-Anfragen
+
+#### Einstellungen
+
+- KI-Provider: OpenRouter oder lokale OpenAI-kompatible API (z. B. Ollama, LM Studio)
+- Verschlüsselte Speicherung von API-Keys (AES-256-GCM)
+- Scraper-Konfiguration: Delay, Cache-TTL, maximale Ergebnisse
+- Datenbankpfad konfigurierbar, Verschieben mit Kopie, Zurücksetzen mit Bestätigung
+- Theme-Umschaltung: Hell, Dunkel, System
+
+#### Technik
+
+- Nuxt 4 SPA mit @nuxt/ui v4, SQLite (better-sqlite3) und Nitro-Server-Routen
+- Deutsche Zahlenformatierung für Euro (`1.000,00 €`) und Prozent (`33,33 %`)
+- Versionsanzeige in der Sidebar (`v. 0.1.0` aus `package.json`)
+- 56 Unit-Tests (Vitest) und 17 E2E-Tests (Playwright) unter `marketmind/test/`
+
+[0.1.0]: https://github.com/emelpe78/marketmind/releases/tag/v0.1.0

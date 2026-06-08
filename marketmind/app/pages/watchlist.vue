@@ -44,6 +44,14 @@ const editPlatformLabel = computed(() => {
   return platform ? platformLabels[platform] : null;
 });
 
+const deleteItem = ref<Record<string, unknown> | null>(null);
+const deleteModalOpen = computed({
+  get: () => deleteItem.value !== null,
+  set: (open: boolean) => {
+    if (!open) deleteItem.value = null;
+  },
+});
+
 function openEditModal(item: Record<string, unknown>) {
   editItem.value = item;
   editForm.title = String(item.title ?? "");
@@ -128,9 +136,21 @@ async function scrapeAll() {
   }
 }
 
-async function removeItem(id: number) {
-  await $fetch(`/api/watchlist/${id}`, { method: "DELETE" });
-  await refresh();
+function openDeleteModal(item: Record<string, unknown>) {
+  deleteItem.value = item;
+}
+
+async function confirmDelete() {
+  if (!deleteItem.value?.id) return;
+
+  try {
+    await $fetch(`/api/watchlist/${deleteItem.value.id}`, { method: "DELETE" });
+    deleteItem.value = null;
+    await refresh();
+    toast.add({ title: "Eintrag gelöscht", color: "success" });
+  } catch {
+    toast.add({ title: "Löschen fehlgeschlagen", color: "error" });
+  }
 }
 
 function currentPriceClass(item: Record<string, unknown>): string {
@@ -259,7 +279,8 @@ function currentPriceClass(item: Record<string, unknown>): string {
               color="error"
               variant="ghost"
               icon="i-lucide-trash"
-              @click="removeItem(item.id as number)"
+              data-testid="delete-watchlist"
+              @click="openDeleteModal(item)"
             />
           </div>
         </div>
@@ -313,6 +334,29 @@ function currentPriceClass(item: Record<string, unknown>): string {
             </UButton>
             <UButton data-testid="confirm-edit-watchlist" @click="saveEdit">
               Speichern
+            </UButton>
+          </div>
+        </div>
+      </template>
+    </UModal>
+
+    <UModal v-model:open="deleteModalOpen" title="Eintrag löschen?">
+      <template v-if="deleteItem" #body>
+        <div class="space-y-4 p-4">
+          <p>
+            „{{ deleteItem.title }}“ wirklich aus der Watchlist entfernen? Die
+            Preishistorie wird ebenfalls gelöscht.
+          </p>
+          <div class="flex justify-end gap-2">
+            <UButton variant="outline" @click="deleteItem = null">
+              Abbrechen
+            </UButton>
+            <UButton
+              color="error"
+              data-testid="confirm-delete-watchlist"
+              @click="confirmDelete"
+            >
+              Löschen
             </UButton>
           </div>
         </div>

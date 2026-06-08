@@ -35,4 +35,23 @@ test.describe("Watchlist", () => {
     await expect(page.getByText("GPU bearbeitet")).toBeVisible();
     await expect(page.getByText("Ziel: 150,00 €")).toBeVisible();
   });
+
+  test("delete requires confirmation", async ({ page }) => {
+    await page.goto("/watchlist");
+    await page.getByTestId("watchlist-title").fill("GPU zum Löschen");
+    await page.getByTestId("add-watchlist").click();
+    await expect(page.getByText("GPU zum Löschen")).toBeVisible();
+
+    await page.getByTestId("delete-watchlist").first().click();
+    await expect(page.getByText("Eintrag löschen?")).toBeVisible();
+    await page.getByRole("button", { name: "Abbrechen" }).click();
+    await expect(page.getByText("GPU zum Löschen")).toBeVisible();
+
+    await page.getByTestId("delete-watchlist").first().click();
+    await page.getByTestId("confirm-delete-watchlist").click();
+    await expect(page.getByText("Eintrag löschen?")).not.toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "GPU zum Löschen", exact: true }),
+    ).not.toBeVisible();
+  });
 });

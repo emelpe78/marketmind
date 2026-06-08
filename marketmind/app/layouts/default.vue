@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const colorMode = useColorMode();
+const { public: publicConfig } = useRuntimeConfig();
 
 const navItems = [
   { label: "Dashboard", icon: "i-lucide-layout-dashboard", to: "/" },
@@ -23,7 +24,12 @@ function toggleTheme() {
       class="w-64 border-r border-muted bg-elevated p-4 flex flex-col gap-2"
     >
       <div class="mb-4 px-2">
-        <h1 class="text-lg font-bold text-highlighted">MarketMind</h1>
+        <div class="flex items-baseline gap-2">
+          <h1 class="text-lg font-bold text-highlighted">MarketMind</h1>
+          <span class="text-xs text-muted"
+            >v. {{ publicConfig.appVersion }}</span
+          >
+        </div>
         <p class="text-xs text-muted">eBay & Kleinanzeigen</p>
       </div>
       <nav class="flex flex-col gap-1">
