@@ -18,8 +18,6 @@ export default defineNuxtConfig({
     host: "127.0.0.1",
   },
   runtimeConfig: {
-    openrouterApiKey: process.env.MM_OPENROUTER_API_KEY || "",
-    defaultModel: process.env.MM_OPENROUTER_MODEL || "deepseek/deepseek-v4-pro",
     databasePath: process.env.MM_DATABASE_PATH || "data/marketmind.db",
     public: {},
   },

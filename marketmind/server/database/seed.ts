@@ -1,4 +1,9 @@
 import type Database from "better-sqlite3";
+import {
+  decodeSecret,
+  encodeSecret,
+  isSecretSettingKey,
+} from "../services/settings/secrets";
 
 export const DEFAULT_SETTINGS: Record<string, string> = {
   "scraper-delay-min": "2",
@@ -11,8 +16,13 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
   "scraper-proxy-port": "",
   "scraper-proxy-auth": "",
   "watchlist-scrape-interval-hours": "6",
+  "ai-provider": "openrouter",
   "openrouter-api-key": "",
-  "default-model": "google/gemini-2.5-pro",
+  "default-model": "deepseek/deepseek-v4-pro",
+  "local-ai-api-url": "http://127.0.0.1:11434/v1",
+  "local-ai-api-key": "",
+  "local-ai-model": "",
+  "database-path": "",
 };
 
 const DEFAULT_AGENTS = [
@@ -70,7 +80,9 @@ export function getAllSettings(db: Database.Database): Record<string, string> {
   }[];
   const settings = { ...DEFAULT_SETTINGS };
   for (const row of rows) {
-    settings[row.key] = row.value;
+    settings[row.key] = isSecretSettingKey(row.key)
+      ? decodeSecret(row.value)
+      : row.value;
   }
   return settings;
 }
@@ -82,7 +94,9 @@ export function getSetting(
   const row = db
     .prepare("SELECT value FROM settings WHERE key = ?")
     .get(key) as { value: string } | undefined;
-  return row?.value;
+  if (!row) return DEFAULT_SETTINGS[key];
+  if (!row.value) return "";
+  return isSecretSettingKey(key) ? decodeSecret(row.value) : row.value;
 }
 
 export function setSetting(
@@ -90,7 +104,8 @@ export function setSetting(
   key: string,
   value: string,
 ): void {
+  const storedValue = isSecretSettingKey(key) ? encodeSecret(value) : value;
   db.prepare(
     "INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
-  ).run(key, value);
+  ).run(key, storedValue);
 }

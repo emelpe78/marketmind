@@ -65,7 +65,7 @@ function renderTable(rows: string[][]): string {
     )
     .join("");
 
-  return `<div class="my-2 overflow-x-auto rounded-lg border border-default"><table class="w-full text-sm">${headHtml}<tbody>${bodyHtml}</tbody></table></div>`;
+  return `<div class="my-2 max-w-full overflow-x-hidden rounded-lg border border-default"><table class="w-full max-w-full table-fixed text-sm break-words [overflow-wrap:anywhere]">${headHtml}<tbody>${bodyHtml}</tbody></table></div>`;
 }
 
 function isFullWidthHeading(heading: string): boolean {

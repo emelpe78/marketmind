@@ -22,3 +22,14 @@ logs
 .env
 .env.*
 !.env.example
+
+# Database
+data/
+
+# Test artifacts
+.playwright-mcp
+test/test-results/
+test/playwright-report/
+test-results/
+playwright-report/
+coverage/

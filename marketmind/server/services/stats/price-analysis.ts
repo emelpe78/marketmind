@@ -1,3 +1,5 @@
+import { formatEuro } from "../../../app/utils/format-currency";
+
 export interface PriceStats {
   min: number;
   max: number;
@@ -55,7 +57,7 @@ export function analyzePrices(results: SearchResultRow[]): PriceStats {
       (p) => p >= low && (i === 4 ? p <= high : p < high),
     ).length;
     histogram.push({
-      range: `${low.toFixed(0)}–${high.toFixed(0)} €`,
+      range: `${formatEuro(low).replace(/ €$/, "")}–${formatEuro(high)}`,
       count: bucketCount,
     });
   }

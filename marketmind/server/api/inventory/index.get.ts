@@ -1,5 +1,8 @@
 import { getDb } from "../../database/db";
-import { calculateProfit } from "../../services/inventory/index";
+import {
+  calculateProfit,
+  type InventoryItem,
+} from "../../services/inventory/index";
 
 export default defineEventHandler((event) => {
   const db = getDb();
@@ -25,5 +28,9 @@ export default defineEventHandler((event) => {
   }
   sql += " ORDER BY created_at DESC";
 
-  return db.prepare(sql).all(...params);
+  const rows = db.prepare(sql).all(...params) as InventoryItem[];
+  return rows.map((row) => ({
+    ...row,
+    profit: calculateProfit(row),
+  }));
 });

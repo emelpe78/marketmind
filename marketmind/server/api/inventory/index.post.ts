@@ -1,5 +1,8 @@
 import { getDb } from "../../database/db";
-import { calculateProfit } from "../../services/inventory/index";
+import {
+  calculateProfit,
+  normalizePlatform,
+} from "../../services/inventory/index";
 
 export default defineEventHandler(async (event) => {
   const db = getDb();
@@ -13,7 +16,7 @@ export default defineEventHandler(async (event) => {
     .run(
       body.title,
       body.buy_price ?? null,
-      body.buy_platform ?? null,
+      normalizePlatform(body.buy_platform),
       body.buy_date ?? null,
       body.sell_price ?? null,
       body.sell_platform ?? null,

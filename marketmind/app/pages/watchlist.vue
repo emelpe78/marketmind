@@ -6,20 +6,101 @@ const { data: items, refresh } =
 const loading = ref(false);
 const toast = useToast();
 
+const platformLabels: Record<string, string> = {
+  kleinanzeigen: "Kleinanzeigen",
+  ebay: "eBay",
+};
+
+function getPlatformLabel(item: Record<string, unknown>): string | null {
+  const platform =
+    detectPlatformFromUrl(String(item.url ?? "")) ??
+    (item.platform === "ebay" || item.platform === "kleinanzeigen"
+      ? item.platform
+      : null);
+  return platform ? platformLabels[platform] : null;
+}
+
 const newItem = ref({
   title: "",
   url: "",
-  platform: "kleinanzeigen",
   target_price: undefined as number | undefined,
 });
 
+const editItem = ref<Record<string, unknown> | null>(null);
+const editModalOpen = computed({
+  get: () => editItem.value !== null,
+  set: (open: boolean) => {
+    if (!open) editItem.value = null;
+  },
+});
+const editForm = reactive({
+  title: "",
+  url: "",
+  target_price: undefined as number | undefined,
+});
+
+const editPlatformLabel = computed(() => {
+  const platform = detectPlatformFromUrl(editForm.url);
+  return platform ? platformLabels[platform] : null;
+});
+
+function openEditModal(item: Record<string, unknown>) {
+  editItem.value = item;
+  editForm.title = String(item.title ?? "");
+  editForm.url = String(item.url ?? "");
+  editForm.target_price =
+    item.target_price != null ? Number(item.target_price) : undefined;
+}
+
+async function saveEdit() {
+  if (!editItem.value?.id) return;
+  if (!editForm.title.trim()) {
+    toast.add({
+      title: "Titel fehlt",
+      description: "Bitte einen Titel eingeben.",
+      color: "warning",
+    });
+    return;
+  }
+
+  const url = editForm.url.trim() || null;
+
+  try {
+    await $fetch(`/api/watchlist/${editItem.value.id}`, {
+      method: "PUT",
+      body: {
+        title: editForm.title.trim(),
+        url,
+        target_price: editForm.target_price ?? null,
+        current_price: editItem.value.current_price ?? null,
+        alert_active: editItem.value.alert_active ?? 1,
+        status: editItem.value.status ?? "aktiv",
+      },
+    });
+    editItem.value = null;
+    await refresh();
+    toast.add({ title: "Eintrag aktualisiert", color: "success" });
+  } catch {
+    toast.add({
+      title: "Speichern fehlgeschlagen",
+      color: "error",
+    });
+  }
+}
+
 async function addItem() {
   if (!newItem.value.title) return;
-  await $fetch("/api/watchlist", { method: "POST", body: newItem.value });
+  await $fetch("/api/watchlist", {
+    method: "POST",
+    body: {
+      title: newItem.value.title,
+      url: newItem.value.url.trim() || null,
+      target_price: newItem.value.target_price,
+    },
+  });
   newItem.value = {
     title: "",
     url: "",
-    platform: "kleinanzeigen",
     target_price: undefined,
   };
   await refresh();
@@ -50,6 +131,15 @@ async function scrapeAll() {
 async function removeItem(id: number) {
   await $fetch(`/api/watchlist/${id}`, { method: "DELETE" });
   await refresh();
+}
+
+function currentPriceClass(item: Record<string, unknown>): string {
+  const current = Number(item.current_price);
+  const target = Number(item.target_price);
+  if (!Number.isFinite(current) || !Number.isFinite(target)) return "";
+  return current <= target
+    ? "text-success font-medium"
+    : "text-error font-medium";
 }
 </script>
 
@@ -100,10 +190,32 @@ async function removeItem(id: number) {
       >
         <div class="flex justify-between items-center">
           <div>
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-2">
               <h3 class="font-semibold">
-                {{ item.title }}
+                <a
+                  v-if="item.url"
+                  :href="String(item.url)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 text-primary hover:underline"
+                  data-testid="watchlist-title-link"
+                >
+                  <span>{{ item.title }}</span>
+                  <UIcon
+                    name="i-lucide-external-link"
+                    class="size-4 shrink-0 opacity-80"
+                  />
+                </a>
+                <span v-else>{{ item.title }}</span>
               </h3>
+              <UBadge
+                v-if="getPlatformLabel(item)"
+                variant="subtle"
+                color="neutral"
+                data-testid="watchlist-platform"
+              >
+                {{ getPlatformLabel(item) }}
+              </UBadge>
               <UBadge
                 v-if="item.alertTriggered"
                 data-testid="price-alert"
@@ -113,11 +225,28 @@ async function removeItem(id: number) {
               </UBadge>
             </div>
             <p class="text-sm text-muted">
-              Aktuell: {{ item.current_price ?? "–" }} € · Ziel:
-              {{ item.target_price ?? "–" }} €
+              Aktuell:
+              <span :class="currentPriceClass(item)">
+                {{
+                  item.current_price != null
+                    ? formatEuro(item.current_price)
+                    : "–"
+                }}
+              </span>
+              · Ziel:
+              {{
+                item.target_price != null ? formatEuro(item.target_price) : "–"
+              }}
             </p>
           </div>
           <div class="flex gap-2">
+            <UButton
+              size="sm"
+              variant="outline"
+              icon="i-lucide-pencil"
+              data-testid="edit-watchlist"
+              @click="openEditModal(item)"
+            />
             <UButton
               size="sm"
               variant="outline"
@@ -136,5 +265,58 @@ async function removeItem(id: number) {
         </div>
       </UCard>
     </div>
+
+    <UModal
+      v-model:open="editModalOpen"
+      :title="editItem ? `Bearbeiten: ${editItem.title}` : 'Eintrag bearbeiten'"
+    >
+      <template v-if="editItem" #body>
+        <div class="space-y-4 p-4">
+          <UFormField label="Titel" required>
+            <UInput
+              v-model="editForm.title"
+              data-testid="edit-watchlist-title"
+              autofocus
+            />
+          </UFormField>
+          <UFormField label="URL">
+            <UInput v-model="editForm.url" data-testid="edit-watchlist-url" />
+          </UFormField>
+          <p v-if="editPlatformLabel" class="text-sm text-muted">
+            Plattform:
+            <UBadge variant="subtle" color="neutral" class="ml-1">
+              {{ editPlatformLabel }}
+            </UBadge>
+          </p>
+          <p v-else-if="editForm.url.trim()" class="text-sm text-warning">
+            Plattform konnte aus der URL nicht erkannt werden.
+          </p>
+          <UFormField label="Zielpreis (€)">
+            <UInput
+              v-model.number="editForm.target_price"
+              data-testid="edit-watchlist-target-price"
+              type="number"
+              min="0"
+              step="0.01"
+            />
+          </UFormField>
+          <p v-if="editItem.current_price != null" class="text-sm text-muted">
+            Aktueller Preis:
+            <span :class="currentPriceClass(editItem)" class="font-medium">
+              {{ formatEuro(editItem.current_price) }}
+            </span>
+            (wird beim Aktualisieren neu ermittelt)
+          </p>
+          <div class="flex justify-end gap-2">
+            <UButton variant="outline" @click="editItem = null">
+              Abbrechen
+            </UButton>
+            <UButton data-testid="confirm-edit-watchlist" @click="saveEdit">
+              Speichern
+            </UButton>
+          </div>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>

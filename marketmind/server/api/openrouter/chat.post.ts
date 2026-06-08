@@ -1,15 +1,17 @@
+import { getDb } from "../../database/db";
+import {
+  assertAiConfigured,
+  getAiConfig,
+  getAiConnection,
+} from "../../services/ai/config";
 import { chatCompletion } from "../../services/openrouter/client";
 import type { ChatMessage } from "../../services/openrouter/client";
 
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig();
-  const apiKey = config.openrouterApiKey;
-  if (!apiKey) {
-    throw createError({
-      statusCode: 400,
-      message: "OpenRouter API-Key nicht konfiguriert",
-    });
-  }
+  const db = getDb();
+  const ai = getAiConfig(db);
+  assertAiConfigured(ai);
+
   const body = await readBody<{
     messages: ChatMessage[];
     model?: string;
@@ -18,9 +20,10 @@ export default defineEventHandler(async (event) => {
   if (!body?.messages?.length) {
     throw createError({ statusCode: 400, message: "Messages fehlen" });
   }
-  const model = body.model || config.defaultModel;
+
+  const model = body.model || ai.defaultModel;
   const result = await chatCompletion(
-    apiKey,
+    getAiConnection(ai),
     model,
     body.messages,
     body.temperature ?? 0.7,

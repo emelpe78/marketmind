@@ -1,4 +1,9 @@
 import { getDb } from "../../../database/db";
+import {
+  assertAiConfigured,
+  getAiConfig,
+  getAiConnection,
+} from "../../../services/ai/config";
 import { analyzeSearchByPlatform } from "../../../services/research/analyze-search";
 
 export default defineEventHandler(async (event) => {
@@ -6,8 +11,9 @@ export default defineEventHandler(async (event) => {
   if (!id) {
     throw createError({ statusCode: 400, message: "ID fehlt" });
   }
-  const config = useRuntimeConfig();
   const db = getDb();
+  const ai = getAiConfig(db);
+  assertAiConfigured(ai);
   const search = db
     .prepare("SELECT * FROM searches WHERE id = ?")
     .get(Number(id)) as { query: string; platform: string } | undefined;
@@ -15,20 +21,12 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, message: "Suche nicht gefunden" });
   }
 
-  const apiKey = config.openrouterApiKey;
-  if (!apiKey) {
-    throw createError({
-      statusCode: 400,
-      message: "OpenRouter API-Key nicht konfiguriert",
-    });
-  }
-
   const { summaries, tokensUsed } = await analyzeSearchByPlatform(
     db,
     Number(id),
     search,
-    apiKey,
-    config.defaultModel,
+    getAiConnection(ai),
+    ai.defaultModel,
   );
 
   if (!summaries.length) {

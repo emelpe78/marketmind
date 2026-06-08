@@ -8,6 +8,7 @@ test.describe("Settings", () => {
       page.getByRole("heading", { name: "Einstellungen" }),
     ).toBeVisible();
     await expect(page.getByTestId("scraper-delay-min")).toBeVisible();
+    await expect(page.getByTestId("ai-provider-tabs")).toBeVisible();
     await expect(page.getByTestId("openrouter-key")).toBeVisible();
 
     const html = page.locator("html");

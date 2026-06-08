@@ -37,6 +37,7 @@ export function expectAllTables(dbPath: string): void {
     "inventory",
     "listings",
     "prompt_library",
+    "saved_researches",
     "scraper_cache",
     "search_results",
     "searches",

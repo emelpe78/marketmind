@@ -14,15 +14,31 @@ export interface InventoryItem {
   notes: string | null;
 }
 
-export function calculateProfit(item: InventoryItem): number | null {
-  if (
-    item.status === "verkauft" &&
-    item.buy_price != null &&
-    item.sell_price != null
-  ) {
-    return item.sell_price - item.buy_price;
+export function normalizePlatform(value: unknown): string | null {
+  if (value == null || value === "") return null;
+  if (value === "ebay" || value === "kleinanzeigen") return value;
+  if (typeof value === "object" && value && "value" in value) {
+    const platform = (value as { value: unknown }).value;
+    if (platform === "ebay" || platform === "kleinanzeigen") return platform;
   }
-  return item.profit;
+  return String(value);
+}
+
+function toNumber(value: unknown): number | null {
+  if (value == null || value === "") return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+export function calculateProfit(item: InventoryItem): number | null {
+  const buyPrice = toNumber(item.buy_price);
+  const sellPrice = toNumber(item.sell_price);
+
+  if (item.status === "verkauft" && buyPrice != null && sellPrice != null) {
+    return sellPrice - buyPrice;
+  }
+
+  return toNumber(item.profit);
 }
 
 export function getInventorySummary(db: Database.Database) {
@@ -35,14 +51,18 @@ export function getInventorySummary(db: Database.Database) {
     .filter((p) => !Number.isNaN(p));
 
   const totalProfit = profits.reduce((a, b) => a + b, 0);
+  const margins = items
+    .map((item) => {
+      const buyPrice = toNumber(item.buy_price);
+      const sellPrice = toNumber(item.sell_price);
+      if (buyPrice == null || buyPrice <= 0 || sellPrice == null) return null;
+      return ((sellPrice - buyPrice) / buyPrice) * 100;
+    })
+    .filter((margin): margin is number => margin != null);
+
   const avgMargin =
-    items.length > 0
-      ? items.reduce((sum, i) => {
-          if (i.buy_price && i.buy_price > 0 && i.sell_price) {
-            return sum + ((i.sell_price - i.buy_price) / i.buy_price) * 100;
-          }
-          return sum;
-        }, 0) / items.length
+    margins.length > 0
+      ? margins.reduce((sum, margin) => sum + margin, 0) / margins.length
       : 0;
 
   let bestFlip = null as { title: string; profit: number } | null;

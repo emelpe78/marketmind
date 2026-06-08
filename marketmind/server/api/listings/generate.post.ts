@@ -1,10 +1,17 @@
 import { getDb } from "../../database/db";
+import {
+  assertAiConfigured,
+  getAiConfig,
+  getAiConnection,
+} from "../../services/ai/config";
 import { chatCompletion } from "../../services/openrouter/client";
 import {
   getAgentByType,
   resolveAgentModel,
   logAgentHistory,
 } from "../../services/openrouter/agents";
+import { formatEuro } from "../../../app/utils/format-currency";
+import { parseListingGeneration } from "../../services/listings/parse-generation";
 import { analyzePrices } from "../../services/stats/price-analysis";
 
 interface ListingInput {
@@ -25,17 +32,11 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const config = useRuntimeConfig();
-  if (!config.openrouterApiKey) {
-    throw createError({
-      statusCode: 400,
-      message: "OpenRouter API-Key nicht konfiguriert",
-    });
-  }
-
   const db = getDb();
+  const ai = getAiConfig(db);
+  assertAiConfigured(ai);
   const agent = getAgentByType(db, "listing");
-  const model = resolveAgentModel(agent, config.defaultModel);
+  const model = resolveAgentModel(agent, ai.defaultModel);
 
   let priceContext = "";
   if (body.searchId) {
@@ -45,7 +46,7 @@ export default defineEventHandler(async (event) => {
     const stats = analyzePrices(
       results.map((r) => ({ price: r.price, platform: body.platform })),
     );
-    priceContext = `\nMarktdaten: Durchschnitt ${stats.avg.toFixed(2)}€, Median ${stats.median.toFixed(2)}€`;
+    priceContext = `\nMarktdaten: Durchschnitt ${formatEuro(stats.avg)}, Median ${formatEuro(stats.median)}`;
   }
 
   const platformHint =
@@ -56,7 +57,7 @@ export default defineEventHandler(async (event) => {
   const userInput = `${platformHint}\nProdukt: ${body.query}\nZustand: ${body.condition}\nZusatz: ${body.extras || "-"}\nWunschpreis: ${body.desiredPrice || "-"}${priceContext}`;
 
   const completion = await chatCompletion(
-    config.openrouterApiKey,
+    getAiConnection(ai),
     model,
     [
       { role: "system", content: agent.system_prompt },
@@ -74,22 +75,13 @@ export default defineEventHandler(async (event) => {
     completion.costUsd,
   );
 
-  let parsed: Record<string, unknown> = {};
-  try {
-    const jsonMatch = completion.content.match(/\{[\s\S]*\}/);
-    if (jsonMatch) parsed = JSON.parse(jsonMatch[0]);
-  } catch {
-    parsed = { title: body.query, description: completion.content };
-  }
+  const parsed = parseListingGeneration(completion.content, {
+    query: body.query,
+    desiredPrice: body.desiredPrice ?? null,
+  });
 
   return {
     platform: body.platform,
-    title: parsed.title || body.query,
-    description: parsed.description || completion.content,
-    priceSuggestion: parsed.priceSuggestion || body.desiredPrice || null,
-    category: parsed.category || null,
-    keywords: parsed.itemSpecifics
-      ? JSON.stringify(parsed.itemSpecifics)
-      : null,
+    ...parsed,
   };
 });

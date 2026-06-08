@@ -1,4 +1,5 @@
 import type Database from "better-sqlite3";
+import type { AiConnection } from "../ai/config";
 import { chatCompletion } from "../openrouter/client";
 import {
   getAgentByType,
@@ -28,7 +29,7 @@ export async function analyzeSearchByPlatform(
   db: Database.Database,
   searchId: number,
   search: { query: string; platform: string },
-  apiKey: string,
+  connection: AiConnection,
   defaultModel: string,
 ): Promise<{ summaries: PlatformAnalysis[]; tokensUsed: number }> {
   const agent = getAgentByType(db, "research");
@@ -51,7 +52,7 @@ export async function analyzeSearchByPlatform(
     const label = PLATFORM_LABEL[platform];
     const userInput = `Analysiere Marktdaten für "${search.query}" ausschließlich von ${label}. Ignoriere andere Plattformen.\n${JSON.stringify(results, null, 2)}`;
     const completion = await chatCompletion(
-      apiKey,
+      connection,
       model,
       [
         { role: "system", content: agent.system_prompt },

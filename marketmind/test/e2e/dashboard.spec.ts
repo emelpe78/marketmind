@@ -14,8 +14,19 @@ const pages = [
 test.describe("Dashboard & Navigation", () => {
   test("dashboard loads with KPI cards", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByText("Letzte Suchen")).toBeVisible();
+    await expect(page.getByText("Gespeicherte Recherchen")).toBeVisible();
     await expect(page.getByText("Watchlist-Alerts")).toBeVisible();
+  });
+
+  test("shows ai setup hint when provider is not configured", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await expect(page.getByTestId("ai-setup-hint")).toBeVisible();
+    await expect(page.getByText("KI-Provider konfigurieren")).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Zu den Einstellungen" }),
+    ).toBeVisible();
   });
 
   for (const { path, heading } of pages.slice(1)) {

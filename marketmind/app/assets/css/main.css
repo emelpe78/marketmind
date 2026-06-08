@@ -6,4 +6,16 @@
     width: 100%;
     display: flex;
   }
+
+  [data-slot="root"]:has(> table) {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  [data-slot="root"]:has(> table) > table {
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+  }
 }

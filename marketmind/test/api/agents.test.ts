@@ -3,6 +3,7 @@ import { createTestDb } from "../helpers/test-db";
 import { getDb } from "../../server/database/db";
 import {
   getAgentByType,
+  listAgentsWithStats,
   resolveAgentModel,
   logAgentHistory,
   generateSystemPrompt,
@@ -51,6 +52,28 @@ describe("agents service", () => {
     expect(history).toHaveLength(1);
   });
 
+  it("aggregates total cost and call count per agent", () => {
+    createTestDb();
+    const db = getDb();
+    const research = getAgentByType(db, "research");
+    const listing = getAgentByType(db, "listing");
+    logAgentHistory(db, research.id, "a", "b", 50, 0.002);
+    logAgentHistory(db, research.id, "c", "d", 30, 0.001);
+    logAgentHistory(db, listing.id, "e", "f", 10, 0.0005);
+
+    const agents = listAgentsWithStats(db);
+    const researchStats = agents.find((a) => a.id === research.id);
+    const listingStats = agents.find((a) => a.id === listing.id);
+    const strategyStats = agents.find((a) => a.type === "strategy");
+
+    expect(researchStats?.call_count).toBe(2);
+    expect(researchStats?.total_cost_usd).toBeCloseTo(0.003);
+    expect(listingStats?.call_count).toBe(1);
+    expect(listingStats?.total_cost_usd).toBeCloseTo(0.0005);
+    expect(strategyStats?.call_count).toBe(0);
+    expect(strategyStats?.total_cost_usd).toBe(0);
+  });
+
   it("generateSystemPrompt returns prompt from meta-agent", async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
@@ -61,7 +84,7 @@ describe("agents service", () => {
       }),
     });
     const prompt = await generateSystemPrompt(
-      "key",
+      { apiKey: "key", baseUrl: "https://openrouter.ai/api/v1" },
       "google/gemini-2.5-pro",
       "Marktanalyse für GPUs",
       mockFetch as typeof fetch,

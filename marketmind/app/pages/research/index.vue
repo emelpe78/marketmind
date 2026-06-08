@@ -22,6 +22,7 @@ const query = ref("");
 const platform = ref<"ebay" | "kleinanzeigen" | "both">("both");
 const loading = ref(false);
 const analyzing = ref(false);
+const saving = ref(false);
 const searchId = ref<number | null>(null);
 const stats = ref<Record<string, unknown> | null>(null);
 const summaries = ref<PlatformSummary[]>([]);
@@ -87,6 +88,34 @@ async function analyzeSearch() {
   }
 }
 
+async function saveResearch() {
+  if (!searchId.value || !stats.value || results.value.length === 0) return;
+  saving.value = true;
+  try {
+    const saved = await $fetch<{ id: number }>("/api/saved-researches", {
+      method: "POST",
+      body: {
+        query: query.value.trim(),
+        platform: platform.value,
+        searchId: searchId.value,
+        stats: stats.value,
+        results: results.value,
+        analyses: summaries.value,
+      },
+    });
+    toast.add({
+      title: "Recherche gespeichert",
+      description: "Im Dashboard unter „Gespeicherte Recherchen“ aufrufbar.",
+      color: "success",
+    });
+    await navigateTo(`/research/saved/${saved.id}`);
+  } catch {
+    toast.add({ title: "Speichern fehlgeschlagen", color: "error" });
+  } finally {
+    saving.value = false;
+  }
+}
+
 const platformLabels: Record<PlatformSummary["platform"], string> = {
   ebay: "eBay",
   kleinanzeigen: "Kleinanzeigen",
@@ -128,8 +157,8 @@ const resultColumns: TableColumn<SearchResult>[] = [
     sortingFn: "basic",
     meta: {
       class: {
-        th: "w-[11%] text-right whitespace-nowrap",
-        td: "w-[11%] px-3 text-right whitespace-nowrap",
+        th: "w-[11%] text-right",
+        td: "w-[11%] px-3 text-right",
       },
     },
   },
@@ -138,8 +167,8 @@ const resultColumns: TableColumn<SearchResult>[] = [
     header: "Plattform",
     meta: {
       class: {
-        th: "w-[14%] whitespace-nowrap",
-        td: "w-[14%] px-3 whitespace-nowrap",
+        th: "w-[14%]",
+        td: "w-[14%] px-3",
       },
     },
   },
@@ -149,8 +178,8 @@ const resultColumns: TableColumn<SearchResult>[] = [
     sortingFn: "alphanumeric",
     meta: {
       class: {
-        th: "w-[13%] whitespace-nowrap",
-        td: "w-[13%] px-3 whitespace-nowrap",
+        th: "w-[13%]",
+        td: "w-[13%] px-3",
       },
     },
   },
@@ -201,25 +230,25 @@ const resultColumns: TableColumn<SearchResult>[] = [
       <UCard>
         <p class="text-sm text-muted">Minimum</p>
         <p class="text-xl font-bold">
-          {{ (stats.min as number).toFixed(2) }} €
+          {{ formatEuro(stats.min) }}
         </p>
       </UCard>
       <UCard>
         <p class="text-sm text-muted">Maximum</p>
         <p class="text-xl font-bold">
-          {{ (stats.max as number).toFixed(2) }} €
+          {{ formatEuro(stats.max) }}
         </p>
       </UCard>
       <UCard>
         <p class="text-sm text-muted">Durchschnitt</p>
         <p class="text-xl font-bold">
-          {{ (stats.avg as number).toFixed(2) }} €
+          {{ formatEuro(stats.avg) }}
         </p>
       </UCard>
       <UCard>
         <p class="text-sm text-muted">Median</p>
         <p class="text-xl font-bold">
-          {{ (stats.median as number).toFixed(2) }} €
+          {{ formatEuro(stats.median) }}
         </p>
       </UCard>
     </div>
@@ -232,7 +261,10 @@ const resultColumns: TableColumn<SearchResult>[] = [
       description="Für diesen Suchbegriff wurden keine Anzeigen gefunden. Bei eBay kann ein Zugriffsblock (403) vorliegen – Kleinanzeigen oder Proxy in den Einstellungen versuchen."
     />
 
-    <div v-if="results.length && searchId" class="flex justify-end">
+    <div
+      v-if="results.length && searchId"
+      class="flex flex-wrap justify-end gap-2"
+    >
       <UButton
         variant="outline"
         icon="i-lucide-sparkles"
@@ -241,6 +273,14 @@ const resultColumns: TableColumn<SearchResult>[] = [
         @click="analyzeSearch"
       >
         {{ hasAnalysis ? "Analyse aktualisieren" : "KI-Analyse" }}
+      </UButton>
+      <UButton
+        icon="i-lucide-bookmark"
+        :loading="saving"
+        data-testid="save-research"
+        @click="saveResearch"
+      >
+        Recherche speichern
       </UButton>
     </div>
 
@@ -254,7 +294,7 @@ const resultColumns: TableColumn<SearchResult>[] = [
       />
     </div>
 
-    <UCard v-if="results.length" data-testid="results-table">
+    <UCard v-if="results.length" class="min-w-0" data-testid="results-table">
       <template #header>
         <h3 class="font-semibold">{{ results.length }} Ergebnisse</h3>
       </template>
@@ -263,12 +303,6 @@ const resultColumns: TableColumn<SearchResult>[] = [
         :data="results"
         :columns="resultColumns"
         :sorting-options="{ getSortedRowModel: getSortedRowModel() }"
-        :ui="{
-          root: 'relative overflow-x-hidden',
-          base: 'w-full table-fixed',
-          th: 'px-4 py-3 align-top',
-          td: 'px-4 py-3 text-sm text-muted align-top whitespace-normal break-words [&:has([role=checkbox])]:pe-0',
-        }"
       >
         <template #title-cell="{ row }">
           <a
@@ -312,19 +346,13 @@ const resultColumns: TableColumn<SearchResult>[] = [
           />
         </template>
         <template #price-cell="{ row }">
-          <span class="whitespace-nowrap tabular-nums">
-            {{ Number(row.original.price).toFixed(2) }} €
-          </span>
+          <span class="tabular-nums">{{ formatEuro(row.original.price) }}</span>
         </template>
         <template #platform-cell="{ row }">
-          <span class="whitespace-nowrap capitalize">
-            {{ row.original.platform }}
-          </span>
+          <span class="capitalize">{{ row.original.platform }}</span>
         </template>
         <template #condition-cell="{ row }">
-          <span class="whitespace-nowrap">
-            {{ row.original.condition || "–" }}
-          </span>
+          {{ row.original.condition || "–" }}
         </template>
       </UTable>
     </UCard>

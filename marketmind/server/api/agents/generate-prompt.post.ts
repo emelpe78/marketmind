@@ -1,20 +1,24 @@
+import { getDb } from "../../database/db";
+import {
+  assertAiConfigured,
+  getAiConfig,
+  getAiConnection,
+} from "../../services/ai/config";
 import { generateSystemPrompt } from "../../services/openrouter/agents";
 
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig();
   const body = await readBody<{ description: string }>(event);
   if (!body?.description) {
     throw createError({ statusCode: 400, message: "Beschreibung fehlt" });
   }
-  if (!config.openrouterApiKey) {
-    throw createError({
-      statusCode: 400,
-      message: "OpenRouter API-Key nicht konfiguriert",
-    });
-  }
+
+  const db = getDb();
+  const ai = getAiConfig(db);
+  assertAiConfigured(ai);
+
   const prompt = await generateSystemPrompt(
-    config.openrouterApiKey,
-    config.defaultModel,
+    getAiConnection(ai),
+    ai.defaultModel,
     body.description,
   );
   return { prompt };

@@ -1,4 +1,5 @@
 import type Database from "better-sqlite3";
+import type { AiConnection } from "../ai/config";
 
 export interface AgentRow {
   id: number;
@@ -28,6 +29,30 @@ export function getAgentById(
     | undefined;
 }
 
+export interface AgentWithStats extends AgentRow {
+  total_cost_usd: number;
+  call_count: number;
+}
+
+export function listAgentsWithStats(db: Database.Database): AgentWithStats[] {
+  return db
+    .prepare(
+      `SELECT a.*,
+        COALESCE(stats.total_cost_usd, 0) AS total_cost_usd,
+        COALESCE(stats.call_count, 0) AS call_count
+      FROM agents a
+      LEFT JOIN (
+        SELECT agent_id,
+          SUM(cost_usd) AS total_cost_usd,
+          COUNT(*) AS call_count
+        FROM agent_history
+        GROUP BY agent_id
+      ) stats ON stats.agent_id = a.id
+      ORDER BY a.id`,
+    )
+    .all() as AgentWithStats[];
+}
+
 export function resolveAgentModel(
   agent: AgentRow,
   defaultModel: string,
@@ -49,14 +74,14 @@ export function logAgentHistory(
 }
 
 export async function generateSystemPrompt(
-  apiKey: string,
+  connection: AiConnection,
   defaultModel: string,
   description: string,
   fetchFn: typeof fetch = fetch,
 ): Promise<string> {
   const { chatCompletion } = await import("./client");
   const result = await chatCompletion(
-    apiKey,
+    connection,
     defaultModel,
     [
       {

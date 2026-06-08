@@ -3,6 +3,11 @@ import { readFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mkdirSync } from "node:fs";
+import {
+  getRuntimeDefaultPath,
+  readConfiguredPathFromFile,
+  resolveDbPath,
+} from "./paths";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -23,14 +28,31 @@ let currentPath: string | null = null;
 
 export function getDbPath(): string {
   if (process.env.MM_DATABASE_PATH) {
-    return process.env.MM_DATABASE_PATH;
+    return resolveDbPath(process.env.MM_DATABASE_PATH);
   }
-  try {
-    const config = useRuntimeConfig();
-    return config.databasePath || "data/marketmind.db";
-  } catch {
-    return "data/marketmind.db";
+
+  const bootstrapPath = resolveDbPath(getRuntimeDefaultPath());
+
+  if (dbInstance && currentPath) {
+    try {
+      const row = dbInstance
+        .prepare("SELECT value FROM settings WHERE key = 'database-path'")
+        .get() as { value: string } | undefined;
+      if (row?.value?.trim()) {
+        return resolveDbPath(row.value);
+      }
+    } catch {
+      return currentPath;
+    }
+    return currentPath;
   }
+
+  const configured = readConfiguredPathFromFile(bootstrapPath);
+  if (configured) {
+    return resolveDbPath(configured);
+  }
+
+  return bootstrapPath;
 }
 
 export function getDb(dbPath?: string): Database.Database {

@@ -64,6 +64,33 @@ async function savePromptToLibrary() {
   await refreshPrompts();
   toast.add({ title: "In Bibliothek gespeichert", color: "success" });
 }
+
+function formatTemperature(value: unknown): string {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return "–";
+  return new Intl.NumberFormat("de-DE", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  }).format(num);
+}
+
+const temperatureMarks = [0, 0.2, 0.4, 0.6, 0.8, 1];
+
+function formatUsdCost(value: unknown): string {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return "–";
+  return `$${new Intl.NumberFormat("de-DE", {
+    minimumFractionDigits: 4,
+    maximumFractionDigits: 4,
+  }).format(num)}`;
+}
+
+function formatCallsLabel(value: unknown): string {
+  const num = Number(value);
+  if (!Number.isFinite(num) || num < 0) return "0 Aufrufe";
+  const formatted = new Intl.NumberFormat("de-DE").format(num);
+  return num === 1 ? `${formatted} Aufruf` : `${formatted} Aufrufe`;
+}
 </script>
 
 <template>
@@ -83,7 +110,11 @@ async function savePromptToLibrary() {
               {{ agent.name }}
             </h3>
             <p class="text-sm text-muted">
-              {{ agent.type }} · Temp {{ agent.temperature }}
+              {{ agent.type }} · Temp {{ formatTemperature(agent.temperature) }}
+            </p>
+            <p class="text-sm text-muted mt-0.5">
+              {{ formatCallsLabel(agent.call_count) }} · Kosten
+              {{ formatUsdCost(agent.total_cost_usd) }}
             </p>
           </div>
           <UButton
@@ -113,13 +144,29 @@ async function savePromptToLibrary() {
           <UFormField label="System-Prompt">
             <UTextarea v-model="editingAgent.system_prompt" :rows="8" />
           </UFormField>
-          <UFormField label="Temperatur">
-            <USlider
-              v-model="editingAgent.temperature"
-              :min="0"
-              :max="1"
-              :step="0.1"
-            />
+          <UFormField label="Temperatur" class="mt-6! mb-6!">
+            <div class="space-y-4 py-2">
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-muted">Aktueller Wert</span>
+                <span
+                  class="font-semibold tabular-nums text-highlighted"
+                  data-testid="agent-temperature-value"
+                >
+                  {{ formatTemperature(editingAgent.temperature) }}
+                </span>
+              </div>
+              <USlider
+                v-model="editingAgent.temperature"
+                :min="0"
+                :max="1"
+                :step="0.1"
+              />
+              <div class="flex justify-between text-xs text-muted tabular-nums">
+                <span v-for="mark in temperatureMarks" :key="mark">
+                  {{ formatTemperature(mark) }}
+                </span>
+              </div>
+            </div>
           </UFormField>
           <UButton @click="saveAgent"> Speichern </UButton>
         </div>
@@ -163,7 +210,7 @@ async function savePromptToLibrary() {
       </div>
     </UCard>
 
-    <UCard v-if="prompts?.length">
+    <UCard v-if="prompts?.length" class="min-w-0">
       <template #header>
         <h3 class="font-semibold">Prompt-Bibliothek</h3>
       </template>
@@ -177,7 +224,7 @@ async function savePromptToLibrary() {
       />
     </UCard>
 
-    <UCard v-if="history?.length">
+    <UCard v-if="history?.length" class="min-w-0">
       <template #header>
         <h3 class="font-semibold">Verlauf</h3>
       </template>

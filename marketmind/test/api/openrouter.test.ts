@@ -16,14 +16,19 @@ describe("openrouter client", () => {
       }),
     });
 
-    const models = await fetchModels("test-key", mockFetch as typeof fetch);
+    const models = await fetchModels(
+      { apiKey: "test-key", baseUrl: "https://openrouter.ai/api/v1" },
+      mockFetch as typeof fetch,
+    );
 
     expect(models).toHaveLength(2);
     expect(models[0].id).toBe("google/gemini-2.5-pro");
     expect(mockFetch).toHaveBeenCalledWith(
       "https://openrouter.ai/api/v1/models",
       expect.objectContaining({
-        headers: { Authorization: "Bearer test-key" },
+        headers: expect.objectContaining({
+          Authorization: "Bearer test-key",
+        }),
       }),
     );
   });
@@ -39,7 +44,7 @@ describe("openrouter client", () => {
     });
 
     const result = await chatCompletion(
-      "test-key",
+      { apiKey: "test-key", baseUrl: "https://openrouter.ai/api/v1" },
       "google/gemini-2.5-pro",
       [{ role: "user", content: "Analysiere RTX 3060 Preise" }],
       0.7,

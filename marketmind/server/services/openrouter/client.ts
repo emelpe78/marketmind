@@ -1,3 +1,5 @@
+import type { AiConnection } from "../ai/config";
+
 export interface OpenRouterModel {
   id: string;
   name: string;
@@ -17,17 +19,25 @@ export interface ChatCompletionResult {
 
 export type FetchFn = typeof fetch;
 
-const OPENROUTER_BASE = "https://openrouter.ai/api/v1";
+function authHeaders(apiKey: string): Record<string, string> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (apiKey) {
+    headers.Authorization = `Bearer ${apiKey}`;
+  }
+  return headers;
+}
 
 export async function fetchModels(
-  apiKey: string,
+  connection: AiConnection,
   fetchFn: FetchFn = fetch,
 ): Promise<OpenRouterModel[]> {
-  const response = await fetchFn(`${OPENROUTER_BASE}/models`, {
-    headers: { Authorization: `Bearer ${apiKey}` },
+  const response = await fetchFn(`${connection.baseUrl}/models`, {
+    headers: authHeaders(connection.apiKey),
   });
   if (!response.ok) {
-    throw new Error(`OpenRouter models failed: ${response.status}`);
+    throw new Error(`AI models failed: ${response.status}`);
   }
   const data = (await response.json()) as {
     data: { id: string; name?: string }[];
@@ -36,22 +46,19 @@ export async function fetchModels(
 }
 
 export async function chatCompletion(
-  apiKey: string,
+  connection: AiConnection,
   model: string,
   messages: ChatMessage[],
   temperature = 0.7,
   fetchFn: FetchFn = fetch,
 ): Promise<ChatCompletionResult> {
-  const response = await fetchFn(`${OPENROUTER_BASE}/chat/completions`, {
+  const response = await fetchFn(`${connection.baseUrl}/chat/completions`, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
+    headers: authHeaders(connection.apiKey),
     body: JSON.stringify({ model, messages, temperature }),
   });
   if (!response.ok) {
-    throw new Error(`OpenRouter chat failed: ${response.status}`);
+    throw new Error(`AI chat failed: ${response.status}`);
   }
   const data = (await response.json()) as {
     choices: { message: { content: string } }[];

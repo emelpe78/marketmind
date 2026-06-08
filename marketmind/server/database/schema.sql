@@ -22,6 +22,20 @@ CREATE TABLE IF NOT EXISTS search_results (
   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Gespeicherte Recherchen (Snapshot: Ergebnisse + KI-Analyse)
+CREATE TABLE IF NOT EXISTS saved_researches (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  query TEXT NOT NULL,
+  platform TEXT NOT NULL,
+  search_id INTEGER REFERENCES searches(id) ON DELETE SET NULL,
+  stats_json TEXT NOT NULL,
+  results_json TEXT NOT NULL,
+  analyses_json TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Generierte Anzeigen
 CREATE TABLE IF NOT EXISTS listings (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

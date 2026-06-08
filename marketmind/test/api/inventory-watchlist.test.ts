@@ -4,6 +4,7 @@ import { getDb } from "../../server/database/db";
 import {
   calculateProfit,
   getInventorySummary,
+  normalizePlatform,
 } from "../../server/services/inventory/index";
 import { checkAlert } from "../../server/services/watchlist/scraper";
 
@@ -22,6 +23,27 @@ describe("inventory", () => {
       notes: null,
     });
     expect(profit).toBe(50);
+  });
+
+  it("normalizes platform values from select objects", () => {
+    expect(normalizePlatform({ value: "ebay" })).toBe("ebay");
+    expect(normalizePlatform("kleinanzeigen")).toBe("kleinanzeigen");
+  });
+
+  it("coerces sqlite string prices when calculating profit", () => {
+    const profit = calculateProfit({
+      title: "GPU",
+      buy_price: "100" as unknown as number,
+      sell_price: "180" as unknown as number,
+      status: "verkauft",
+      buy_platform: null,
+      buy_date: null,
+      sell_platform: null,
+      sell_date: null,
+      profit: null,
+      notes: null,
+    });
+    expect(profit).toBe(80);
   });
 
   it("computes inventory summary", () => {

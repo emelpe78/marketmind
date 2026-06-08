@@ -122,21 +122,19 @@ async function analyzeWithAI() {
         <div class="space-y-3">
           <div class="flex justify-between">
             <span class="text-muted">Netto-Erlös</span>
-            <span class="font-semibold"
-              >{{ (result.netProceeds as number).toFixed(2) }} €</span
-            >
+            <span class="font-semibold">{{
+              formatEuro(result.netProceeds)
+            }}</span>
           </div>
           <div class="flex justify-between">
             <span class="text-muted">Rohgewinn</span>
-            <span class="font-semibold"
-              >{{ (result.profit as number).toFixed(2) }} €</span
-            >
+            <span class="font-semibold">{{ formatEuro(result.profit) }}</span>
           </div>
           <div class="flex justify-between">
             <span class="text-muted">Marge</span>
-            <span class="font-semibold"
-              >{{ (result.marginPercent as number).toFixed(1) }} %</span
-            >
+            <span class="font-semibold">{{
+              formatPercent(result.marginPercent)
+            }}</span>
           </div>
           <UBadge
             data-testid="flip-score"
