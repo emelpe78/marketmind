@@ -1,0 +1,36 @@
+{
+  "hotspots": [
+    {
+      "label": "renderMarkdownBlock()",
+      "risk": 0.68,
+      "type": "FUNCTION"
+    },
+    {
+      "label": "analyzePrices()",
+      "risk": 0.641,
+      "type": "FUNCTION"
+    },
+    {
+      "label": "fetchWithConfig()",
+      "risk": 0.596,
+      "type": "FUNCTION"
+    },
+    {
+      "label": "getInventorySummary()",
+      "risk": 0.492,
+      "type": "FUNCTION"
+    },
+    {
+      "label": "err",
+      "risk": 0.473,
+      "type": "FUNCTION"
+    }
+  ],
+  "blast_radius": {
+    "fetchWithConfig()": 16,
+    "db": 10,
+    "scrapeEbay()": 9,
+    "scrapeKleinanzeigen()": 9,
+    "relocateDatabase()": 9
+  }
+}
