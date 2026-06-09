@@ -27,6 +27,6 @@ const display = computed(() => renderMarkdownDocument(props.summary));
       </div>
     </template>
 
-    <MarkdownContent :content="summary" />
+    <AnalysisSectionTabs :content="summary" />
   </UCard>
 </template>

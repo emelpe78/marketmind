@@ -37,6 +37,40 @@ describe("runResearch", () => {
     expect(result.summaries?.[0]?.summary).toContain("Markt stabil");
   });
 
+  it("saves research with analyses from a prior analyze step", async () => {
+    const db = getDb();
+    const search = db
+      .prepare("INSERT INTO searches (query, platform) VALUES (?, ?)")
+      .run("RTX 3060", "ebay");
+    const searchId = Number(search.lastInsertRowid);
+    db.prepare(
+      "INSERT INTO search_results (search_id, title, price, platform, url) VALUES (?, ?, ?, ?, ?)",
+    ).run(searchId, "MSI RTX 3060", 250, "ebay", "https://ebay.de/1");
+
+    const result = await runResearch(db, {
+      searchId,
+      save: true,
+      saveName: "RTX mit Analyse",
+      analyses: [
+        {
+          platform: "ebay",
+          summary: "## Marktanalyse\nPreise stabil.",
+        },
+      ],
+    });
+
+    expect(result.savedResearchId).toBeDefined();
+    const saved = db
+      .prepare("SELECT analyses_json FROM saved_researches WHERE id = ?")
+      .get(result.savedResearchId) as { analyses_json: string };
+    const analyses = JSON.parse(saved.analyses_json) as Array<{
+      platform: string;
+      summary: string;
+    }>;
+    expect(analyses).toHaveLength(1);
+    expect(analyses[0]?.summary).toContain("Marktanalyse");
+  });
+
   it("saves research from existing search", async () => {
     const db = getDb();
     const search = db

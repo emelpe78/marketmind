@@ -3,6 +3,19 @@ export interface MarkdownDisplay {
   html: string;
 }
 
+export interface MarkdownSection {
+  label: string;
+  content: string;
+  html: string;
+}
+
+export interface MarkdownSectionsDisplay {
+  title: string | null;
+  preambleHtml: string | null;
+  sections: MarkdownSection[];
+  hasSections: boolean;
+}
+
 function escapeHtml(text: string): string {
   return text
     .replace(/&/g, "&amp;")
@@ -10,13 +23,36 @@ function escapeHtml(text: string): string {
     .replace(/>/g, "&gt;");
 }
 
-export function formatInlineMarkdown(text: string): string {
+function applyMarkdownFormatting(text: string): string {
   return escapeHtml(text)
     .replace(
       /\*\*(.+?)\*\*/g,
       '<strong class="font-semibold text-default">$1</strong>',
     )
     .replace(/\*(.+?)\*/g, "<em>$1</em>");
+}
+
+export function formatInlineMarkdown(text: string): string {
+  const smallBlocks: string[] = [];
+  const brTags: string[] = [];
+
+  let result = text.replace(/<br\s*\/?>/gi, () => {
+    brTags.push("<br />");
+    return `\x00BR${brTags.length - 1}\x00`;
+  });
+
+  result = result.replace(/<small>([\s\S]*?)<\/small>/gi, (_, inner) => {
+    smallBlocks.push(
+      `<small class="text-xs text-muted">${applyMarkdownFormatting(inner)}</small>`,
+    );
+    return `\x00SM${smallBlocks.length - 1}\x00`;
+  });
+
+  result = applyMarkdownFormatting(result);
+
+  return result
+    .replace(/\x00SM(\d+)\x00/g, (_, index) => smallBlocks[Number(index)] ?? "")
+    .replace(/\x00BR(\d+)\x00/g, (_, index) => brTags[Number(index)] ?? "");
 }
 
 function isTableSeparatorRow(cells: string[]): boolean {
@@ -229,10 +265,75 @@ export function renderMarkdownBlock(text: string): string {
   return html.join("");
 }
 
-function renderSectionCards(body: string): string {
+function stripSectionNumber(label: string): string {
+  return label.replace(/^\d+\.\s*/, "").trim();
+}
+
+function splitMarkdownSections(body: string): {
+  preambleText: string;
+  sections: Array<{ heading: string; content: string }>;
+} {
   const sectionParts = body.split(/^### /m);
   const preambleText = sectionParts[0]?.trim() ?? "";
-  const sections = sectionParts.slice(1);
+  const sections = sectionParts.slice(1).map((part) => {
+    const newlineIndex = part.indexOf("\n");
+    const heading =
+      newlineIndex === -1 ? part.trim() : part.slice(0, newlineIndex).trim();
+    const content =
+      newlineIndex === -1 ? "" : part.slice(newlineIndex + 1).trim();
+    return { heading, content };
+  });
+  return { preambleText, sections };
+}
+
+export function parseMarkdownSections(
+  markdown: string,
+): MarkdownSectionsDisplay {
+  const trimmed = markdown.trim();
+  if (!trimmed) {
+    return {
+      title: null,
+      preambleHtml: null,
+      sections: [],
+      hasSections: false,
+    };
+  }
+
+  const { title, body } = extractMarkdownTitle(trimmed);
+  const hasSections = /^### /m.test(body);
+
+  if (!hasSections) {
+    return {
+      title,
+      preambleHtml: body
+        ? `<div class="space-y-2">${renderMarkdownBlock(body)}</div>`
+        : null,
+      sections: [],
+      hasSections: false,
+    };
+  }
+
+  const { preambleText, sections } = splitMarkdownSections(body);
+  const preambleHtml = preambleText
+    ? `<div class="space-y-2">${renderMarkdownBlock(preambleText)}</div>`
+    : null;
+
+  return {
+    title,
+    preambleHtml,
+    sections: sections.map(({ heading, content }) => ({
+      label: stripSectionNumber(heading),
+      content,
+      html: content
+        ? `<div class="space-y-2">${renderMarkdownBlock(content)}</div>`
+        : "",
+    })),
+    hasSections: true,
+  };
+}
+
+function renderSectionCards(body: string): string {
+  const { preambleText, sections } = splitMarkdownSections(body);
   const htmlParts: string[] = [];
 
   if (preambleText) {
@@ -243,14 +344,7 @@ function renderSectionCards(body: string): string {
 
   if (sections.length) {
     const cards = sections
-      .map((part) => {
-        const newlineIndex = part.indexOf("\n");
-        const heading =
-          newlineIndex === -1
-            ? part.trim()
-            : part.slice(0, newlineIndex).trim();
-        const content =
-          newlineIndex === -1 ? "" : part.slice(newlineIndex + 1).trim();
+      .map(({ heading, content }) => {
         const widthClass = isFullWidthHeading(heading) ? "sm:col-span-2" : "";
         const bodyHtml = content ? renderMarkdownBlock(content) : "";
         return `<div class="rounded-lg border border-default bg-elevated/30 p-4 ${widthClass}"><h3 class="text-sm font-semibold text-highlighted mb-2">${formatInlineMarkdown(heading)}</h3><div class="space-y-2">${bodyHtml}</div></div>`;

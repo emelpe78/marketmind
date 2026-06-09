@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   formatInlineMarkdown,
+  parseMarkdownSections,
   renderMarkdownBlock,
   renderMarkdownDocument,
 } from "../../app/utils/render-markdown";
@@ -10,6 +11,18 @@ describe("render-markdown", () => {
     expect(formatInlineMarkdown("Preis **249,99 €**")).toContain("<strong");
     expect(formatInlineMarkdown("Preis **249,99 €**")).toContain("249,99 €");
     expect(formatInlineMarkdown("<script>")).toContain("&lt;script&gt;");
+  });
+
+  it("renders allowed small tags with inner markdown", () => {
+    const html = renderMarkdownBlock(
+      "<small>**Datenbasis:** 17 Angebote, ausschließlich Kleinanzeigen.de.</small>",
+    );
+
+    expect(html).toContain("<small");
+    expect(html).toContain("<strong");
+    expect(html).toContain("Datenbasis");
+    expect(html).not.toContain("&lt;small&gt;");
+    expect(html).not.toContain("&lt;/small&gt;");
   });
 
   it("renders ### sections once without duplicate fallback", () => {
@@ -71,6 +84,31 @@ Text mit **Fett**.
     expect(html).toContain("<h3");
     expect(html).toContain("<ul");
     expect(html).not.toContain("###");
+  });
+
+  it("parses ### sections for tabbed analysis layout", () => {
+    const sample = `## Marktanalyse für „RTX 3060 12GB“
+
+**Plattform:** eBay.de
+
+### 1. Preisübersicht (Gebraucht)
+| Kennzahl | Wert |
+|----------|------|
+| Median | 217,00 € |
+
+### 2. Marktbewertung
+- Preisniveau stabil`;
+
+    const parsed = parseMarkdownSections(sample);
+
+    expect(parsed.title).toContain("RTX 3060 12GB");
+    expect(parsed.hasSections).toBe(true);
+    expect(parsed.preambleHtml).toContain("eBay.de");
+    expect(parsed.sections).toHaveLength(2);
+    expect(parsed.sections[0]?.label).toBe("Preisübersicht (Gebraucht)");
+    expect(parsed.sections[1]?.label).toBe("Marktbewertung");
+    expect(parsed.sections[0]?.html).toContain("<table");
+    expect(parsed.sections[1]?.html).toContain("stabil");
   });
 
   it("renders unstructured text as single block", () => {

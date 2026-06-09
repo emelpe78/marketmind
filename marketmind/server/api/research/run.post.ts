@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
     analyze?: boolean;
     save?: boolean;
     saveName?: string;
+    analyses?: Array<{ platform: "ebay" | "kleinanzeigen"; summary: string }>;
   }>(event);
 
   const db = getDb();
@@ -23,6 +24,7 @@ export default defineEventHandler(async (event) => {
       analyze: body?.analyze,
       save: body?.save,
       saveName: body?.saveName,
+      analyses: body?.analyses,
     });
   } catch (error) {
     const domainError = mapDomainError(error);

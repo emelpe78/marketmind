@@ -82,7 +82,11 @@ async function saveResearch() {
   if (!searchId.value || !stats.value || results.value.length === 0) return;
   saving.value = true;
   try {
-    const saved = await requestSave(searchId.value, query.value.trim());
+    const saved = await requestSave(
+      searchId.value,
+      query.value.trim(),
+      summaries.value,
+    );
     toast.add({
       title: "Recherche gespeichert",
       description: "Im Dashboard unter „Gespeicherte Recherchen“ aufrufbar.",

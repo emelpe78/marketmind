@@ -1,6 +1,6 @@
 # MarketMind — Agent Guide
 
-Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.1.0**.
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.1.2**.
 
 ## Repository-Layout
 
@@ -58,8 +58,9 @@ Dev-DB: `marketmind/data/` (gitignored). Docker-DB: Volume `marketmind-data` unt
 ### Frontend (`marketmind/app/`)
 
 - **Pages:** file-based routing unter `app/pages/`
-- **Composables:** `useInventory`, `useWatchlist`, `useSettings`, `useListings`, `useAgents`
+- **Composables:** `useResearch`, `useFlipping`, `useDashboard`, `useInventory`, `useWatchlist`, `useSettings`, `useListings`, `useAgents`, `useDatabaseAdmin`
 - **Layout:** `app/layouts/default.vue` — Sidebar, Theme-Toggle, Versionsbadge
+- **KI-Analyse-UI:** `ResearchAnalysisSummary` + `AnalysisSectionTabs` (vertikale Tabs); Markdown über `app/utils/render-markdown.ts` (`parseMarkdownSections`, erlaubte HTML-Tags)
 - **Utils:** Re-Exports aus `shared/`; `render-markdown.ts` bleibt app-lokal
 - Keine Pinia-Stores — State über Composables, `useFetch`, `ref`, `reactive`
 

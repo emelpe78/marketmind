@@ -37,10 +37,19 @@ export function useResearch() {
     });
   }
 
-  async function saveResearch(searchId: number, saveName: string) {
+  async function saveResearch(
+    searchId: number,
+    saveName: string,
+    analyses?: PlatformSummary[],
+  ) {
     return $fetch<ResearchRunResponse>("/api/research/run", {
       method: "POST",
-      body: { searchId, save: true, saveName },
+      body: {
+        searchId,
+        save: true,
+        saveName,
+        ...(analyses?.length ? { analyses } : {}),
+      },
     });
   }
 

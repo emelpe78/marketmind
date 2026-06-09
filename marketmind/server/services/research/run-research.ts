@@ -36,6 +36,7 @@ export interface ResearchRunInput {
   analyze?: boolean;
   save?: boolean;
   saveName?: string;
+  analyses?: ResearchRunSummary[];
   scraperDeps?: FetcherDeps;
 }
 
@@ -118,7 +119,7 @@ export async function runResearch(
       searchId,
       stats,
       results,
-      analyses: summaries ?? [],
+      analyses: input.analyses ?? summaries ?? [],
     });
     savedResearchId = saved.id;
   }

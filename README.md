@@ -6,7 +6,7 @@
 
 ## Was MarketMind kann
 
-MarketMind hilft beim **Einkaufen und Wiederverkaufen** gebrauchter Artikel: Du recherchierst Marktpreise per Scraper, lässt die Ergebnisse von einer KI auswerten und speicherst Recherchen für später. Der **Flipping-Kalkulator** berechnet Marge und Score für den privaten Weiterverkauf (ohne Plattformgebühren). Der **Anzeigen-Generator** erstellt plattformgerechte Texte für eBay und Kleinanzeigen. Mit der **Watchlist** beobachtest du einzelne Angebote und erhältst Preisalarme, im **Inventar** trackst du Einkauf, Verkauf und Gewinn. Über den **Agent-Manager** konfigurierst du KI-Agents mit eigenen System-Prompts.
+MarketMind hilft beim **Einkaufen und Wiederverkaufen** gebrauchter Artikel: Du recherchierst Marktpreise per Scraper, lässt die Ergebnisse von einer KI auswerten (Abschnitte wie Preisübersicht und Marktbewertung in einer Tab-Ansicht) und speicherst Recherchen inklusive KI-Analyse für später. Der **Flipping-Kalkulator** berechnet Marge und Score für den privaten Weiterverkauf (ohne Plattformgebühren). Der **Anzeigen-Generator** erstellt plattformgerechte Texte für eBay und Kleinanzeigen. Mit der **Watchlist** beobachtest du einzelne Angebote und erhältst Preisalarme, im **Inventar** trackst du Einkauf, Verkauf und Gewinn. Über den **Agent-Manager** konfigurierst du KI-Agents mit eigenen System-Prompts.
 
 ## Voraussetzungen
 
@@ -173,6 +173,6 @@ Nutze **moderate Abfragefrequenzen** (einstellbarer Delay), cache Ergebnisse und
 
 ## Lizenz & Status
 
-- **Version:** 0.1.1 — siehe [CHANGELOG.md](CHANGELOG.md)
+- **Version:** 0.1.2 — siehe [CHANGELOG.md](CHANGELOG.md)
 - **Lizenz:** Noch nicht veröffentlicht (geplant: Open Source)
 - **Issues:** [GitHub Issues](https://github.com/emelpe78/marketmind/issues)

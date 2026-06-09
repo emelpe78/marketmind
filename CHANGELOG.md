@@ -26,6 +26,13 @@ Architektur-Vertiefung: Shared-Seams, Use-Case-Module für KI-Features, Domain-E
 - Routes für Listings, Flipping und Prompt-Generierung sind dünne Adapter über Use-Cases
 - Inventar-Server nutzt `shared/detect-platform` für `normalizePlatform`
 - Watchlist-Scrape-Routes nutzen Repository statt inline SQL
+- **KI-Marktanalyse** — Abschnitte (`###`) in vertikalen Tabs (`AnalysisSectionTabs`: Navigation links, Inhalt rechts)
+- **`render-markdown.ts`** — `parseMarkdownSections()` für strukturiertes Tab-Rendering; erlaubte HTML-Tags (`<small>`, `<br>`) in KI-Ausgaben
+
+### Behoben
+
+- Gespeicherte Recherchen enthielten keine KI-Analyse, wenn Analyse und Speichern in getrennten API-Schritten erfolgten (`analyses` werden beim Speichern mit übergeben)
+- HTML-Tags in KI-Markdown (z. B. `<small>` für Datenbasis-Hinweise) wurden escaped statt gerendert
 
 ### Entfernt (Breaking)
 
@@ -137,7 +144,7 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 
 #### Einstellungen
 
-- KI-Provider: OpenRouter oder lokale OpenAI-kompatible API (z. B. Ollama, LM Studio)
+- KI-Provider: OpenRouter oder lokale OpenAI-kompatible API (z. B. Ollama, LM Studio)
 - Verschlüsselte Speicherung von API-Keys (AES-256-GCM)
 - Scraper-Konfiguration: Delay, Cache-TTL, maximale Ergebnisse
 - Datenbankpfad konfigurierbar, Verschieben mit Kopie, Zurücksetzen mit Bestätigung
@@ -172,8 +179,9 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 
 - TypeScript-Fehler im gesamten Projekt (`nuxi typecheck` ohne Fehlermeldungen)
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
-- Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
+- Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/emelpe78/marketmind/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/emelpe78/marketmind/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/emelpe78/marketmind/releases/tag/v0.1.0
