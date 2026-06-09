@@ -9,6 +9,7 @@ export const FETCH_KEYS = {
   database: "marketmind:database",
   settings: "marketmind:settings",
   listings: "marketmind:listings",
+  savedFlipAnalyses: "marketmind:saved-flip-analyses",
 } as const;
 
 export type FetchKey = (typeof FETCH_KEYS)[keyof typeof FETCH_KEYS];

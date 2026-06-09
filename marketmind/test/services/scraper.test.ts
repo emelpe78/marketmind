@@ -124,6 +124,16 @@ describe("Kleinanzeigen scraper", () => {
     const url = buildKleinanzeigenSearchUrl("rtx 3060 12gb", 2);
     expect(url).toBe("https://www.kleinanzeigen.de/s-seite:2/rtx-3060-12gb/k0");
   });
+
+  it("sanitizes slashes and special chars in search URL", () => {
+    const url = buildKleinanzeigenSearchUrl(
+      "Gaming/Office PC i5 GTX 1050 Ti 16GB RAM SSD+SSHD",
+    );
+    expect(url).toBe(
+      "https://www.kleinanzeigen.de/s-gaming-office-pc-i5-gtx-1050-ti-16gb-ram-ssd-sshd/k0",
+    );
+    expect(url).not.toContain("%2F");
+  });
 });
 
 describe("fetcher", () => {

@@ -4,6 +4,32 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.1.4] — 2026-06-09
+
+Flipping-Kalkulator neu: KI-Analyse per Anzeigen-URL, gespeicherte Analysen, Sidebar-Submenu.
+
+### Hinzugefügt
+
+- **Flipping per URL** — Anzeigen-URL (eBay / Kleinanzeigen) scrapen, Marktvergleich, KI-Bewertung durch Flipping Agent (`mode: required`)
+- **Listing-Detail-Parser** — `server/services/scraper/listing-detail.ts` für Anzeigen-Seiten
+- **Gespeicherte Flipping-Analysen** — Tabelle `saved_flip_analyses`, API `/api/saved-flip-analyses` (CRUD)
+- **Flipping-Unterseiten** — `/flipping` (Kalkulator), `/flipping/analyses` (Liste), `/flipping/analyses/[id]` (Detail mit Tab-Ansicht)
+- **Flipping-Submenu** — Sidebar wie bei Agents (`shared/flipping-nav.ts`, Icon `i-lucide-banknote`)
+- **Composable** — `useSavedFlipAnalyses`; Fetch-Key `savedFlipAnalyses`
+- **`isListingUrl()`** — in `shared/detect-platform.ts`
+- Tests für Listing-Parser, gespeicherte Analysen, erweiterte `analyzeFlip`- und Scraper-URL-Sanitisierung
+
+### Geändert
+
+- **Flipping-Kalkulator** — manuelle Eingabe (Einkauf, Verkauf, Versand, Verpackung) und Live-Score entfernt; Ausgabe über `ResearchAnalysisSummary` + `AnalysisSectionTabs`
+- **Flipping Agent** — Auslöser „Flipping analysieren“; KI jetzt erforderlich (`shared/agent-usage.ts`)
+- **Kleinanzeigen-Such-URLs** — Sonderzeichen (`/`, `+`, …) in Suchbegriffen werden bereinigt (keine HTTP-400 durch `%2F`)
+- **Marktsuche** — bei Scraper-Fehler Fallback: Analyse nur mit Anzeigendaten; `ScraperFetchError` in Flipping-API wie bei Research
+
+### Entfernt
+
+- Alter Flipping-Flow mit manueller Margen-Eingabe und optionalem KI-Button „KI-Empfehlung“
+
 ## [0.1.3] — 2026-06-09
 
 Agent-Manager in Unterseiten aufgeteilt, Prompt-Bibliothek mit Agent-Zuordnung, Sync zwischen Feature-Agents und Bibliothek.
@@ -219,7 +245,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/emelpe78/marketmind/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/emelpe78/marketmind/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/emelpe78/marketmind/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/emelpe78/marketmind/compare/v0.1.0...v0.1.1

@@ -22,6 +22,21 @@ CREATE TABLE IF NOT EXISTS search_results (
   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Gespeicherte Flipping-Analysen
+CREATE TABLE IF NOT EXISTS saved_flip_analyses (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  listing_url TEXT NOT NULL,
+  listing_platform TEXT NOT NULL,
+  query TEXT NOT NULL,
+  analysis TEXT NOT NULL,
+  listing_json TEXT NOT NULL,
+  market_stats_json TEXT NOT NULL,
+  market_samples_json TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Gespeicherte Recherchen (Snapshot: Ergebnisse + KI-Analyse)
 CREATE TABLE IF NOT EXISTS saved_researches (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

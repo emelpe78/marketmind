@@ -201,8 +201,8 @@ async function confirmDelete() {
       <UButton to="/listings" icon="i-lucide-file-text" variant="outline">
         Anzeige erstellen
       </UButton>
-      <UButton to="/flipping" icon="i-lucide-calculator" variant="outline">
-        Flipping berechnen
+      <UButton to="/flipping" icon="i-lucide-banknote" variant="outline">
+        Flipping analysieren
       </UButton>
     </div>
 

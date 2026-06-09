@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { getDb } from "../../server/database/db";
 import { setSetting } from "../../server/database/settings";
@@ -11,6 +13,7 @@ vi.mock("../../server/services/openrouter/client", () => ({
 import { chatCompletion } from "../../server/services/openrouter/client";
 
 const mockChatCompletion = vi.mocked(chatCompletion);
+const fixturesDir = join(__dirname, "../fixtures");
 
 async function callFlippingAnalyze(body: Record<string, unknown>) {
   vi.stubGlobal("readBody", async () => body);
@@ -26,50 +29,79 @@ describe("flipping analyze API", () => {
     mockChatCompletion.mockReset();
   });
 
-  it("returns calculation without recommendation when AI is not configured", async () => {
-    const db = getDb();
-    setSetting(db, "openrouter-api-key", "");
-
-    const result = (await callFlippingAnalyze({
-      buyPrice: 100,
-      sellPrice: 150,
-      shipping: 5,
-      packaging: 2,
-      productName: "GPU",
-    })) as { profit: number; recommendation: string };
-
-    expect(result.profit).toBe(43);
-    expect(result.recommendation).toBe("");
-    expect(mockChatCompletion).not.toHaveBeenCalled();
+  it("returns 400 when url is missing", async () => {
+    await expect(callFlippingAnalyze({ url: "" })).rejects.toMatchObject({
+      statusCode: 400,
+    });
   });
 
-  it("returns calculation with AI recommendation when configured", async () => {
+  it("returns analysis for listing URL when AI is configured", async () => {
     const db = getDb();
     setSetting(db, "ai-provider", "openrouter");
     setSetting(db, "openrouter-api-key", "sk-test");
+    setSetting(db, "scraper-delay-min", "0");
+    setSetting(db, "scraper-delay-max", "0");
     mockChatCompletion.mockResolvedValue({
-      content: "Gute Marge für privaten Verkauf.",
+      content: "### 1. Kalkulations-Zusammenfassung\nSolide Marge.",
       tokensUsed: 80,
       costUsd: 0.001,
       model: "test-model",
     });
 
-    const result = (await callFlippingAnalyze({
-      buyPrice: 100,
-      sellPrice: 150,
-      shipping: 5,
-      packaging: 2,
-      productName: "GPU",
-    })) as { profit: number; recommendation: string };
+    const listingHtml = readFileSync(
+      join(fixturesDir, "kleinanzeigen/listing-detail.html"),
+      "utf-8",
+    );
+    const ebayHtml = readFileSync(
+      join(fixturesDir, "ebay/s-card-page.html"),
+      "utf-8",
+    );
+    const kaHtml = readFileSync(
+      join(fixturesDir, "kleinanzeigen/page1.html"),
+      "utf-8",
+    );
 
-    expect(result.profit).toBe(43);
-    expect(result.recommendation).toContain("Gute Marge");
+    const listingUrl = "https://www.kleinanzeigen.de/s-anzeige/rtx-3060/123";
+    const emptyEbaySearchHtml =
+      '<html><body><ul class="srp-results"></ul></body></html>';
+    const emptyKaSearchHtml =
+      '<html><body><ul id="srchrslt-adtable"></ul></body></html>';
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => {
+        const normalized = String(url);
+        if (normalized === listingUrl) {
+          return new Response(listingHtml, { status: 200 });
+        }
+        if (normalized.includes("_pgn=2") || normalized.includes("s-seite:2")) {
+          return new Response(
+            normalized.includes("ebay")
+              ? emptyEbaySearchHtml
+              : emptyKaSearchHtml,
+            { status: 200 },
+          );
+        }
+        if (normalized.includes("ebay")) {
+          return new Response(ebayHtml, { status: 200 });
+        }
+        return new Response(kaHtml, { status: 200 });
+      }) as typeof fetch,
+    );
+
+    const result = (await callFlippingAnalyze({
+      url: listingUrl,
+    })) as { analysis: string; query: string; listing: { title: string } };
+
+    expect(result.listing.title).toBe("RTX 3060 12GB zu verkaufen");
+    expect(result.query).toBe("RTX 3060 12GB");
+    expect(result.analysis).toContain("Kalkulations-Zusammenfassung");
     expect(mockChatCompletion).toHaveBeenCalledOnce();
 
     const history = db.prepare("SELECT * FROM agent_history").all() as {
       user_input: string;
     }[];
-    expect(history).toHaveLength(1);
-    expect(history[0]?.user_input).toContain("GPU");
+    expect(history.length).toBeGreaterThan(0);
+    expect(history[0]?.user_input).toContain("RTX 3060 12GB");
   });
 });

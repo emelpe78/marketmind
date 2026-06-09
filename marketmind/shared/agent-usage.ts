@@ -22,8 +22,8 @@ export const AGENT_USAGE: Record<string, AgentUsage> = {
   analytics: {
     feature: "Flipping",
     route: "/flipping",
-    trigger: "Beim Klick auf „KI-Empfehlung“",
-    mode: "optional",
+    trigger: "Beim Klick auf „Flipping analysieren“",
+    mode: "required",
   },
   strategy: {
     feature: "System-Prompt-Generator",

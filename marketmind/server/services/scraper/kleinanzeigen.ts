@@ -11,12 +11,22 @@ export interface KleinanzeigenListing {
   platform: "kleinanzeigen";
 }
 
+function kleinanzeigenSearchSlug(query: string): string {
+  return query
+    .trim()
+    .toLowerCase()
+    .replace(/[/\\+&?#%:,;|]/g, " ")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 export function buildKleinanzeigenSearchUrl(query: string, page = 1): string {
-  const slug = query.trim().toLowerCase().replace(/\s+/g, "-");
+  const slug = kleinanzeigenSearchSlug(query);
   if (page <= 1) {
-    return `https://www.kleinanzeigen.de/s-${encodeURIComponent(slug)}/k0`;
+    return `https://www.kleinanzeigen.de/s-${slug}/k0`;
   }
-  return `https://www.kleinanzeigen.de/s-seite:${page}/${encodeURIComponent(slug)}/k0`;
+  return `https://www.kleinanzeigen.de/s-seite:${page}/${slug}/k0`;
 }
 
 export function parseKleinanzeigenPrice(text: string): number {

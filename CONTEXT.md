@@ -7,7 +7,7 @@ Glossar für Architektur-Reviews und Code. Begriffe aus dem PRD plus technische 
 | Begriff                | Bedeutung                                                                                                                                                                                                                                    |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Preisrecherche**     | Scraper + Statistik + optionale KI-Marktanalyse für eBay.de und Kleinanzeigen.de. Einstieg nur über `ResearchRun` + `saved-researches` (keine separaten Search-CRUD-Routen). Gespeicherte Snapshots enthalten `analyses_json` inkl. KI-Texte |
-| **Flipping**           | Margen-Kalkulation und KI-Bewertung für privaten Weiterverkauf (ohne Plattformgebühren). `RunAgent` mit `mode: "optional"` — bei fehlender KI-Konfiguration keine Empfehlung                                                                 |
+| **Flipping**           | KI-Bewertung des Flipping-Potenzials einer **konkreten Anzeigen-URL** (eBay / Kleinanzeigen): Listing scrapen → Marktvergleich → Flipping Agent. Speicherung unter `saved_flip_analyses`. UI: `/flipping`, `/flipping/analyses`              |
 | **Anzeigen-Generator** | KI-erzeugte Verkaufstexte, plattformspezifisch (eBay / Kleinanzeigen)                                                                                                                                                                        |
 | **Watchlist**          | Beobachtete Artikel mit Preis-Scraping und Zielpreis-Alarm                                                                                                                                                                                   |
 | **Inventar**           | Gekaufte/verkaufte Artikel mit Gewinn/Verlust; Server liefert berechnetes `profit`                                                                                                                                                           |
@@ -20,40 +20,43 @@ Glossar für Architektur-Reviews und Code. Begriffe aus dem PRD plus technische 
 | -------------- | ----------- | ---------------------------------------------------------- | -------------------------------- |
 | Research Agent | `research`  | KI-Marktanalyse in der Preisrecherche (`mode: required`)   | Ja                               |
 | Listing Agent  | `listing`   | Anzeigen-Generator (`mode: required`)                      | Ja                               |
-| Flipping Agent | `analytics` | KI-Empfehlung im Flipping-Kalkulator (`mode: optional`)    | Ja                               |
+| Flipping Agent | `analytics` | Flipping-Kalkulator per Anzeigen-URL (`mode: required`)    | Ja                               |
 | Prompt Agent   | `strategy`  | System-Prompt-Generator (`mode: required`); **Meta-Agent** | Nein (Prompt in Bibliothek/Code) |
 
 Pro Agent ist höchstens **ein** Prompt in der Bibliothek zugeordnet; eine neue Zuweisung ersetzt die bisherige.
 
 ## Technische Module
 
-| Begriff                 | Datei                                          | Bedeutung                                                                                                |
-| ----------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **SettingsStore**       | `server/database/settings.ts`                  | Laufzeit-Konfiguration aus SQLite, inkl. verschlüsselter Secrets                                         |
-| **ScraperRuntime**      | `server/services/scraper/runtime.ts`           | Einheitliche Scraping-Session: Throttle pro Instanz, Cache, User-Agent                                   |
-| **RunAgent**            | `server/services/ai/run-agent.ts`              | KI-Use-Case: Config → Agent → Completion → History (`required` / `optional` / `skip`)                    |
-| **ResearchRun**         | `server/services/research/run-research.ts`     | Preisrecherche: Scrape → Stats → optionale Analyse → optionales Speichern (inkl. `analyses` im Snapshot) |
-| **AnalysisSectionTabs** | `app/components/AnalysisSectionTabs.vue`       | KI-Marktanalyse: `###`-Abschnitte als vertikale Tabs (links/rechts)                                      |
-| **MarkdownRenderer**    | `app/utils/render-markdown.ts`                 | KI-Markdown → HTML; `parseMarkdownSections`, erlaubte Tags (`<small>`, `<br>`)                           |
-| **generateListing**     | `server/services/listings/generate-listing.ts` | Anzeigen-Generator: Marktkontext → `RunAgent` (`listing`) → Parsing                                      |
-| **analyzeFlip**         | `server/services/flipping/analyze-flip.ts`     | Flipping: `calculateFlip` → optionale KI-Empfehlung (`analytics`)                                        |
-| **generateAgentPrompt** | `server/services/agents/generate-prompt.ts`    | Prompt-Generierung über Prompt Agent (`strategy`); nutzt `resolveAgentPromptText()`                      |
-| **PromptLibrary**       | `server/services/prompt-library/`              | CRUD, Agent-Zuordnung, Sync aus `agents`                                                                 |
-| **AgentPromptSync**     | `server/services/prompt-library/agent-sync.ts` | Übernimmt Feature-Agent-Prompts in die Bibliothek beim Start und nach Agent-Speichern                    |
-| **AgentUsage**          | `shared/agent-usage.ts`                        | UI-Zuordnung: Feature, Route, Auslöser, KI-Modus pro `type`                                              |
-| **AgentMeta**           | `shared/agent-meta.ts`                         | Meta-Agent-Typ (`strategy`), Generator-Prompt und Temperatur `0.2`                                       |
-| **FormatDateTime**      | `shared/format-datetime.ts`                    | SQLite-UTC → lokale `de-DE`-Anzeige                                                                      |
-| **FetchKeys**           | `app/utils/fetch-keys.ts`                      | Stabile `useFetch`-Cache-Keys pro API-Endpoint                                                           |
-| **RefreshFetchData**    | `app/utils/refresh-fetch-data.ts`              | Globales UI-Refresh nach Mutationen (`refreshNuxtData`); z. B. `refreshAgentsData()`                     |
-| **DatabaseLifecycle**   | `server/database/lifecycle.ts`                 | Relocate, Reset, Pfad-Info                                                                               |
-| **Repository**          | `server/services/*/repository.ts`              | SQL + Row-Mapping pro Domäne                                                                             |
-| **PlatformLabels**      | `shared/platform-labels.ts`                    | Kanonische UI-Labels für eBay / Kleinanzeigen / Beide                                                    |
-| **FlippingCalculator**  | `shared/flipping-calculator.ts`                | Margen- und Score-Berechnung (Client + Server)                                                           |
+| Begriff                 | Datei                                             | Bedeutung                                                                                                |
+| ----------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **SettingsStore**       | `server/database/settings.ts`                     | Laufzeit-Konfiguration aus SQLite, inkl. verschlüsselter Secrets                                         |
+| **ScraperRuntime**      | `server/services/scraper/runtime.ts`              | Einheitliche Scraping-Session: Throttle pro Instanz, Cache, User-Agent                                   |
+| **ListingDetailParser** | `server/services/scraper/listing-detail.ts`       | Anzeigen-Seiten (eBay/Kleinanzeigen) → Titel, Preis, Beschreibung, Zustand                               |
+| **RunAgent**            | `server/services/ai/run-agent.ts`                 | KI-Use-Case: Config → Agent → Completion → History (`required` / `optional` / `skip`)                    |
+| **ResearchRun**         | `server/services/research/run-research.ts`        | Preisrecherche: Scrape → Stats → optionale Analyse → optionales Speichern (inkl. `analyses` im Snapshot) |
+| **analyzeFlip**         | `server/services/flipping/analyze-flip.ts`        | Flipping: Listing-URL → Detail-Scrape → Marktsuche → Flipping Agent (`analytics`, `required`)            |
+| **SavedFlipAnalysis**   | `server/services/flipping/saved-flip-analysis.ts` | CRUD für gespeicherte Flipping-Analysen (`saved_flip_analyses`)                                          |
+| **AnalysisSectionTabs** | `app/components/AnalysisSectionTabs.vue`          | KI-Marktanalyse: `###`-Abschnitte als vertikale Tabs (links/rechts)                                      |
+| **MarkdownRenderer**    | `app/utils/render-markdown.ts`                    | KI-Markdown → HTML; `parseMarkdownSections`, erlaubte Tags (`<small>`, `<br>`)                           |
+| **generateListing**     | `server/services/listings/generate-listing.ts`    | Anzeigen-Generator: Marktkontext → `RunAgent` (`listing`) → Parsing                                      |
+| **generateAgentPrompt** | `server/services/agents/generate-prompt.ts`       | Prompt-Generierung über Prompt Agent (`strategy`); nutzt `resolveAgentPromptText()`                      |
+| **PromptLibrary**       | `server/services/prompt-library/`                 | CRUD, Agent-Zuordnung, Sync aus `agents`                                                                 |
+| **AgentPromptSync**     | `server/services/prompt-library/agent-sync.ts`    | Übernimmt Feature-Agent-Prompts in die Bibliothek beim Start und nach Agent-Speichern                    |
+| **AgentUsage**          | `shared/agent-usage.ts`                           | UI-Zuordnung: Feature, Route, Auslöser, KI-Modus pro `type`                                              |
+| **FlippingNav**         | `shared/flipping-nav.ts`                          | Sidebar-Submenu: Kalkulator, Analysen; `isFlippingRoute()`                                               |
+| **AgentMeta**           | `shared/agent-meta.ts`                            | Meta-Agent-Typ (`strategy`), Generator-Prompt und Temperatur `0.2`                                       |
+| **FormatDateTime**      | `shared/format-datetime.ts`                       | SQLite-UTC → lokale `de-DE`-Anzeige                                                                      |
+| **FetchKeys**           | `app/utils/fetch-keys.ts`                         | Stabile `useFetch`-Cache-Keys pro API-Endpoint                                                           |
+| **RefreshFetchData**    | `app/utils/refresh-fetch-data.ts`                 | Globales UI-Refresh nach Mutationen (`refreshNuxtData`); z. B. `refreshAgentsData()`                     |
+| **DatabaseLifecycle**   | `server/database/lifecycle.ts`                    | Relocate, Reset, Pfad-Info                                                                               |
+| **Repository**          | `server/services/*/repository.ts`                 | SQL + Row-Mapping pro Domäne                                                                             |
+| **PlatformLabels**      | `shared/platform-labels.ts`                       | Kanonische UI-Labels für eBay / Kleinanzeigen / Beide                                                    |
+| **FlippingCalculator**  | `shared/flipping-calculator.ts`                   | Margen-/Score-Hilfsfunktion (Legacy; nicht mehr im Flipping-UI-Flow)                                     |
 
 ## Schichten-Konvention
 
 - **Routes** — HTTP-Adapter (Validierung, Statuscodes, Domain-Error-Mapping)
-- **Use-Case-Module** — Geschäftslogik (`RunAgent`, `ResearchRun`, `generateListing`, `ScraperRuntime`)
+- **Use-Case-Module** — Geschäftslogik (`RunAgent`, `ResearchRun`, `analyzeFlip`, `generateListing`, `ScraperRuntime`)
 - **Repository-Module** — SQL + Row-Mapping pro Domäne
 - **Shared** — Plattformübergreifende Pure Functions (`shared/`)
-- **Composables** — Frontend-State aligned mit Server-APIs (`useResearch`, `useFlipping`, `useDashboard`, `useAgents`, …); Mutationen invalidieren verknüpfte Fetch-Keys (Speichern → sofortige UI-Aktualisierung)
+- **Composables** — Frontend-State aligned mit Server-APIs (`useResearch`, `useFlipping`, `useSavedFlipAnalyses`, `useDashboard`, `useAgents`, …); Mutationen invalidieren verknüpfte Fetch-Keys (Speichern → sofortige UI-Aktualisierung)

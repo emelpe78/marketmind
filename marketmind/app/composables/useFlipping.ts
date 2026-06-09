@@ -1,48 +1,44 @@
-import {
-  calculateFlip,
-  type FlipResult,
-  type FlippingScore,
-} from "shared/flipping-calculator";
 import { refreshAfterAgentCall } from "~/utils/refresh-fetch-data";
 
-export interface FlipAnalysisResult extends FlipResult {
-  recommendation: string;
+export interface FlipListingInfo {
+  platform: string;
+  url: string;
+  title: string;
+  price: number | null;
+  condition: string | null;
+  location: string | null;
+}
+
+export interface FlipMarketSample {
+  title: string;
+  price: number;
+  platform: string;
+  condition: string | null;
+}
+
+export interface FlipAnalysisResult {
+  analysis: string;
+  query: string;
+  listing: FlipListingInfo;
+  marketStats: {
+    min: number;
+    max: number;
+    avg: number;
+    median: number;
+    count: number;
+  };
+  marketSamples: FlipMarketSample[];
 }
 
 export function useFlipping() {
   const loading = ref(false);
 
-  function computeFlip(input: {
-    buyPrice: number;
-    sellPrice: number;
-    shipping: number;
-    packaging: number;
-  }): FlipAnalysisResult {
-    return {
-      ...calculateFlip(input),
-      recommendation: "",
-    };
-  }
-
-  function mergeRecommendation(
-    calc: FlipResult,
-    recommendation: string,
-  ): FlipAnalysisResult {
-    return { ...calc, recommendation };
-  }
-
-  async function analyzeWithAI(input: {
-    buyPrice: number;
-    sellPrice: number;
-    shipping: number;
-    packaging: number;
-    productName?: string;
-  }): Promise<FlipAnalysisResult> {
+  async function analyze(url: string): Promise<FlipAnalysisResult> {
     loading.value = true;
     try {
       const result = await $fetch<FlipAnalysisResult>("/api/flipping/analyze", {
         method: "POST",
-        body: input,
+        body: { url },
       });
       await refreshAfterAgentCall();
       return result;
@@ -51,18 +47,8 @@ export function useFlipping() {
     }
   }
 
-  function scoreColor(score: FlippingScore | string | undefined) {
-    if (score === "Sehr lohnenswert") return "success";
-    if (score === "Solide") return "primary";
-    if (score === "Grenzwertig") return "warning";
-    return "error";
-  }
-
   return {
     loading,
-    computeFlip,
-    mergeRecommendation,
-    analyzeWithAI,
-    scoreColor,
+    analyze,
   };
 }

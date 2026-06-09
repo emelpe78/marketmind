@@ -19,3 +19,9 @@ export function detectPlatformFromUrl(
   if (normalized.includes("kleinanzeigen.")) return "kleinanzeigen";
   return null;
 }
+
+export function isListingUrl(input: string): boolean {
+  const trimmed = input.trim();
+  if (!/^https?:\/\//i.test(trimmed)) return false;
+  return detectPlatformFromUrl(trimmed) !== null;
+}

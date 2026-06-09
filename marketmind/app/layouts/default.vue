@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { AGENTS_NAV_ITEMS, isAgentsRoute } from "shared/agent-nav";
+import {
+  FLIPPING_ICON,
+  FLIPPING_NAV_ITEMS,
+  isFlippingRoute,
+} from "shared/flipping-nav";
 
 const colorMode = useColorMode();
 const { public: publicConfig } = useRuntimeConfig();
@@ -9,7 +14,6 @@ const mainNavItems = [
   { label: "Dashboard", icon: "i-lucide-layout-dashboard", to: "/" },
   { label: "Preisrecherche", icon: "i-lucide-search", to: "/research" },
   { label: "Anzeigen", icon: "i-lucide-file-text", to: "/listings" },
-  { label: "Flipping", icon: "i-lucide-calculator", to: "/flipping" },
   { label: "Watchlist", icon: "i-lucide-eye", to: "/watchlist" },
   { label: "Inventar", icon: "i-lucide-package", to: "/inventory" },
 ];
@@ -20,7 +24,15 @@ const settingsNavItem = {
   to: "/settings",
 };
 
+const navButtonProps = {
+  variant: "ghost" as const,
+  color: "neutral" as const,
+  activeVariant: "ghost" as const,
+  activeColor: "primary" as const,
+};
+
 const agentsNavOpen = ref(isAgentsRoute(route.path));
+const flippingNavOpen = ref(isFlippingRoute(route.path));
 
 watch(
   () => route.path,
@@ -28,11 +40,18 @@ watch(
     if (isAgentsRoute(path)) {
       agentsNavOpen.value = true;
     }
+    if (isFlippingRoute(path)) {
+      flippingNavOpen.value = true;
+    }
   },
 );
 
 function toggleAgentsNav() {
   agentsNavOpen.value = !agentsNavOpen.value;
+}
+
+function toggleFlippingNav() {
+  flippingNavOpen.value = !flippingNavOpen.value;
 }
 
 function toggleTheme() {
@@ -58,10 +77,10 @@ function toggleTheme() {
         <UButton
           v-for="item in mainNavItems"
           :key="item.to"
+          v-bind="navButtonProps"
           :to="item.to"
           :icon="item.icon"
-          variant="ghost"
-          color="neutral"
+          :exact="item.to === '/'"
           class="justify-start"
           block
         >
@@ -70,13 +89,48 @@ function toggleTheme() {
 
         <div class="flex flex-col gap-1">
           <UButton
-            data-testid="nav-agents-toggle"
-            icon="i-lucide-bot"
-            variant="ghost"
-            color="neutral"
+            data-testid="nav-flipping-toggle"
+            v-bind="navButtonProps"
+            :icon="FLIPPING_ICON"
+            :active="isFlippingRoute(route.path)"
             class="justify-start"
             block
-            :class="{ 'bg-elevated': isAgentsRoute(route.path) }"
+            @click="toggleFlippingNav"
+          >
+            <span class="flex-1 text-left">Flipping</span>
+            <UIcon
+              name="i-lucide-chevron-down"
+              class="size-4 shrink-0 transition-transform"
+              :class="{ 'rotate-180': flippingNavOpen }"
+            />
+          </UButton>
+          <div
+            v-show="flippingNavOpen"
+            class="ml-3 flex flex-col gap-1 border-l border-muted pl-2"
+          >
+            <UButton
+              v-for="child in FLIPPING_NAV_ITEMS"
+              :key="child.to"
+              v-bind="navButtonProps"
+              :to="child.to"
+              :data-testid="child.testId"
+              size="sm"
+              class="justify-start"
+              block
+            >
+              {{ child.label }}
+            </UButton>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <UButton
+            data-testid="nav-agents-toggle"
+            v-bind="navButtonProps"
+            icon="i-lucide-bot"
+            :active="isAgentsRoute(route.path)"
+            class="justify-start"
+            block
             @click="toggleAgentsNav"
           >
             <span class="flex-1 text-left">Agents</span>
@@ -93,14 +147,12 @@ function toggleTheme() {
             <UButton
               v-for="child in AGENTS_NAV_ITEMS"
               :key="child.to"
+              v-bind="navButtonProps"
               :to="child.to"
               :data-testid="child.testId"
-              variant="ghost"
-              color="neutral"
               size="sm"
               class="justify-start"
               block
-              :class="{ 'bg-elevated': route.path === child.to }"
             >
               {{ child.label }}
             </UButton>
@@ -108,10 +160,9 @@ function toggleTheme() {
         </div>
 
         <UButton
+          v-bind="navButtonProps"
           :to="settingsNavItem.to"
           :icon="settingsNavItem.icon"
-          variant="ghost"
-          color="neutral"
           class="justify-start"
           block
         >

@@ -26,6 +26,27 @@ export class AiNotConfiguredError extends Error {
   }
 }
 
+export class InvalidFlipInputError extends Error {
+  constructor() {
+    super("Anzeigen-URL fehlt");
+    this.name = "InvalidFlipInputError";
+  }
+}
+
+export class UnsupportedListingUrlError extends Error {
+  constructor() {
+    super("Nur eBay- und Kleinanzeigen-URLs werden unterstützt");
+    this.name = "UnsupportedListingUrlError";
+  }
+}
+
+export class ListingScrapeError extends Error {
+  constructor() {
+    super("Anzeige konnte nicht gelesen werden");
+    this.name = "ListingScrapeError";
+  }
+}
+
 export function mapDomainError(
   error: unknown,
 ): { statusCode: number; message: string } | null {
@@ -40,6 +61,15 @@ export function mapDomainError(
   }
   if (error instanceof AiNotConfiguredError) {
     return { statusCode: 400, message: error.message };
+  }
+  if (error instanceof InvalidFlipInputError) {
+    return { statusCode: 400, message: error.message };
+  }
+  if (error instanceof UnsupportedListingUrlError) {
+    return { statusCode: 400, message: error.message };
+  }
+  if (error instanceof ListingScrapeError) {
+    return { statusCode: 422, message: error.message };
   }
   return null;
 }
