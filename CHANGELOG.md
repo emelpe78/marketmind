@@ -21,6 +21,7 @@ Dashboard mit gruppierten KPI-Karten, Feature-Agent-Übersicht und Navigation zu
 - **Dashboard-API** — `getDashboardSummary` liefert Zähler (Recherchen, Analysen, Anzeigen, Watchlist, Inventar, Prompt-Bibliothek) und Agent-Stats statt Listen/„Letzte Suchen“
 - **Dashboard-Karten** — Verlinkung zu passenden Routen (z. B. `/research/saved`, `/flipping/analyses`, `/watchlist`, `/inventory`, `/agents/history`, `/settings`)
 - **`useDashboard`** — erweitertes `DashboardSummary`-Interface mit `agents`, `promptLibraryCount` und Zählfeldern
+- **Sidebar-Reihenfolge** — Dashboard → Preisrecherche → Anzeigen → Flipping → Inventar → Watchlist → Agents → Einstellungen
 
 ### Entfernt
 

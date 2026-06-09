@@ -20,10 +20,15 @@ const colorMode = useColorMode();
 const { public: publicConfig } = useRuntimeConfig();
 const route = useRoute();
 
-const mainNavItems = [
-  { label: "Dashboard", icon: "i-lucide-layout-dashboard", to: "/" },
-  { label: "Watchlist", icon: "i-lucide-eye", to: "/watchlist" },
+const dashboardNavItem = {
+  label: "Dashboard",
+  icon: "i-lucide-layout-dashboard",
+  to: "/",
+};
+
+const middleNavItems = [
   { label: "Inventar", icon: "i-lucide-package", to: "/inventory" },
+  { label: "Watchlist", icon: "i-lucide-eye", to: "/watchlist" },
 ];
 
 const settingsNavItem = {
@@ -99,16 +104,14 @@ function toggleTheme() {
       </div>
       <nav class="flex flex-col gap-1">
         <UButton
-          v-for="item in mainNavItems"
-          :key="item.to"
           v-bind="navButtonProps"
-          :to="item.to"
-          :icon="item.icon"
-          :exact="item.to === '/'"
+          :to="dashboardNavItem.to"
+          :icon="dashboardNavItem.icon"
+          exact
           class="justify-start"
           block
         >
-          {{ item.label }}
+          {{ dashboardNavItem.label }}
         </UButton>
 
         <div class="flex flex-col gap-1">
@@ -218,6 +221,18 @@ function toggleTheme() {
             </UButton>
           </div>
         </div>
+
+        <UButton
+          v-for="item in middleNavItems"
+          :key="item.to"
+          v-bind="navButtonProps"
+          :to="item.to"
+          :icon="item.icon"
+          class="justify-start"
+          block
+        >
+          {{ item.label }}
+        </UButton>
 
         <div class="flex flex-col gap-1">
           <UButton

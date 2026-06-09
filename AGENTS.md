@@ -65,7 +65,7 @@ Dev-DB: `marketmind/data/` (gitignored). Docker-DB: Volume `marketmind-data` unt
 - **Flipping-UI:** `/flipping` (Kalkulator), `/flipping/analyses` (Liste), `/flipping/analyses/[id]` (Detail); Submenu in `default.vue` (`shared/flipping-nav.ts`)
 - **Agents-UI:** `/agents/feature-agents` (Konfiguration), `/agents/prompt-generator` (Bibliothek + Generator), `/agents/history` (KI-Verlauf); Submenu in `default.vue`
 - **Dashboard:** `app/components/DashboardOverview.vue` — KPI-Karten in vier Abschnitten (Recherche & Tools, Inventar, Agents, KI & Nutzung); `DashboardKpiCard` mit optionaler Navigation; Daten über `useDashboard` / `GET /api/dashboard`
-- **Layout:** `app/layouts/default.vue` — Sidebar mit Preisrecherche-, Anzeigen-, Flipping- und Agents-Submenu, Theme-Toggle, Versionsbadge
+- **Layout:** `app/layouts/default.vue` — Sidebar-Reihenfolge: Dashboard, Preisrecherche, Anzeigen, Flipping, Inventar, Watchlist, Agents, Einstellungen; Submenüs für Preisrecherche, Anzeigen, Flipping und Agents; Theme-Toggle, Versionsbadge
 - **KI-Analyse-UI:** `ResearchAnalysisList` (Accordion pro Plattform), `ResearchAnalysisSummary` (Einzel-Card), `ResearchResultsTable` (Collapsible), `AnalysisSectionTabs` (vertikale Tabs); Markdown über `app/utils/render-markdown.ts` (`parseMarkdownSections`, `stripPlatformSuffixFromTitle`, erlaubte HTML-Tags)
 - **Utils:** Re-Exports aus `shared/`; `render-markdown.ts` bleibt app-lokal
 - Keine Pinia-Stores — State über Composables, `useFetch`, `ref`, `reactive`
