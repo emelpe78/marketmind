@@ -13,4 +13,14 @@ describe("database migrations", () => {
     expect(columns.some((column) => column.name === "agent_id")).toBe(true);
     expect(columns.some((column) => column.name === "category")).toBe(false);
   });
+
+  it("adds category column to listings", () => {
+    createTestDb();
+    const db = getDb();
+    const columns = db.prepare("PRAGMA table_info(listings)").all() as Array<{
+      name: string;
+    }>;
+
+    expect(columns.some((column) => column.name === "category")).toBe(true);
+  });
 });

@@ -8,6 +8,10 @@ function hasColumn(db: Database.Database, table: string, column: string) {
 }
 
 export function runMigrations(db: Database.Database): void {
+  if (!hasColumn(db, "listings", "category")) {
+    db.exec("ALTER TABLE listings ADD COLUMN category TEXT");
+  }
+
   if (!hasColumn(db, "prompt_library", "agent_id")) {
     db.exec(
       "ALTER TABLE prompt_library ADD COLUMN agent_id INTEGER REFERENCES agents(id) ON DELETE SET NULL",

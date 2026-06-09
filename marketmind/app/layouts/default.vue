@@ -5,6 +5,11 @@ import {
   FLIPPING_NAV_ITEMS,
   isFlippingRoute,
 } from "shared/flipping-nav";
+import {
+  LISTINGS_ICON,
+  LISTINGS_NAV_ITEMS,
+  isListingsRoute,
+} from "shared/listings-nav";
 
 const colorMode = useColorMode();
 const { public: publicConfig } = useRuntimeConfig();
@@ -13,7 +18,6 @@ const route = useRoute();
 const mainNavItems = [
   { label: "Dashboard", icon: "i-lucide-layout-dashboard", to: "/" },
   { label: "Preisrecherche", icon: "i-lucide-search", to: "/research" },
-  { label: "Anzeigen", icon: "i-lucide-file-text", to: "/listings" },
   { label: "Watchlist", icon: "i-lucide-eye", to: "/watchlist" },
   { label: "Inventar", icon: "i-lucide-package", to: "/inventory" },
 ];
@@ -33,6 +37,7 @@ const navButtonProps = {
 
 const agentsNavOpen = ref(isAgentsRoute(route.path));
 const flippingNavOpen = ref(isFlippingRoute(route.path));
+const listingsNavOpen = ref(isListingsRoute(route.path));
 
 watch(
   () => route.path,
@@ -43,6 +48,9 @@ watch(
     if (isFlippingRoute(path)) {
       flippingNavOpen.value = true;
     }
+    if (isListingsRoute(path)) {
+      listingsNavOpen.value = true;
+    }
   },
 );
 
@@ -52,6 +60,10 @@ function toggleAgentsNav() {
 
 function toggleFlippingNav() {
   flippingNavOpen.value = !flippingNavOpen.value;
+}
+
+function toggleListingsNav() {
+  listingsNavOpen.value = !listingsNavOpen.value;
 }
 
 function toggleTheme() {
@@ -86,6 +98,42 @@ function toggleTheme() {
         >
           {{ item.label }}
         </UButton>
+
+        <div class="flex flex-col gap-1">
+          <UButton
+            data-testid="nav-listings-toggle"
+            v-bind="navButtonProps"
+            :icon="LISTINGS_ICON"
+            :active="isListingsRoute(route.path)"
+            class="justify-start"
+            block
+            @click="toggleListingsNav"
+          >
+            <span class="flex-1 text-left">Anzeigen</span>
+            <UIcon
+              name="i-lucide-chevron-down"
+              class="size-4 shrink-0 transition-transform"
+              :class="{ 'rotate-180': listingsNavOpen }"
+            />
+          </UButton>
+          <div
+            v-show="listingsNavOpen"
+            class="ml-3 flex flex-col gap-1 border-l border-muted pl-2"
+          >
+            <UButton
+              v-for="child in LISTINGS_NAV_ITEMS"
+              :key="child.to"
+              v-bind="navButtonProps"
+              :to="child.to"
+              :data-testid="child.testId"
+              size="sm"
+              class="justify-start"
+              block
+            >
+              {{ child.label }}
+            </UButton>
+          </div>
+        </div>
 
         <div class="flex flex-col gap-1">
           <UButton

@@ -1,5 +1,5 @@
 import type Database from "better-sqlite3";
-import { normalizePlatform } from "shared/detect-platform";
+import { normalizeInventoryPlatform } from "shared/detect-platform";
 import { calculateProfit, type InventoryItem } from "./index";
 
 export interface InventoryFilters {
@@ -59,10 +59,10 @@ export function createInventory(db: Database.Database, body: InventoryItem) {
     .run(
       body.title,
       body.buy_price ?? null,
-      normalizePlatform(body.buy_platform),
+      normalizeInventoryPlatform(body.buy_platform),
       body.buy_date ?? null,
       body.sell_price ?? null,
-      normalizePlatform(body.sell_platform),
+      normalizeInventoryPlatform(body.sell_platform),
       body.sell_date ?? null,
       body.status ?? "gekauft",
       profit,
@@ -82,10 +82,10 @@ export function updateInventory(
   ).run(
     body.title,
     body.buy_price ?? null,
-    normalizePlatform(body.buy_platform),
+    normalizeInventoryPlatform(body.buy_platform),
     body.buy_date ?? null,
     body.sell_price ?? null,
-    normalizePlatform(body.sell_platform),
+    normalizeInventoryPlatform(body.sell_platform),
     body.sell_date ?? null,
     body.status ?? "gekauft",
     profit,

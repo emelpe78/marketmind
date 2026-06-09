@@ -12,7 +12,7 @@ const {
   createItem: createInventoryItem,
   updateItem: updateInventoryItem,
   deleteItem: deleteInventoryItem,
-  normalizePlatform,
+  normalizeInventoryPlatform,
 } = await useInventory();
 const toast = useToast();
 
@@ -29,7 +29,7 @@ function formatDate(value: unknown): string {
   return date.toLocaleDateString("de-DE");
 }
 
-type Platform = "kleinanzeigen" | "ebay";
+type Platform = "kleinanzeigen" | "ebay" | "sonstige";
 
 function getItemProfit(item: Record<string, unknown>): number | null {
   if (item.profit != null) return Number(item.profit);
@@ -39,7 +39,7 @@ function getItemProfit(item: Record<string, unknown>): number | null {
 const newItem = ref({
   title: "",
   buy_price: undefined as number | undefined,
-  buy_platform: "kleinanzeigen" as "kleinanzeigen" | "ebay",
+  buy_platform: "kleinanzeigen" as Platform,
   buy_date: todayIsoDate(),
   status: "gekauft",
 });
@@ -69,7 +69,7 @@ function openSellModal(item: Record<string, unknown>) {
   sellItem.value = item;
   sellForm.sell_price = undefined;
   sellForm.sell_platform =
-    normalizePlatform(item.buy_platform) ?? "kleinanzeigen";
+    normalizeInventoryPlatform(item.buy_platform) ?? "kleinanzeigen";
   sellForm.sell_date = todayIsoDate();
 }
 
@@ -81,7 +81,7 @@ async function addItem() {
   if (!newItem.value.title) return;
   await createInventoryItem({
     ...newItem.value,
-    buy_platform: normalizePlatform(newItem.value.buy_platform),
+    buy_platform: normalizeInventoryPlatform(newItem.value.buy_platform),
   });
   newItem.value = {
     title: "",
@@ -110,7 +110,7 @@ async function confirmSell() {
       buildInventoryPayload(sellItem.value, {
         status: "verkauft",
         sell_price: sellForm.sell_price,
-        sell_platform: normalizePlatform(sellForm.sell_platform),
+        sell_platform: normalizeInventoryPlatform(sellForm.sell_platform),
         sell_date: sellForm.sell_date,
       }),
     );

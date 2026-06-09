@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS listings (
   title TEXT,
   description TEXT,
   keywords TEXT,
+  category TEXT,
   price_suggestion REAL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

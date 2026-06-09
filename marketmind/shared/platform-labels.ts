@@ -1,6 +1,7 @@
 export const PLATFORM_LABELS = {
   kleinanzeigen: "Kleinanzeigen",
   ebay: "eBay",
+  sonstige: "Sonstige",
 } as const;
 
 export const RESEARCH_PLATFORM_LABELS = {
@@ -11,6 +12,11 @@ export const RESEARCH_PLATFORM_LABELS = {
 export const PLATFORM_SELECT_OPTIONS = [
   { label: PLATFORM_LABELS.kleinanzeigen, value: "kleinanzeigen" },
   { label: PLATFORM_LABELS.ebay, value: "ebay" },
+] as const;
+
+export const INVENTORY_PLATFORM_SELECT_OPTIONS = [
+  ...PLATFORM_SELECT_OPTIONS,
+  { label: PLATFORM_LABELS.sonstige, value: "sonstige" },
 ] as const;
 
 export const RESEARCH_PLATFORM_OPTIONS = [

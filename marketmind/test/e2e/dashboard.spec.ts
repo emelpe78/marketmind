@@ -3,7 +3,12 @@ import { test, expect } from "@playwright/test";
 const pages = [
   { path: "/", heading: "Letzte Suchen" },
   { path: "/research", heading: "Preisrecherche" },
-  { path: "/listings", heading: "Anzeigen-Generator" },
+  {
+    path: "/listings",
+    heading: "Anzeigen-Generator",
+    navTestId: "nav-listings-generator",
+    navToggleTestId: "nav-listings-toggle",
+  },
   { path: "/flipping", heading: "Flipping-Kalkulator" },
   { path: "/watchlist", heading: "Watchlist" },
   { path: "/inventory", heading: "Inventar" },
@@ -33,11 +38,15 @@ test.describe("Dashboard & Navigation", () => {
     ).toBeVisible();
   });
 
-  for (const { path, heading, navTestId } of pages.slice(1)) {
+  for (const { path, heading, navTestId, navToggleTestId } of pages.slice(1)) {
     test(`navigates to ${path}`, async ({ page }) => {
       await page.goto("/");
       if (navTestId) {
-        await page.getByTestId("nav-agents-toggle").click();
+        if (navToggleTestId) {
+          await page.getByTestId(navToggleTestId).click();
+        } else {
+          await page.getByTestId("nav-agents-toggle").click();
+        }
         await page.getByTestId(navTestId).click();
       } else {
         await page

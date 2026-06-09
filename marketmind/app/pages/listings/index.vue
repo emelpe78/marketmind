@@ -1,9 +1,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
 
-import type { GeneratedListing, ListingItem } from "~/composables/useListings";
-import { formatDateTime } from "shared/format-datetime";
-import { platformLabelFor, PLATFORM_LABELS } from "shared/platform-labels";
+import type { GeneratedListing } from "~/composables/useListings";
 
 const query = ref("");
 const condition = ref("Gebraucht");
@@ -13,28 +11,16 @@ const activeTab = ref("kleinanzeigen");
 const saving = ref(false);
 const editingId = ref<number | null>(null);
 const generated = ref<GeneratedListing | null>(null);
-const deleteItem = ref<ListingItem | null>(null);
-const deleteModalOpen = computed({
-  get: () => deleteItem.value !== null,
-  set: (open: boolean) => {
-    if (!open) deleteItem.value = null;
-  },
-});
 const toast = useToast();
 
 const {
-  listings,
   generating: loading,
-  refreshListings,
   generateListing: runGenerateListing,
   saveListing: persistListing,
   updateListing: persistListingUpdate,
-  deleteListing: removeListing,
 } = await useListings();
 
 const conditionOptions = ["Neu", "Gebraucht", "Defekt"];
-
-const platformLabels = PLATFORM_LABELS;
 
 function resetEditor() {
   editingId.value = null;
@@ -65,6 +51,7 @@ function buildSavePayload() {
     title: String(generated.value.title).trim(),
     description: String(generated.value.description).trim(),
     keywords: generated.value.keywords,
+    category: generated.value.category,
     price_suggestion: generated.value.priceSuggestion,
   };
 }
@@ -100,43 +87,10 @@ async function saveListing() {
   }
 }
 
-function loadListing(item: ListingItem) {
-  editingId.value = item.id;
-  query.value = item.query;
-  activeTab.value = item.platform;
-  generated.value = {
-    platform: item.platform,
-    title: item.title,
-    description: item.description,
-    priceSuggestion: item.price_suggestion,
-    category: null,
-    keywords: item.keywords,
-  };
-}
-
-function openDeleteModal(item: ListingItem) {
-  deleteItem.value = item;
-}
-
-async function confirmDelete() {
-  if (!deleteItem.value) return;
-  try {
-    await removeListing(deleteItem.value.id);
-    if (editingId.value === deleteItem.value.id) {
-      resetEditor();
-    }
-    deleteItem.value = null;
-    toast.add({ title: "Anzeige gelöscht", color: "success" });
-  } catch {
-    toast.add({ title: "Löschen fehlgeschlagen", color: "error" });
-  }
-}
-
 function copyText(text: string) {
   navigator.clipboard.writeText(text);
   toast.add({ title: "Kopiert", color: "success" });
 }
-
 </script>
 
 <template>
@@ -198,7 +152,7 @@ function copyText(text: string) {
       <template #header>
         <div class="flex items-center justify-between gap-3">
           <h3 class="font-semibold">
-            {{ editingId ? "Anzeige bearbeiten" : "Generierte Anzeige" }}
+            {{ editingId ? "Gespeicherte Anzeige" : "Generierte Anzeige" }}
           </h3>
           <UButton
             v-if="editingId"
@@ -256,81 +210,5 @@ function copyText(text: string) {
         </UButton>
       </div>
     </UCard>
-
-    <UCard v-if="listings?.length" data-testid="saved-listings">
-      <template #header>
-        <h3 class="font-semibold">Gespeicherte Anzeigen</h3>
-      </template>
-      <div class="space-y-3">
-        <div
-          v-for="item in listings"
-          :key="item.id"
-          class="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-muted p-4"
-        >
-          <div class="min-w-0 flex-1">
-            <div class="flex flex-wrap items-center gap-2">
-              <h4 class="font-semibold">{{ item.title }}</h4>
-              <UBadge variant="subtle" color="neutral">
-                {{
-                  platformLabelFor(
-                    PLATFORM_LABELS as Record<string, string>,
-                    item.platform,
-                    item.platform,
-                  )
-                }}
-              </UBadge>
-            </div>
-            <p class="text-sm text-muted mt-1 line-clamp-2">
-              {{ item.description }}
-            </p>
-            <p class="text-xs text-muted mt-1">
-              <span v-if="item.price_suggestion != null">
-                {{ formatEuro(item.price_suggestion) }} ·
-              </span>
-              {{ formatDateTime(item.created_at) }}
-            </p>
-          </div>
-          <div class="flex gap-2">
-            <UButton
-              size="sm"
-              variant="outline"
-              icon="i-lucide-pencil"
-              data-testid="edit-listing"
-              @click="loadListing(item)"
-            />
-            <UButton
-              size="sm"
-              color="error"
-              variant="ghost"
-              icon="i-lucide-trash"
-              data-testid="delete-listing"
-              @click="openDeleteModal(item)"
-            />
-          </div>
-        </div>
-      </div>
-    </UCard>
-
-    <UModal v-model:open="deleteModalOpen" title="Anzeige löschen?">
-      <template v-if="deleteItem" #body>
-        <div class="space-y-4 p-4">
-          <p class="text-sm text-muted">
-            „{{ deleteItem.title }}“ wirklich löschen?
-          </p>
-          <div class="flex justify-end gap-2">
-            <UButton variant="outline" @click="deleteItem = null">
-              Abbrechen
-            </UButton>
-            <UButton
-              color="error"
-              data-testid="confirm-delete-listing"
-              @click="confirmDelete"
-            >
-              Löschen
-            </UButton>
-          </div>
-        </div>
-      </template>
-    </UModal>
   </div>
 </template>

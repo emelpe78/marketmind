@@ -1,11 +1,34 @@
 export type DetectedPlatform = "ebay" | "kleinanzeigen";
+export type InventoryPlatform = DetectedPlatform | "sonstige";
 
-export function normalizePlatform(value: unknown): DetectedPlatform | null {
+const INVENTORY_PLATFORMS = new Set<InventoryPlatform>([
+  "ebay",
+  "kleinanzeigen",
+  "sonstige",
+]);
+
+function readPlatformValue(value: unknown): string | null {
   if (value == null || value === "") return null;
-  if (value === "ebay" || value === "kleinanzeigen") return value;
+  if (typeof value === "string") return value;
   if (typeof value === "object" && value && "value" in value) {
     const platform = (value as { value: unknown }).value;
-    if (platform === "ebay" || platform === "kleinanzeigen") return platform;
+    return typeof platform === "string" ? platform : null;
+  }
+  return null;
+}
+
+export function normalizePlatform(value: unknown): DetectedPlatform | null {
+  const platform = readPlatformValue(value);
+  if (platform === "ebay" || platform === "kleinanzeigen") return platform;
+  return null;
+}
+
+export function normalizeInventoryPlatform(
+  value: unknown,
+): InventoryPlatform | null {
+  const platform = readPlatformValue(value);
+  if (platform && INVENTORY_PLATFORMS.has(platform as InventoryPlatform)) {
+    return platform as InventoryPlatform;
   }
   return null;
 }

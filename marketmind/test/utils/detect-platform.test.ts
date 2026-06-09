@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { detectPlatformFromUrl, isListingUrl } from "shared/detect-platform";
+import {
+  detectPlatformFromUrl,
+  isListingUrl,
+  normalizeInventoryPlatform,
+  normalizePlatform,
+} from "shared/detect-platform";
 
 describe("detect-platform", () => {
   it("detects platform from listing urls", () => {
@@ -13,6 +18,13 @@ describe("detect-platform", () => {
     );
     expect(detectPlatformFromUrl("https://example.com/item")).toBeNull();
     expect(detectPlatformFromUrl("")).toBeNull();
+  });
+
+  it("normalizes inventory platforms including sonstige", () => {
+    expect(normalizePlatform("ebay")).toBe("ebay");
+    expect(normalizePlatform("sonstige")).toBeNull();
+    expect(normalizeInventoryPlatform("sonstige")).toBe("sonstige");
+    expect(normalizeInventoryPlatform({ value: "sonstige" })).toBe("sonstige");
   });
 
   it("detects listing urls", () => {

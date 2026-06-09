@@ -1,0 +1,460 @@
+<script setup lang="ts">
+definePageMeta({ layout: "default" });
+
+import type { ListingItem } from "~/composables/useListings";
+import {
+  INVENTORY_PLATFORM_OPTIONS,
+  useInventory,
+} from "~/composables/useInventory";
+import { formatDateTime } from "shared/format-datetime";
+import { platformLabelFor, PLATFORM_LABELS } from "shared/platform-labels";
+
+type InventoryPlatform = "kleinanzeigen" | "ebay" | "sonstige";
+
+const deleteItem = ref<ListingItem | null>(null);
+const deleteModalOpen = computed({
+  get: () => deleteItem.value !== null,
+  set: (open: boolean) => {
+    if (!open) deleteItem.value = null;
+  },
+});
+
+const editItem = ref<ListingItem | null>(null);
+const editModalOpen = computed({
+  get: () => editItem.value !== null,
+  set: (open: boolean) => {
+    if (!open) editItem.value = null;
+  },
+});
+const editForm = reactive({
+  query: "",
+  platform: "kleinanzeigen",
+  title: "",
+  description: "",
+  price_suggestion: undefined as number | undefined,
+  category: "",
+  keywords: "",
+});
+const saving = ref(false);
+const inventorySource = ref<ListingItem | null>(null);
+const inventoryModalOpen = computed({
+  get: () => inventorySource.value !== null,
+  set: (open: boolean) => {
+    if (!open) inventorySource.value = null;
+  },
+});
+const inventoryForm = reactive({
+  title: "",
+  buy_price: undefined as number | undefined,
+  buy_platform: "kleinanzeigen" as InventoryPlatform,
+  buy_date: "",
+  sell_price: undefined as number | undefined,
+  sell_platform: "kleinanzeigen" as InventoryPlatform,
+  notes: "",
+});
+const addingToInventory = ref(false);
+const toast = useToast();
+
+const {
+  listings,
+  updateListing: persistListingUpdate,
+  deleteListing: removeListing,
+} = await useListings();
+
+const {
+  createItem: createInventoryItem,
+  todayIsoDate,
+  normalizeInventoryPlatform,
+} = await useInventory();
+
+const platformOptions = [
+  { label: "Kleinanzeigen", value: "kleinanzeigen" },
+  { label: "eBay", value: "ebay" },
+];
+
+function buildListingNotes(item: ListingItem): string {
+  const parts: string[] = [];
+  if (item.category?.trim()) {
+    parts.push(`Kategorie: ${item.category.trim()}`);
+  }
+  if (item.keywords?.trim()) {
+    parts.push(`Keywords: ${item.keywords.trim()}`);
+  }
+  if (item.description.trim()) {
+    if (parts.length > 0) parts.push("");
+    parts.push(item.description.trim());
+  }
+  return parts.join("\n");
+}
+
+function openInventoryModal(item: ListingItem) {
+  inventorySource.value = item;
+  inventoryForm.title = item.title;
+  inventoryForm.buy_price = undefined;
+  inventoryForm.buy_platform = "kleinanzeigen";
+  inventoryForm.buy_date = todayIsoDate();
+  inventoryForm.sell_price = item.price_suggestion ?? undefined;
+  inventoryForm.sell_platform =
+    normalizeInventoryPlatform(item.platform) ?? "kleinanzeigen";
+  inventoryForm.notes = buildListingNotes(item);
+}
+
+async function confirmAddToInventory() {
+  if (!inventorySource.value) return;
+  if (!inventoryForm.title.trim()) {
+    toast.add({
+      title: "Titel fehlt",
+      description: "Bitte einen Titel eingeben.",
+      color: "warning",
+    });
+    return;
+  }
+
+  addingToInventory.value = true;
+  try {
+    await createInventoryItem({
+      title: inventoryForm.title.trim(),
+      buy_price: inventoryForm.buy_price ?? null,
+      buy_platform: normalizeInventoryPlatform(inventoryForm.buy_platform),
+      buy_date: inventoryForm.buy_date || null,
+      sell_price: inventoryForm.sell_price ?? null,
+      sell_platform: normalizeInventoryPlatform(inventoryForm.sell_platform),
+      sell_date: null,
+      status: "gekauft",
+      notes: inventoryForm.notes.trim() || null,
+    });
+    inventorySource.value = null;
+    toast.add({ title: "Artikel ins Inventar aufgenommen", color: "success" });
+  } catch {
+    toast.add({
+      title: "Inventar-Eintrag konnte nicht angelegt werden",
+      color: "error",
+    });
+  } finally {
+    addingToInventory.value = false;
+  }
+}
+
+function openEditModal(item: ListingItem) {
+  editItem.value = item;
+  editForm.query = item.query;
+  editForm.platform = item.platform;
+  editForm.title = item.title;
+  editForm.description = item.description;
+  editForm.price_suggestion = item.price_suggestion ?? undefined;
+  editForm.category = item.category ?? "";
+  editForm.keywords = item.keywords ?? "";
+}
+
+async function saveEdit() {
+  if (!editItem.value) return;
+  if (!editForm.title.trim() || !editForm.description.trim()) {
+    toast.add({
+      title: "Titel und Beschreibung erforderlich",
+      color: "warning",
+    });
+    return;
+  }
+
+  saving.value = true;
+  try {
+    await persistListingUpdate(editItem.value.id, {
+      query: editForm.query.trim() || editForm.title.trim(),
+      platform: editForm.platform,
+      title: editForm.title.trim(),
+      description: editForm.description.trim(),
+      price_suggestion: editForm.price_suggestion ?? null,
+      category: editForm.category?.trim() || null,
+      keywords: editForm.keywords?.trim() || null,
+    });
+    editItem.value = null;
+    toast.add({ title: "Anzeige aktualisiert", color: "success" });
+  } catch (error: unknown) {
+    const err = error as { data?: { message?: string } };
+    toast.add({
+      title: err?.data?.message || "Speichern fehlgeschlagen",
+      color: "error",
+    });
+  } finally {
+    saving.value = false;
+  }
+}
+
+function openDeleteModal(item: ListingItem) {
+  deleteItem.value = item;
+}
+
+async function confirmDelete() {
+  if (!deleteItem.value) return;
+  try {
+    await removeListing(deleteItem.value.id);
+    deleteItem.value = null;
+    toast.add({ title: "Anzeige gelöscht", color: "success" });
+  } catch {
+    toast.add({ title: "Löschen fehlgeschlagen", color: "error" });
+  }
+}
+</script>
+
+<template>
+  <div class="space-y-6">
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <div>
+        <h2 class="text-2xl font-bold text-highlighted">Gespeicherte Anzeigen</h2>
+        <p class="text-muted mt-1">
+          Gespeicherte Texte bearbeiten, ins Inventar übernehmen oder löschen
+        </p>
+      </div>
+      <UButton to="/listings" icon="i-lucide-sparkles" variant="outline">
+        Neue Anzeige generieren
+      </UButton>
+    </div>
+
+    <UCard v-if="listings?.length" data-testid="saved-listings">
+      <div class="space-y-3">
+        <div
+          v-for="item in listings"
+          :key="item.id"
+          class="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-muted p-4"
+        >
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <h4 class="font-semibold">{{ item.title }}</h4>
+              <UBadge variant="subtle" color="neutral">
+                {{
+                  platformLabelFor(
+                    PLATFORM_LABELS as Record<string, string>,
+                    item.platform,
+                    item.platform,
+                  )
+                }}
+              </UBadge>
+            </div>
+            <p class="text-sm text-muted mt-1 line-clamp-2">
+              {{ item.description }}
+            </p>
+            <p class="text-xs text-muted mt-1">
+              <span v-if="item.price_suggestion != null">
+                {{ formatEuro(item.price_suggestion) }} ·
+              </span>
+              {{ formatDateTime(item.created_at) }}
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <UButton
+              size="sm"
+              variant="outline"
+              icon="i-lucide-package-plus"
+              aria-label="Ins Inventar aufnehmen"
+              data-testid="add-listing-to-inventory"
+              @click="openInventoryModal(item)"
+            />
+            <UButton
+              size="sm"
+              variant="outline"
+              icon="i-lucide-pencil"
+              data-testid="edit-listing"
+              @click="openEditModal(item)"
+            />
+            <UButton
+              size="sm"
+              color="error"
+              variant="ghost"
+              icon="i-lucide-trash"
+              data-testid="delete-listing"
+              @click="openDeleteModal(item)"
+            />
+          </div>
+        </div>
+      </div>
+    </UCard>
+
+    <UCard v-else data-testid="saved-listings-empty">
+      <div class="py-8 text-center space-y-3">
+        <p class="text-muted">Noch keine Anzeigen gespeichert.</p>
+        <UButton to="/listings" icon="i-lucide-sparkles">
+          Anzeige generieren
+        </UButton>
+      </div>
+    </UCard>
+
+    <UModal
+      v-model:open="inventoryModalOpen"
+      :title="
+        inventorySource
+          ? `Ins Inventar aufnehmen: ${inventorySource.title}`
+          : 'Ins Inventar aufnehmen'
+      "
+    >
+      <template v-if="inventorySource" #body>
+        <div class="space-y-4 p-4">
+          <UFormField label="Titel" required>
+            <UInput
+              v-model="inventoryForm.title"
+              data-testid="inventory-from-listing-title"
+              autofocus
+            />
+          </UFormField>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <UFormField label="Einkaufspreis (€)">
+              <UInput
+                v-model.number="inventoryForm.buy_price"
+                data-testid="inventory-from-listing-buy-price"
+                type="number"
+                min="0"
+                step="0.01"
+              />
+            </UFormField>
+            <UFormField label="Einkaufsdatum">
+              <UInput
+                v-model="inventoryForm.buy_date"
+                data-testid="inventory-from-listing-buy-date"
+                type="date"
+              />
+            </UFormField>
+            <UFormField label="Einkaufsplattform">
+              <USelect
+                v-model="inventoryForm.buy_platform"
+                :items="INVENTORY_PLATFORM_OPTIONS"
+                value-key="value"
+                data-testid="inventory-from-listing-buy-platform"
+                class="w-full"
+              />
+            </UFormField>
+            <UFormField label="Ziel-Verkaufspreis (€)">
+              <UInput
+                v-model.number="inventoryForm.sell_price"
+                data-testid="inventory-from-listing-sell-price"
+                type="number"
+                min="0"
+                step="0.01"
+              />
+            </UFormField>
+            <UFormField label="Verkaufsplattform" class="sm:col-span-2">
+              <USelect
+                v-model="inventoryForm.sell_platform"
+                :items="INVENTORY_PLATFORM_OPTIONS"
+                value-key="value"
+                data-testid="inventory-from-listing-sell-platform"
+                class="w-full"
+              />
+            </UFormField>
+          </div>
+          <UFormField label="Notizen">
+            <UTextarea
+              v-model="inventoryForm.notes"
+              data-testid="inventory-from-listing-notes"
+              :rows="6"
+            />
+          </UFormField>
+          <div class="flex justify-end gap-2">
+            <UButton variant="outline" @click="inventorySource = null">
+              Abbrechen
+            </UButton>
+            <UButton
+              data-testid="confirm-add-listing-to-inventory"
+              icon="i-lucide-package-plus"
+              :loading="addingToInventory"
+              @click="confirmAddToInventory"
+            >
+              Ins Inventar aufnehmen
+            </UButton>
+          </div>
+        </div>
+      </template>
+    </UModal>
+
+    <UModal
+      v-model:open="editModalOpen"
+      :title="editItem ? `Anzeige bearbeiten: ${editItem.title}` : 'Anzeige bearbeiten'"
+    >
+      <template v-if="editItem" #body>
+        <div class="space-y-4 p-4">
+          <UFormField label="Produktname">
+            <UInput
+              v-model="editForm.query"
+              data-testid="edit-listing-query"
+            />
+          </UFormField>
+          <UFormField label="Plattform">
+            <USelect
+              v-model="editForm.platform"
+              :items="platformOptions"
+              data-testid="edit-listing-platform"
+              class="w-full"
+            />
+          </UFormField>
+          <UFormField label="Titel" required>
+            <UInput
+              v-model="editForm.title"
+              data-testid="edit-listing-title"
+              autofocus
+            />
+          </UFormField>
+          <UFormField label="Beschreibung" required>
+            <UTextarea
+              v-model="editForm.description"
+              data-testid="edit-listing-description"
+              :rows="8"
+            />
+          </UFormField>
+          <UFormField label="Preis-Empfehlung (€)">
+            <UInput
+              v-model.number="editForm.price_suggestion"
+              data-testid="edit-listing-price"
+              type="number"
+              min="0"
+              step="0.01"
+            />
+          </UFormField>
+          <UFormField label="Kategorie">
+            <UInput
+              v-model="editForm.category"
+              data-testid="edit-listing-category"
+            />
+          </UFormField>
+          <UFormField label="Keywords">
+            <UInput
+              v-model="editForm.keywords"
+              data-testid="edit-listing-keywords"
+            />
+          </UFormField>
+          <div class="flex justify-end gap-2">
+            <UButton variant="outline" @click="editItem = null">
+              Abbrechen
+            </UButton>
+            <UButton
+              data-testid="confirm-edit-listing"
+              :loading="saving"
+              @click="saveEdit"
+            >
+              Speichern
+            </UButton>
+          </div>
+        </div>
+      </template>
+    </UModal>
+
+    <UModal v-model:open="deleteModalOpen" title="Anzeige löschen?">
+      <template v-if="deleteItem" #body>
+        <div class="space-y-4 p-4">
+          <p class="text-sm text-muted">
+            „{{ deleteItem.title }}“ wirklich löschen?
+          </p>
+          <div class="flex justify-end gap-2">
+            <UButton variant="outline" @click="deleteItem = null">
+              Abbrechen
+            </UButton>
+            <UButton
+              color="error"
+              data-testid="confirm-delete-listing"
+              @click="confirmDelete"
+            >
+              Löschen
+            </UButton>
+          </div>
+        </div>
+      </template>
+    </UModal>
+  </div>
+</template>

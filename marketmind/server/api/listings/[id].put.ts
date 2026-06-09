@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
     title?: string;
     description?: string;
     keywords?: string | null;
+    category?: string | null;
     price_suggestion?: number | string | null;
   }>(event);
 
@@ -37,6 +38,7 @@ export default defineEventHandler(async (event) => {
     title: body.title.trim(),
     description: body.description.trim(),
     keywords: body.keywords ?? null,
+    category: body.category ?? null,
     price_suggestion: body.price_suggestion,
   });
 });

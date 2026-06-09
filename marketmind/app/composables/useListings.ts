@@ -11,6 +11,7 @@ export interface ListingItem {
   title: string;
   description: string;
   keywords: string | null;
+  category: string | null;
   price_suggestion: number | null;
   created_at: string;
 }

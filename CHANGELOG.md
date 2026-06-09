@@ -4,6 +4,28 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.1.5] — 2026-06-09
+
+Anzeigen-Bereich in Generator und gespeicherte Liste aufgeteilt; Bearbeitung und Inventar-Übernahme per Modal; Inventar-Plattform „Sonstige“.
+
+### Hinzugefügt
+
+- **Anzeigen-Unterseiten** — `/listings` (Generator), `/listings/saved` (Gespeicherte Anzeigen)
+- **Anzeigen-Submenu** — Sidebar wie bei Flipping und Agents (`shared/listings-nav.ts`)
+- **Bearbeitungs-Modal** — gespeicherte Anzeigen auf `/listings/saved` bearbeiten (ohne Query-Parameter)
+- **Inventar aus Anzeige** — Button „Ins Inventar aufnehmen“ mit vorausgefülltem Modal (Titel, Ziel-Verkaufspreis, Plattform, Notizen)
+- **Inventar-Plattform „Sonstige“** — Einkaufs- und Verkaufsplattform zusätzlich zu Kleinanzeigen und eBay (`INVENTORY_PLATFORM_SELECT_OPTIONS`, `normalizeInventoryPlatform()`)
+- **`category` in `listings`** — Spalte in `schema.sql` plus Migration für bestehende Datenbanken
+
+### Geändert
+
+- **Gespeicherte Anzeigen** — eigene Seite statt Liste unter dem Generator
+- **Listings-API** — `POST`/`PUT` `/api/listings` übernehmen `category`; Speichern inkl. Kategorie aus KI-Generierung
+
+### Behoben
+
+- **Anzeigen speichern** — SQLite-Fehler `table listings has no column named category` bei neuen/gespeicherten Anzeigen
+
 ## [0.1.4] — 2026-06-09
 
 Flipping-Kalkulator neu: KI-Analyse per Anzeigen-URL, gespeicherte Analysen, Sidebar-Submenu.
@@ -245,7 +267,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.4...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.5...HEAD
+[0.1.5]: https://github.com/emelpe78/marketmind/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/emelpe78/marketmind/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/emelpe78/marketmind/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/emelpe78/marketmind/compare/v0.1.1...v0.1.2

@@ -6,9 +6,9 @@
 
 ## Was MarketMind kann
 
-MarketMind hilft beim **Einkaufen und Wiederverkaufen** gebrauchter Artikel: Du recherchierst Marktpreise per Scraper, lässt die Ergebnisse von einer KI auswerten (Abschnitte wie Preisübersicht und Marktbewertung in einer Tab-Ansicht) und speicherst Recherchen inklusive KI-Analyse für später. Der **Flipping-Kalkulator** bewertet per KI das Potenzial einer konkreten eBay- oder Kleinanzeigen-Anzeige (URL eingeben → Analyse in Tabs → optional speichern). Unter **Flipping-Analysen** findest du gespeicherte Auswertungen wieder. Der **Anzeigen-Generator** erstellt plattformgerechte Texte für eBay und Kleinanzeigen. Mit der **Watchlist** beobachtest du einzelne Angebote und erhältst Preisalarme, im **Inventar** trackst du Einkauf, Verkauf und Gewinn.
+MarketMind hilft beim **Einkaufen und Wiederverkaufen** gebrauchter Artikel: Du recherchierst Marktpreise per Scraper, lässt die Ergebnisse von einer KI auswerten (Abschnitte wie Preisübersicht und Marktbewertung in einer Tab-Ansicht) und speicherst Recherchen inklusive KI-Analyse für später. Der **Flipping-Kalkulator** bewertet per KI das Potenzial einer konkreten eBay- oder Kleinanzeigen-Anzeige (URL eingeben → Analyse in Tabs → optional speichern). Unter **Flipping-Analysen** findest du gespeicherte Auswertungen wieder. Der **Anzeigen-Generator** erstellt plattformgerechte Texte für eBay und Kleinanzeigen; unter **Gespeicherte Anzeigen** verwaltest du Texte, bearbeitest sie im Modal und kannst sie direkt ins **Inventar** übernehmen. Mit der **Watchlist** beobachtest du einzelne Angebote und erhältst Preisalarme; im **Inventar** trackst du Einkauf, Verkauf und Gewinn (Plattformen: Kleinanzeigen, eBay, Sonstige).
 
-Die Sidebar hat Submenüs für **Flipping** (Kalkulator, Analysen) und **Agents** (Feature-Agents, System-Prompt-Generator, KI-Verlauf). Der Agent-Manager umfasst **Feature-Agents** (Research, Listing, Flipping, Prompt Agent), die **Prompt-Bibliothek** (CRUD, optionale Agent-Zuordnung — ein Prompt pro Agent) und den **KI-Verlauf**. Änderungen an Agents, Prompts und Zuordnungen erscheinen sofort in der UI — ohne manuellen Reload.
+Die Sidebar hat Submenüs für **Anzeigen** (Generator, Gespeicherte Anzeigen), **Flipping** (Kalkulator, Analysen) und **Agents** (Feature-Agents, System-Prompt-Generator, KI-Verlauf). Der Agent-Manager umfasst **Feature-Agents** (Research, Listing, Flipping, Prompt Agent), die **Prompt-Bibliothek** (CRUD, optionale Agent-Zuordnung — ein Prompt pro Agent) und den **KI-Verlauf**. Änderungen an Agents, Prompts und Zuordnungen erscheinen sofort in der UI — ohne manuellen Reload.
 
 Referenz-System-Prompts für Listing und Flipping Agent: [`docs/listing_agent.md`](docs/listing_agent.md), [`docs/flipping_agent.md`](docs/flipping_agent.md).
 
@@ -178,6 +178,6 @@ Nutze **moderate Abfragefrequenzen** (einstellbarer Delay), cache Ergebnisse und
 
 ## Lizenz & Status
 
-- **Version:** 0.1.4 — siehe [CHANGELOG.md](CHANGELOG.md)
+- **Version:** 0.1.5 — siehe [CHANGELOG.md](CHANGELOG.md)
 - **Lizenz:** Noch nicht veröffentlicht (geplant: Open Source)
 - **Issues:** [GitHub Issues](https://github.com/emelpe78/marketmind/issues)

@@ -1,12 +1,14 @@
 import {
-  normalizePlatform,
-  type DetectedPlatform,
+  normalizeInventoryPlatform,
+  type InventoryPlatform,
 } from "shared/detect-platform";
-import { PLATFORM_SELECT_OPTIONS } from "shared/platform-labels";
+import { INVENTORY_PLATFORM_SELECT_OPTIONS } from "shared/platform-labels";
 import { FETCH_KEYS } from "~/utils/fetch-keys";
 import { refreshFetchData } from "~/utils/refresh-fetch-data";
 
-export const INVENTORY_PLATFORM_OPTIONS = [...PLATFORM_SELECT_OPTIONS];
+export const INVENTORY_PLATFORM_OPTIONS = [
+  ...INVENTORY_PLATFORM_SELECT_OPTIONS,
+];
 
 export function useInventory() {
   const { data: items } = useFetch<Array<Record<string, unknown>>>(
@@ -39,21 +41,21 @@ export function useInventory() {
     overrides: {
       status?: string;
       sell_price?: number | null;
-      sell_platform?: DetectedPlatform | null;
+      sell_platform?: InventoryPlatform | null;
       sell_date?: string | null;
     } = {},
   ) {
     return {
       title: item.title,
       buy_price: item.buy_price ?? null,
-      buy_platform: normalizePlatform(item.buy_platform),
+      buy_platform: normalizeInventoryPlatform(item.buy_platform),
       buy_date: item.buy_date ?? null,
       sell_price: overrides.sell_price ?? item.sell_price ?? null,
       sell_platform:
         overrides.sell_platform !== undefined
           ? overrides.sell_platform
           : item.sell_platform
-            ? normalizePlatform(item.sell_platform)
+            ? normalizeInventoryPlatform(item.sell_platform)
             : null,
       sell_date: overrides.sell_date ?? item.sell_date ?? null,
       status: overrides.status ?? item.status ?? "gekauft",
@@ -85,6 +87,6 @@ export function useInventory() {
     createItem,
     updateItem,
     deleteItem,
-    normalizePlatform,
+    normalizeInventoryPlatform,
   };
 }
