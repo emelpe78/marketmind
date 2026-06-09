@@ -1,0 +1,140 @@
+# MarketMind — Agent Guide
+
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.1.0**.
+
+## Repository-Layout
+
+```
+marketmind/                 # Repo-Root
+├── AGENTS.md               # Diese Datei
+├── CHANGELOG.md
+├── docker-compose.yml      # Production-Container (Port 5667)
+├── docs/PRD.md             # Produktanforderungen
+└── marketmind/             # Nuxt-App (Arbeitsverzeichnis für npm)
+    ├── app/                # Pages, Components, Layouts, Utils
+    ├── server/             # Nitro API, Services, SQLite
+    ├── test/               # Vitest + Playwright (e2e unter test/e2e/)
+    ├── Dockerfile
+    └── package.json
+```
+
+**Wichtig:** `npm`-Befehle immer in `marketmind/` ausführen. Docker-Compose vom Repo-Root.
+
+## Stack
+
+| Schicht   | Technologie                                  |
+| --------- | -------------------------------------------- |
+| Framework | Nuxt 4 (SPA, `ssr: false`)                   |
+| UI        | @nuxt/ui v4, Tailwind, Lucide Icons          |
+| DB        | SQLite via better-sqlite3 (kein ORM)         |
+| KI        | OpenRouter oder lokale OpenAI-kompatible API |
+| Scraping  | Cheerio + Nitro fetch                        |
+| Tests     | Vitest (Unit/API), Playwright (E2E)          |
+
+## Ports & Umgebungen
+
+| Umgebung | Port     | Befehl                             |
+| -------- | -------- | ---------------------------------- |
+| Dev      | **5666** | `npm run dev`                      |
+| Docker   | **5667** | `docker compose up -d` (Repo-Root) |
+
+Env-Variablen: `MM_PORT`, `MM_DATABASE_PATH`, `PORT`, `HOST` — siehe `marketmind/.env.example`.
+
+Dev-DB: `marketmind/data/` (gitignored). Docker-DB: Volume `marketmind-data` unter `/app/data/`.
+
+## Architektur
+
+### Frontend (`marketmind/app/`)
+
+- **Pages:** file-based routing unter `app/pages/`
+- **Layout:** `app/layouts/default.vue` — Sidebar, Theme-Toggle, Versionsbadge
+- **Utils:** `format-currency.ts`, `format-percent.ts`, `detect-platform.ts`, `render-markdown.ts`
+- Keine Pinia-Stores — State über `useFetch`, `ref`, `reactive`
+
+### Backend (`marketmind/server/`)
+
+- **API:** `server/api/**/*.ts` — Nitro file-based routes
+- **Services:** Geschäftslogik in `server/services/` (scraper, ai, research, inventory, …)
+- **DB:** `server/database/` — Schema, Seed, Pfad-Auflösung
+- **Plugin:** `server/plugins/database.ts` — Init + Seed beim Start
+
+### KI-Konfiguration
+
+- Nur über **Einstellungen** (SQLite `settings`), nicht über `.env`
+- Provider: `openrouter` | `local` — Routing in `server/services/ai/config.ts`
+- API-Keys verschlüsselt (AES-256-GCM, `.settings-key` neben DB)
+- `isAiConfigured()` steuert z. B. Dashboard-Hinweis und optionale KI-Features
+
+### Wissensgraph (graphify)
+
+Vor Architekturfragen: `graphify-out/GRAPH_REPORT.md` und `graphify-out/wiki/index.md` lesen. Nach Code-Änderungen: `graphify update .` (siehe `.cursor/rules/graphify.mdc`).
+
+## Konventionen
+
+### Sprache & Formatierung
+
+- **UI-Texte:** Deutsch
+- **Euro:** `formatEuro()` / `formatEuroDelta()` — `de-DE` (`1.000,00 €`)
+- **Prozent:** `formatPercent()` — `de-DE` (`33,33 %`)
+- **Datum:** `toLocaleDateString("de-DE")` / `toLocaleString("de-DE")`
+
+### TypeScript
+
+- `noUncheckedIndexedAccess` beachten: Array-/Regex-Zugriffe explizit prüfen (`rows[1]`, `match?.[1]`)
+- Konkrete Interfaces statt `Record<string, unknown>` für Formulare/Modals
+- `npx nuxi typecheck` vor größeren Änderungen
+
+### UI (@nuxt/ui)
+
+- Tabellen: keine horizontale Scrollbar — `table-fixed`, Spaltenbreiten in `meta.class`, Textumbruch
+- **Löschen:** immer mit Bestätigungsmodal (`UModal` + Abbrechen/Löschen)
+- Buttons auf farbigen Alerts: `color="neutral" variant="solid"` (nicht `outline` auf Warning)
+- E2E-relevante Elemente: `data-testid` setzen
+
+### API & Daten
+
+- Validierung mit Zod wo sinnvoll
+- SQLite-Pfad konfigurierbar; Reset behält Pfad, löscht Daten
+- Agent-Aufrufe in `agent_history` loggen (Tokens, Kosten)
+
+### Git
+
+- Nur committen/pushen wenn explizit angefragt
+- Eine `.gitignore` im Repo-Root (nicht in `marketmind/`)
+
+## Tests
+
+```bash
+cd marketmind
+npm run test:run          # Vitest (Unit + API)
+npm run test:e2e          # Playwright (baut vorher)
+npx nuxi typecheck        # TypeScript
+```
+
+Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte: `test/test-results/`.
+
+## Häufige Aufgaben
+
+| Aufgabe            | Ort                                          |
+| ------------------ | -------------------------------------------- |
+| Neue API-Route     | `server/api/<name>.<method>.ts`              |
+| Neue Seite         | `app/pages/<route>.vue`                      |
+| Scraper-Logik      | `server/services/scraper/`                   |
+| DB-Schema          | `server/database/schema.sql` + Seed anpassen |
+| Formatierung       | `app/utils/format-*.ts` wiederverwenden      |
+| Einstellungen-Keys | `server/database/seed.ts`, Settings-UI       |
+
+## Was vermeiden
+
+- Keine API-Keys in `.env` oder Commits
+- Kein ORM einführen
+- Keine englischen UI-Strings ohne Anlass
+- Kein direktes Löschen ohne Bestätigungsdialog
+- Keine neuen README/CHANGELOG-Dateien ohne Anfrage
+- Scope klein halten — keine unnötigen Abstraktionen oder Tests für triviales Verhalten
+
+## Referenzen
+
+- Produkt-Spec: `docs/PRD.md`
+- Releases: `CHANGELOG.md`
+- Env-Vorlage: `marketmind/.env.example`

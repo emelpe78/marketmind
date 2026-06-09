@@ -4,17 +4,20 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
-## [0.1.0] — 2026-06-08
+## [0.1.0] — 2026-06-09
 
 Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisrecherche, Flipping-Kalkulation und KI-gestützte Anzeigen auf eBay.de und Kleinanzeigen.de.
 
 ### Hinzugefügt
 
+- **README.md** — Installationsanleitung (Dev, Docker, Production), Konfiguration und rechtlicher Hinweis zum Scraping
+- **AGENTS.md** — Anleitung für KI-Agenten und Mitwirkende (Architektur, Konventionen, Tests)
+
 #### Dashboard
 
 - KPI-Übersicht: gespeicherte Recherchen, Watchlist-Alerts, Gesamtgewinn, Token-Kosten
 - Hinweis zur KI-Provider-Konfiguration nach erstem Start oder Datenbank-Reset
-- Liste gespeicherter Recherchen mit Bearbeiten und Löschen
+- Liste gespeicherter Recherchen mit Bearbeiten und Löschen (mit Bestätigung)
 - Letzte Suchen und Schnellzugriff auf Preisrecherche, Anzeigen und Flipping
 
 #### Preisrecherche
@@ -30,7 +33,7 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Plattform-Tabs für Kleinanzeigen und eBay
 - KI-generierte Titel, Beschreibungen, Preisvorschläge und Kategorien
 - Inline-Editor mit Copy-to-Clipboard
-- Gespeicherte Anzeigen: anlegen, laden, bearbeiten und löschen
+- Gespeicherte Anzeigen: anlegen, laden, bearbeiten und löschen (mit Bestätigung)
 
 #### Flipping-Kalkulator
 
@@ -44,7 +47,7 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Plattform-Erkennung aus der URL (eBay / Kleinanzeigen)
 - Manuelles und globales Preis-Update per Scraper
 - Preisalarm bei Erreichen des Zielpreises mit visueller Hervorhebung
-- Bearbeiten und Löschen von Einträgen
+- Bearbeiten und Löschen mit Bestätigungsdialog
 
 #### Inventar
 
@@ -52,6 +55,7 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Verkauf erfassen per Modal (Verkaufspreis, Plattform, Datum)
 - Automatische Gewinn-/Verlustberechnung
 - Übersicht: Gesamtgewinn, Durchschnittsmarge, bester und schlechtester Flip
+- Löschen mit Bestätigungsdialog
 
 #### Agent-Manager
 
@@ -69,11 +73,36 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Datenbankpfad konfigurierbar, Verschieben mit Kopie, Zurücksetzen mit Bestätigung
 - Theme-Umschaltung: Hell, Dunkel, System
 
+#### Docker
+
+- `Dockerfile` und `docker-compose.yml` für Production-Betrieb auf **Port 5667**
+- Persistentes Daten-Volume (`marketmind-data`) getrennt von der Dev-Instanz (5666)
+- Healthcheck über `/api/health`
+- npm-Scripts: `docker:build`, `docker:up`, `docker:down`
+
+#### Entwicklung
+
+- Graphify-Wissensgraph (Cursor-Regel `.cursor/rules/graphify.mdc`, Ausgabe unter `graphify-out/`)
+
 #### Technik
 
 - Nuxt 4 SPA mit @nuxt/ui v4, SQLite (better-sqlite3) und Nitro-Server-Routen
 - Deutsche Zahlenformatierung für Euro (`1.000,00 €`) und Prozent (`33,33 %`)
 - Versionsanzeige in der Sidebar (`v. 0.1.0` aus `package.json`)
-- 56 Unit-Tests (Vitest) und 17 E2E-Tests (Playwright) unter `marketmind/test/`
+- Alle Tests unter `marketmind/test/` (E2E in `test/e2e/`)
+- 56 Unit-Tests (Vitest) und 18 E2E-Tests (Playwright)
+- Zentrale `.gitignore` im Repo-Root
 
+### Geändert
+
+- E2E-Tests von `marketmind/e2e/` nach `marketmind/test/e2e/` verschoben
+- Playwright-Artefakte unter `test/test-results/` und `test/playwright-report/`
+
+### Behoben
+
+- TypeScript-Fehler im gesamten Projekt (`nuxi typecheck` ohne Fehlermeldungen)
+- Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
+- Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
+
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/emelpe78/marketmind/releases/tag/v0.1.0

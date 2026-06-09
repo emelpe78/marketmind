@@ -1,2 +1,174 @@
-# marketmind
-eBay &amp; Kleinanzeigen Auktions-Organizer
+# MarketMind
+
+**MarketMind** ist ein lokales Reseller-Tool für [eBay.de](https://www.ebay.de) und [Kleinanzeigen.de](https://www.kleinanzeigen.de). Die App läuft auf deinem Rechner, speichert Daten in SQLite und verbindet sich optional mit einer KI über OpenRouter oder einen lokalen Server (z. B. Ollama).
+
+> **Hinweis:** Das Projekt ist derzeit noch nicht als Open Source veröffentlicht. Die Lizenz wird vor dem Release festgelegt.
+
+## Was MarketMind kann
+
+MarketMind hilft beim **Einkaufen und Wiederverkaufen** gebrauchter Artikel: Du recherchierst Marktpreise per Scraper, lässt die Ergebnisse von einer KI auswerten und speicherst Recherchen für später. Der **Flipping-Kalkulator** berechnet Marge und Score für den privaten Weiterverkauf (ohne Plattformgebühren). Der **Anzeigen-Generator** erstellt plattformgerechte Texte für eBay und Kleinanzeigen. Mit der **Watchlist** beobachtest du einzelne Angebote und erhältst Preisalarme, im **Inventar** trackst du Einkauf, Verkauf und Gewinn. Über den **Agent-Manager** konfigurierst du KI-Agents mit eigenen System-Prompts.
+
+## Voraussetzungen
+
+| Komponente        | Version                      |
+| ----------------- | ---------------------------- |
+| Node.js           | ≥ 20                         |
+| npm               | ≥ 10                         |
+| Docker (optional) | aktuelle Version mit Compose |
+
+Für die **KI-Funktionen** brauchst du entweder einen [OpenRouter](https://openrouter.ai)-Account mit API-Key oder einen lokalen OpenAI-kompatiblen Server (z. B. [Ollama](https://ollama.com), LM Studio). Ohne KI-Provider funktionieren Scraper, Watchlist und Inventar; Analysen und Textgenerierung nicht.
+
+## Installation
+
+### Variante A: Lokale Entwicklung (Port 5666)
+
+```bash
+git clone https://github.com/emelpe78/marketmind.git
+cd marketmind/marketmind
+
+cp .env.example .env
+npm install
+npm run dev
+```
+
+Die App ist erreichbar unter **http://127.0.0.1:5666**.
+
+### Variante B: Docker (Port 5667)
+
+Docker läuft getrennt von der Dev-Instanz auf einem eigenen Port und mit eigenem Daten-Volume.
+
+```bash
+git clone https://github.com/emelpe78/marketmind.git
+cd marketmind
+
+docker compose up -d --build
+```
+
+Die App ist erreichbar unter **http://127.0.0.1:5667**.
+
+Container stoppen:
+
+```bash
+docker compose down
+```
+
+### Variante C: Production-Build ohne Docker
+
+```bash
+cd marketmind/marketmind
+npm install
+npm run build
+npm run start
+```
+
+Standardmäßig startet der Server auf Port **3000** (Nitro-Default), sofern `PORT` nicht gesetzt ist. Für einen festen Port:
+
+```bash
+PORT=5666 node .output/server/index.mjs
+```
+
+## Erste Schritte nach der Installation
+
+1. **App im Browser öffnen** (5666 für Dev, 5667 für Docker).
+2. Auf dem Dashboard erscheint ein Hinweis, wenn noch kein KI-Provider konfiguriert ist.
+3. Gehe zu **Einstellungen** und richte API sowie optional Scraper und Datenbank ein.
+4. Starte eine **Preisrecherche** unter `/research`, um Scraper und KI zu testen.
+
+## Konfiguration
+
+Die meisten Einstellungen werden in der App unter **Einstellungen** gespeichert (SQLite), nicht in `.env`. Die `.env` steuert vor allem Server-Port und Datenbankpfad beim Start.
+
+### Umgebungsvariablen (`.env`)
+
+Kopiere `marketmind/.env.example` nach `marketmind/.env`:
+
+| Variable           | Standard             | Beschreibung              |
+| ------------------ | -------------------- | ------------------------- |
+| `MM_DATABASE_PATH` | `data/marketmind.db` | Pfad zur SQLite-Datenbank |
+| `MM_PORT`          | `5666`               | Port des Dev-Servers      |
+
+Unter Docker werden `PORT`, `HOST` und `MM_DATABASE_PATH` über `docker-compose.yml` gesetzt.
+
+### KI-Provider (in der App)
+
+Unter **Einstellungen → API** einen Provider wählen:
+
+**OpenRouter**
+
+- API-Key von [openrouter.ai](https://openrouter.ai) eintragen
+- Default-Modell setzen (z. B. `deepseek/deepseek-v4-pro`)
+
+**Lokale KI**
+
+- OpenAI-kompatible URL (z. B. `http://127.0.0.1:11434/v1` für Ollama)
+- Modellname (z. B. `llama3.2`)
+- API-Key nur falls vom lokalen Server verlangt
+
+API-Keys werden verschlüsselt in der Datenbank gespeichert (Schlüsseldatei `.settings-key` neben der DB).
+
+### Scraper (in der App)
+
+Unter **Einstellungen → Scraper**:
+
+| Einstellung     | Standard  | Bedeutung                              |
+| --------------- | --------- | -------------------------------------- |
+| Delay Min / Max | 2–5 Sek.  | Zufällige Pause zwischen Anfragen      |
+| Cache TTL       | 6 Stunden | Wiederverwendung gecachter HTML-Seiten |
+| Max. Ergebnisse | 100       | Obergrenze pro Suche                   |
+
+### Datenbank (in der App)
+
+Unter **Einstellungen → Datenbank**:
+
+- **Pfad ändern** — verschiebt die DB (bestehende Datei wird kopiert)
+- **Zurücksetzen** — löscht alle Daten, behält den Pfad; Standard-Agents und -Einstellungen werden neu angelegt
+
+Dev-Daten liegen in `marketmind/data/` (nicht versioniert). Docker-Daten im Volume `marketmind-data`.
+
+## Projektstruktur
+
+```
+marketmind/           # Repository-Root
+├── docker-compose.yml
+├── CHANGELOG.md
+├── docs/PRD.md
+└── marketmind/       # Nuxt-App (npm-Befehle hier ausführen)
+    ├── app/          # Frontend
+    ├── server/       # API & Services
+    └── test/         # Unit- & E2E-Tests
+```
+
+## Entwicklung & Tests
+
+```bash
+cd marketmind/marketmind
+
+npm run dev          # Dev-Server (Port 5666)
+npm run test:run     # Unit- & API-Tests
+npm run test:e2e     # Playwright (baut vorher)
+npx nuxi typecheck   # TypeScript-Prüfung
+```
+
+Weitere Hinweise für Mitwirkende: [AGENTS.md](AGENTS.md)
+
+## Rechtlicher Hinweis zum Scraping
+
+MarketMind ruft öffentlich zugängliche Seiten von **eBay.de** und **Kleinanzeigen.de** automatisiert ab, um Preisinformationen zu sammeln. **Du bist selbst dafür verantwortlich**, dass deine Nutzung mit geltendem Recht und den Nutzungsbedingungen der jeweiligen Plattformen vereinbar ist.
+
+**Wichtige Punkte:**
+
+- Die **AGB und Nutzungsbedingungen** von eBay und Kleinanzeigen können automatisiertes Auslesen (Scraping, Crawling, Bots) **untersagen oder einschränken**. Verstöße können zu Sperren, IP-Blocks oder rechtlichen Schritten führen.
+- MarketMind ist ein **privates Werkzeug** für den persönlichen Gebrauch. Es ist nicht vom Betreiber von eBay oder Kleinanzeigen autorisiert oder unterstützt.
+- **eBay** kann automatische Anfragen blockieren (z. B. HTTP 403). Die App kann dann keine Ergebnisse liefern — das ist kein Fehler der Installation, sondern eine Schutzmaßnahme der Plattform.
+- Bei **Kleinanzeigen** werden in der Regel nur **Angebotspreise** erfasst, keine tatsächlichen Verkaufspreise. Die KI weist in Analysen darauf hin, wenn die Datenlage eingeschränkt ist.
+- Scraping kann **personenbezogene Daten** (z. B. in Anzeigentiteln oder Standortangaben) berühren. Verarbeite solche Daten nur, wenn du dazu berechtigt bist, und beachte die **DSGVO**.
+- Die Entwickler von MarketMind **übernehmen keine Haftung** für Schäden, die durch die Nutzung des Scrapings entstehen — einschließlich Kontosperren, rechtlicher Auseinandersetzungen oder fehlerhafter Kauf-/Verkaufsentscheidungen.
+- **Keine Rechtsberatung:** Dieser Hinweis ersetzt keine individuelle rechtliche Beratung. Bei Unsicherheit solltest du die AGB der Plattformen prüfen oder rechtlichen Rat einholen.
+
+Nutze **moderate Abfragefrequenzen** (einstellbarer Delay), cache Ergebnisse und belaste die Plattformen nicht unnötig.
+
+## Lizenz & Status
+
+- **Version:** 0.1.0 — siehe [CHANGELOG.md](CHANGELOG.md)
+- **Lizenz:** Noch nicht veröffentlicht (geplant: Open Source)
+- **Issues:** [GitHub Issues](https://github.com/emelpe78/marketmind/issues)
