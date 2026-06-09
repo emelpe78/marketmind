@@ -4,6 +4,28 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.1.7] — 2026-06-09
+
+Dashboard mit gruppierten KPI-Karten, Feature-Agent-Übersicht und Navigation zu den jeweiligen Bereichen.
+
+### Hinzugefügt
+
+- **Dashboard-KPI-Karten** — Abschnitte Recherche & Tools, Inventar, Agents und KI & Nutzung mit Icon-Boxen
+- **`DashboardKpiCard`** — Wrapper mit optionaler `NuxtLink`-Navigation bei vorhandenen Daten
+- **`shared/agent-icons.ts`** — Lucide-Icons pro Agent-Typ (`research`, `listing`, `analytics`, `strategy`)
+- **Agent-Cards auf dem Dashboard** — Aufrufe, Kosten und Feature-Zuordnung pro Feature-Agent
+- **Flip-Highlights** — Bester und schlechtester Flip als KPI-Karten (wenn Inventardaten vorhanden)
+
+### Geändert
+
+- **Dashboard-API** — `getDashboardSummary` liefert Zähler (Recherchen, Analysen, Anzeigen, Watchlist, Inventar, Prompt-Bibliothek) und Agent-Stats statt Listen/„Letzte Suchen“
+- **Dashboard-Karten** — Verlinkung zu passenden Routen (z. B. `/research/saved`, `/flipping/analyses`, `/watchlist`, `/inventory`, `/agents/history`, `/settings`)
+- **`useDashboard`** — erweitertes `DashboardSummary`-Interface mit `agents`, `promptLibraryCount` und Zählfeldern
+
+### Entfernt
+
+- **Letzte Suchen** — Tabelle vom Dashboard entfernt
+
 ## [0.1.6] — 2026-06-09
 
 Preisrecherche mit Sidebar-Submenu und eigener Seite für gespeicherte Recherchen; Marktanalyse und Ergebnisliste als aufklappbare Accordion-/Collapsible-Ansicht.
@@ -290,7 +312,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.6...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.7...HEAD
+[0.1.7]: https://github.com/emelpe78/marketmind/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/emelpe78/marketmind/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/emelpe78/marketmind/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/emelpe78/marketmind/compare/v0.1.3...v0.1.4

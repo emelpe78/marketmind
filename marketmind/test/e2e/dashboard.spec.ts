@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 const pages = [
-  { path: "/", heading: "Letzte Suchen" },
+  { path: "/", heading: "Dashboard" },
   {
     path: "/research",
     heading: "Preisrecherche",
@@ -34,8 +34,13 @@ const pages = [
 test.describe("Dashboard & Navigation", () => {
   test("dashboard loads with KPI cards", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByText("Gespeicherte Recherchen")).toBeVisible();
-    await expect(page.getByText("Watchlist-Alerts")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Dashboard" }),
+    ).toBeVisible();
+    await expect(page.getByTestId("kpi-saved-researches")).toBeVisible();
+    await expect(page.getByTestId("kpi-watchlist-alerts")).toBeVisible();
+    await expect(page.getByTestId("kpi-total-profit")).toBeVisible();
+    await expect(page.getByTestId("kpi-agent-research")).toBeVisible();
     await expect(page.getByTestId("saved-researches")).not.toBeVisible();
   });
 

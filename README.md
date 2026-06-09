@@ -6,7 +6,7 @@
 
 ## Was MarketMind kann
 
-MarketMind hilft beim **Einkaufen und Wiederverkaufen** gebrauchter Artikel: Du recherchierst Marktpreise per Scraper, lässt die Ergebnisse von einer KI auswerten (Abschnitte wie Preisübersicht und Marktbewertung in einer Tab-Ansicht) und speicherst Recherchen inklusive KI-Analyse für später. Unter **Preisrecherche → Gespeicherte Recherchen** findest du alle Snapshots; in der Detailansicht klappst du Marktanalysen pro Plattform und die Ergebnisliste per Klick auf. Der **Flipping-Kalkulator** bewertet per KI das Potenzial einer konkreten eBay- oder Kleinanzeigen-Anzeige (URL eingeben → Analyse in Tabs → optional speichern). Unter **Flipping-Analysen** findest du gespeicherte Auswertungen wieder. Der **Anzeigen-Generator** erstellt plattformgerechte Texte für eBay und Kleinanzeigen; unter **Gespeicherte Anzeigen** verwaltest du Texte, bearbeitest sie im Modal und kannst sie direkt ins **Inventar** übernehmen. Mit der **Watchlist** beobachtest du einzelne Angebote und erhältst Preisalarme; im **Inventar** trackst du Einkauf, Verkauf und Gewinn (Plattformen: Kleinanzeigen, eBay, Sonstige).
+Das **Dashboard** gibt dir auf einen Blick Kennzahlen zu gespeicherten Recherchen, Flipping-Analysen, Anzeigen, Watchlist, Inventar und KI-Nutzung — mit direkten Links zu den jeweiligen Bereichen, sobald Daten vorhanden sind. MarketMind hilft beim **Einkaufen und Wiederverkaufen** gebrauchter Artikel: Du recherchierst Marktpreise per Scraper, lässt die Ergebnisse von einer KI auswerten (Abschnitte wie Preisübersicht und Marktbewertung in einer Tab-Ansicht) und speicherst Recherchen inklusive KI-Analyse für später. Unter **Preisrecherche → Gespeicherte Recherchen** findest du alle Snapshots; in der Detailansicht klappst du Marktanalysen pro Plattform und die Ergebnisliste per Klick auf. Der **Flipping-Kalkulator** bewertet per KI das Potenzial einer konkreten eBay- oder Kleinanzeigen-Anzeige (URL eingeben → Analyse in Tabs → optional speichern). Unter **Flipping-Analysen** findest du gespeicherte Auswertungen wieder. Der **Anzeigen-Generator** erstellt plattformgerechte Texte für eBay und Kleinanzeigen; unter **Gespeicherte Anzeigen** verwaltest du Texte, bearbeitest sie im Modal und kannst sie direkt ins **Inventar** übernehmen. Mit der **Watchlist** beobachtest du einzelne Angebote und erhältst Preisalarme; im **Inventar** trackst du Einkauf, Verkauf und Gewinn (Plattformen: Kleinanzeigen, eBay, Sonstige).
 
 Die Sidebar hat Submenüs für **Preisrecherche** (Recherche, Gespeicherte Recherchen), **Anzeigen** (Generator, Gespeicherte Anzeigen), **Flipping** (Kalkulator, Analysen) und **Agents** (Feature-Agents, System-Prompt-Generator, KI-Verlauf). Der Agent-Manager umfasst **Feature-Agents** (Research, Listing, Flipping, Prompt Agent), die **Prompt-Bibliothek** (CRUD, optionale Agent-Zuordnung — ein Prompt pro Agent) und den **KI-Verlauf**. Änderungen an Agents, Prompts und Zuordnungen erscheinen sofort in der UI — ohne manuellen Reload.
 
@@ -74,7 +74,7 @@ PORT=5666 node .output/server/index.mjs
 ## Erste Schritte nach der Installation
 
 1. **App im Browser öffnen** (5666 für Dev, 5667 für Docker).
-2. Auf dem Dashboard erscheint ein Hinweis, wenn noch kein KI-Provider konfiguriert ist.
+2. Auf dem Dashboard siehst du KPI-Karten und ggf. einen Hinweis, wenn noch kein KI-Provider konfiguriert ist.
 3. Gehe zu **Einstellungen** und richte API sowie optional Scraper und Datenbank ein.
 4. Starte eine **Preisrecherche** unter `/research`, um Scraper und KI zu testen.
 
@@ -178,6 +178,6 @@ Nutze **moderate Abfragefrequenzen** (einstellbarer Delay), cache Ergebnisse und
 
 ## Lizenz & Status
 
-- **Version:** 0.1.6 — siehe [CHANGELOG.md](CHANGELOG.md)
+- **Version:** 0.1.7 — siehe [CHANGELOG.md](CHANGELOG.md)
 - **Lizenz:** Noch nicht veröffentlicht (geplant: Open Source)
 - **Issues:** [GitHub Issues](https://github.com/emelpe78/marketmind/issues)

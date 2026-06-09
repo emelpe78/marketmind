@@ -1,14 +1,20 @@
 import type Database from "better-sqlite3";
 import { getAiConfig, isAiConfigured } from "../ai/config";
+import { listAgentsWithStats } from "../agents/repository";
 import { getInventorySummary } from "../inventory/index";
-import { listSavedResearches } from "../research/saved-research";
-import { findRecentSearches } from "../searches/repository";
 import { findActiveWatchlistItems } from "../watchlist/repository";
 import { checkAlert } from "../watchlist/alerts";
 
+function countRows(
+  db: Database.Database,
+  sql: string,
+  ...params: unknown[]
+): number {
+  const row = db.prepare(sql).get(...params) as { count: number };
+  return row.count;
+}
+
 export function getDashboardSummary(db: Database.Database) {
-  const recentSearches = findRecentSearches(db, 5);
-  const savedResearches = listSavedResearches(db);
   const watchlistItems = findActiveWatchlistItems(db);
 
   const watchlistAlerts = watchlistItems.filter((item) =>
@@ -24,9 +30,36 @@ export function getDashboardSummary(db: Database.Database) {
   const aiConfig = getAiConfig(db);
 
   return {
-    recentSearches,
-    savedResearches,
+    savedResearchCount: countRows(
+      db,
+      "SELECT COUNT(*) as count FROM saved_researches",
+    ),
+    savedFlipAnalysisCount: countRows(
+      db,
+      "SELECT COUNT(*) as count FROM saved_flip_analyses",
+    ),
+    savedListingCount: countRows(db, "SELECT COUNT(*) as count FROM listings"),
+    watchlistItemCount: watchlistItems.length,
     watchlistAlerts,
+    openInventoryCount: countRows(
+      db,
+      "SELECT COUNT(*) as count FROM inventory WHERE status = 'gekauft'",
+    ),
+    agentCallCount: countRows(
+      db,
+      "SELECT COUNT(*) as count FROM agent_history",
+    ),
+    promptLibraryCount: countRows(
+      db,
+      "SELECT COUNT(*) as count FROM prompt_library",
+    ),
+    agents: listAgentsWithStats(db).map((agent) => ({
+      id: agent.id,
+      name: agent.name,
+      type: agent.type,
+      callCount: agent.call_count,
+      totalCostUsd: agent.total_cost_usd,
+    })),
     inventorySummary,
     tokenCosts: tokenRow.total,
     aiConfigured: isAiConfigured(aiConfig),

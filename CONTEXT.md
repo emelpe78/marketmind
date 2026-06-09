@@ -13,6 +13,7 @@ Glossar für Architektur-Reviews und Code. Begriffe aus dem PRD plus technische 
 | **Inventar**           | Gekaufte/verkaufte Artikel mit Gewinn/Verlust; Einkaufs-/Verkaufsplattform Kleinanzeigen, eBay oder **Sonstige**; Server liefert berechnetes `profit`                                                                                                           |
 | **Agent-Manager**      | KI-Agents in drei UI-Bereichen: Feature-Agents (`/agents/feature-agents`), System-Prompt-Generator (`/agents/prompt-generator`), Verlauf (`/agents/history`); Sidebar-Submenu unter „Agents“                                                                    |
 | **Prompt-Bibliothek**  | Gespeicherte System-Prompts mit CRUD; optionale Zuordnung zu genau einem Agent (`agent_id`); Sync mit `agents.system_prompt`                                                                                                                                    |
+| **Dashboard**          | Startseite `/` mit KPI-Übersicht: gespeicherte Recherchen/Analysen/Anzeigen, Watchlist, Inventar, Feature-Agents, KI-Nutzung; Karten verlinken bei vorhandenen Daten zur jeweiligen Unterseite                                                                  |
 
 ## Vordefinierte Agents
 
@@ -42,6 +43,10 @@ Pro Agent ist höchstens **ein** Prompt in der Bibliothek zugeordnet; eine neue 
 | **ResearchAnalysisSummary** | `app/components/ResearchAnalysisSummary.vue`      | Einzelne KI-Analyse als Card (z. B. Flipping)                                                                                  |
 | **useSavedResearches**      | `app/composables/useSavedResearches.ts`           | Liste, Bearbeiten, Löschen gespeicherter Recherchen; Fetch-Key `savedResearches`                                               |
 | **MarkdownRenderer**        | `app/utils/render-markdown.ts`                    | KI-Markdown → HTML; `parseMarkdownSections`, `stripPlatformSuffixFromTitle`, erlaubte Tags (`<small>`, `<br>`)                 |
+| **DashboardSummary**        | `server/services/dashboard/summary.ts`            | Aggregierte KPI-Daten für Startseite: Zähler, Inventar-Summary, Agent-Stats, Token-Kosten, KI-Status                           |
+| **DashboardOverview**       | `app/components/DashboardOverview.vue`            | KPI-Karten in Abschnitten; Flip-Highlights; Schnellzugriffe                                                                    |
+| **DashboardKpiCard**        | `app/components/DashboardKpiCard.vue`             | KPI-Card mit optionalem `NuxtLink` bei gesetztem `to`                                                                          |
+| **AgentIcons**              | `shared/agent-icons.ts`                           | `getAgentIcon(type)` — Lucide-Icon pro Agent-Typ                                                                               |
 | **ResearchNav**             | `shared/research-nav.ts`                          | Sidebar-Submenu: Recherche, Gespeicherte Recherchen; `isResearchRoute()`                                                       |
 | **generateListing**         | `server/services/listings/generate-listing.ts`    | Anzeigen-Generator: Marktkontext → `RunAgent` (`listing`) → Parsing                                                            |
 | **generateAgentPrompt**     | `server/services/agents/generate-prompt.ts`       | Prompt-Generierung über Prompt Agent (`strategy`); nutzt `resolveAgentPromptText()`                                            |

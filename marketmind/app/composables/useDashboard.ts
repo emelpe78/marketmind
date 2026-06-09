@@ -1,11 +1,24 @@
-import type { SavedResearchListItem } from "~/composables/useSavedResearches";
 import { FETCH_KEYS } from "~/utils/fetch-keys";
 import { refreshFetchData } from "~/utils/refresh-fetch-data";
 
+export interface DashboardAgentSummary {
+  id: number;
+  name: string;
+  type: string;
+  callCount: number;
+  totalCostUsd: number;
+}
+
 export interface DashboardSummary {
-  recentSearches: Array<Record<string, unknown>>;
-  savedResearches: SavedResearchListItem[];
+  savedResearchCount: number;
+  savedFlipAnalysisCount: number;
+  savedListingCount: number;
+  watchlistItemCount: number;
   watchlistAlerts: number;
+  openInventoryCount: number;
+  agentCallCount: number;
+  promptLibraryCount: number;
+  agents: DashboardAgentSummary[];
   inventorySummary: {
     totalProfit: number;
     avgMargin: number;

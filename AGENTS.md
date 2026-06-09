@@ -1,6 +1,6 @@
 # MarketMind — Agent Guide
 
-Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.1.6**.
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.1.7**.
 
 ## Repository-Layout
 
@@ -64,6 +64,7 @@ Dev-DB: `marketmind/data/` (gitignored). Docker-DB: Volume `marketmind-data` unt
 - **Inventar-UI:** `/inventory` — Plattformen Kleinanzeigen, eBay, Sonstige (`INVENTORY_PLATFORM_SELECT_OPTIONS`, `normalizeInventoryPlatform()`)
 - **Flipping-UI:** `/flipping` (Kalkulator), `/flipping/analyses` (Liste), `/flipping/analyses/[id]` (Detail); Submenu in `default.vue` (`shared/flipping-nav.ts`)
 - **Agents-UI:** `/agents/feature-agents` (Konfiguration), `/agents/prompt-generator` (Bibliothek + Generator), `/agents/history` (KI-Verlauf); Submenu in `default.vue`
+- **Dashboard:** `app/components/DashboardOverview.vue` — KPI-Karten in vier Abschnitten (Recherche & Tools, Inventar, Agents, KI & Nutzung); `DashboardKpiCard` mit optionaler Navigation; Daten über `useDashboard` / `GET /api/dashboard`
 - **Layout:** `app/layouts/default.vue` — Sidebar mit Preisrecherche-, Anzeigen-, Flipping- und Agents-Submenu, Theme-Toggle, Versionsbadge
 - **KI-Analyse-UI:** `ResearchAnalysisList` (Accordion pro Plattform), `ResearchAnalysisSummary` (Einzel-Card), `ResearchResultsTable` (Collapsible), `AnalysisSectionTabs` (vertikale Tabs); Markdown über `app/utils/render-markdown.ts` (`parseMarkdownSections`, `stripPlatformSuffixFromTitle`, erlaubte HTML-Tags)
 - **Utils:** Re-Exports aus `shared/`; `render-markdown.ts` bleibt app-lokal
@@ -136,29 +137,30 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 
 ## Häufige Aufgaben
 
-| Aufgabe                 | Ort                                                                                  |
-| ----------------------- | ------------------------------------------------------------------------------------ |
-| Neue API-Route          | `server/api/<name>.<method>.ts`                                                      |
-| Neue Seite              | `app/pages/<route>.vue`                                                              |
-| Scraper-Logik           | `server/services/scraper/`                                                           |
-| DB-Schema               | `server/database/schema.sql` + Seed anpassen                                         |
-| Formatierung            | `shared/format-*.ts` wiederverwenden                                                 |
-| Einstellungen-Keys      | `server/database/settings.ts`, Settings-UI                                           |
-| KI-Aufruf               | `server/services/ai/run-agent.ts`                                                    |
-| Preisrecherche          | `server/services/research/run-research.ts`, `app/pages/research/`                    |
-| Gespeicherte Recherchen | `useSavedResearches`, `app/pages/research/saved/`, `server/api/saved-researches/`    |
-| Research-Navigation     | `shared/research-nav.ts`, `app/layouts/default.vue`                                  |
-| Flipping-Analyse        | `server/services/flipping/analyze-flip.ts`, `server/api/flipping/analyze.post.ts`    |
-| Flipping speichern      | `server/services/flipping/saved-flip-analysis.ts`, `server/api/saved-flip-analyses/` |
-| Anzeigen speichern      | `server/services/listings/repository.ts`, `server/api/listings/`                     |
-| Listings-Navigation     | `shared/listings-nav.ts`, `app/pages/listings/`                                      |
-| Inventar                | `server/services/inventory/`, `app/pages/inventory.vue`, `useInventory`              |
-| Prompt-Bibliothek       | `server/services/prompt-library/`, `server/api/prompt-library/`                      |
-| Agent-Seed/Namen        | `server/database/seed.ts`, `server/database/migrations.ts`                           |
-| Default-Agents          | Research, Listing, Flipping (`analytics`), Prompt (`strategy`, Meta-Agent)           |
-| Fetch-Keys              | `app/utils/fetch-keys.ts` — `useFetch`-Keys für geteilten Cache                      |
-| UI nach Speichern       | `app/utils/refresh-fetch-data.ts` — `refreshAgentsData`, `refreshAllFetchData`, …    |
-| Agent-Prompt-Docs       | `docs/listing_agent.md`, `docs/flipping_agent.md`                                    |
+| Aufgabe                 | Ort                                                                                            |
+| ----------------------- | ---------------------------------------------------------------------------------------------- |
+| Neue API-Route          | `server/api/<name>.<method>.ts`                                                                |
+| Neue Seite              | `app/pages/<route>.vue`                                                                        |
+| Scraper-Logik           | `server/services/scraper/`                                                                     |
+| DB-Schema               | `server/database/schema.sql` + Seed anpassen                                                   |
+| Formatierung            | `shared/format-*.ts` wiederverwenden                                                           |
+| Einstellungen-Keys      | `server/database/settings.ts`, Settings-UI                                                     |
+| KI-Aufruf               | `server/services/ai/run-agent.ts`                                                              |
+| Preisrecherche          | `server/services/research/run-research.ts`, `app/pages/research/`                              |
+| Gespeicherte Recherchen | `useSavedResearches`, `app/pages/research/saved/`, `server/api/saved-researches/`              |
+| Research-Navigation     | `shared/research-nav.ts`, `app/layouts/default.vue`                                            |
+| Flipping-Analyse        | `server/services/flipping/analyze-flip.ts`, `server/api/flipping/analyze.post.ts`              |
+| Flipping speichern      | `server/services/flipping/saved-flip-analysis.ts`, `server/api/saved-flip-analyses/`           |
+| Anzeigen speichern      | `server/services/listings/repository.ts`, `server/api/listings/`                               |
+| Listings-Navigation     | `shared/listings-nav.ts`, `app/pages/listings/`                                                |
+| Inventar                | `server/services/inventory/`, `app/pages/inventory.vue`, `useInventory`                        |
+| Prompt-Bibliothek       | `server/services/prompt-library/`, `server/api/prompt-library/`                                |
+| Agent-Seed/Namen        | `server/database/seed.ts`, `server/database/migrations.ts`                                     |
+| Default-Agents          | Research, Listing, Flipping (`analytics`), Prompt (`strategy`, Meta-Agent)                     |
+| Dashboard               | `server/services/dashboard/summary.ts`, `app/components/DashboardOverview.vue`, `useDashboard` |
+| Fetch-Keys              | `app/utils/fetch-keys.ts` — `useFetch`-Keys für geteilten Cache                                |
+| UI nach Speichern       | `app/utils/refresh-fetch-data.ts` — `refreshAgentsData`, `refreshAllFetchData`, …              |
+| Agent-Prompt-Docs       | `docs/listing_agent.md`, `docs/flipping_agent.md`                                              |
 
 ## Was vermeiden
 

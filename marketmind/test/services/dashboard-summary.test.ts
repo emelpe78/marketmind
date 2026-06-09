@@ -18,10 +18,10 @@ describe("getDashboardSummary", () => {
        VALUES (?, ?, ?, ?, ?)`,
     ).run("Sold Item", 100, 180, "verkauft", 80);
 
-    db.prepare("INSERT INTO searches (query, platform) VALUES (?, ?)").run(
-      "RTX 3060",
-      "ebay",
-    );
+    db.prepare(
+      `INSERT INTO inventory (title, buy_price, status)
+       VALUES (?, ?, ?)`,
+    ).run("Open Item", 50, "gekauft");
 
     const agent = db
       .prepare("SELECT id FROM agents WHERE type = 'research'")
@@ -34,9 +34,19 @@ describe("getDashboardSummary", () => {
     const summary = getDashboardSummary(db);
 
     expect(summary.watchlistAlerts).toBe(1);
+    expect(summary.watchlistItemCount).toBe(1);
     expect(summary.inventorySummary.soldCount).toBe(1);
     expect(summary.inventorySummary.totalProfit).toBe(80);
+    expect(summary.openInventoryCount).toBe(1);
     expect(summary.tokenCosts).toBeCloseTo(0.05);
-    expect(summary.recentSearches.length).toBeGreaterThan(0);
+    expect(summary.agentCallCount).toBe(1);
+    expect(summary.savedResearchCount).toBe(0);
+    expect(summary.savedFlipAnalysisCount).toBe(0);
+    expect(summary.savedListingCount).toBe(0);
+    expect(summary.promptLibraryCount).toBeGreaterThanOrEqual(0);
+    expect(summary.agents.length).toBeGreaterThan(0);
+    expect(summary.agents.some((agent) => agent.type === "research")).toBe(
+      true,
+    );
   });
 });
