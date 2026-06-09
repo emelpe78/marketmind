@@ -6,7 +6,7 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 
 ## [0.1.7] — 2026-06-09
 
-Dashboard mit gruppierten KPI-Karten, Feature-Agent-Übersicht und Navigation zu den jeweiligen Bereichen.
+Dashboard mit gruppierten KPI-Karten und Agent-Übersicht; Docker-Speicherort per Host-Bind-Mount (Nextcloud) statt benanntem Volume.
 
 ### Hinzugefügt
 
@@ -15,6 +15,9 @@ Dashboard mit gruppierten KPI-Karten, Feature-Agent-Übersicht und Navigation zu
 - **`shared/agent-icons.ts`** — Lucide-Icons pro Agent-Typ (`research`, `listing`, `analytics`, `strategy`)
 - **Agent-Cards auf dem Dashboard** — Aufrufe, Kosten und Feature-Zuordnung pro Feature-Agent
 - **Flip-Highlights** — Bester und schlechtester Flip als KPI-Karten (wenn Inventardaten vorhanden)
+- **Docker Bind-Mount** — `MARKETMIND_DATA_DIR` in Repo-Root `.env.example`; Host-Ordner wird nach `/app/data` gemountet (Standard: Nextcloud `Apps/MarketMind`)
+- **`pathLocked` in Datenbank-Info** — API und Einstellungen zeigen Hinweis, wenn `MM_DATABASE_PATH` gesetzt ist (z. B. Docker)
+- **`isDatabasePathLocked()`** — in `server/database/paths.ts`; blockiert Pfadänderungen per API
 
 ### Geändert
 
@@ -22,10 +25,13 @@ Dashboard mit gruppierten KPI-Karten, Feature-Agent-Übersicht und Navigation zu
 - **Dashboard-Karten** — Verlinkung zu passenden Routen (z. B. `/research/saved`, `/flipping/analyses`, `/watchlist`, `/inventory`, `/agents/history`, `/settings`)
 - **`useDashboard`** — erweitertes `DashboardSummary`-Interface mit `agents`, `promptLibraryCount` und Zählfeldern
 - **Sidebar-Reihenfolge** — Dashboard → Preisrecherche → Anzeigen → Flipping → Inventar → Watchlist → Agents → Einstellungen
+- **docker-compose.yml** — benanntes Volume `marketmind-data` durch Host-Bind-Mount ersetzt
+- **Einstellungen → Datenbank** — Pfadfeld und „Pfad speichern“ deaktiviert bei gesperrtem Pfad; `PUT /api/database/path` antwortet mit **409**
 
 ### Entfernt
 
 - **Letzte Suchen** — Tabelle vom Dashboard entfernt
+- **Docker-Volume `marketmind-data`** — durch konfigurierbaren Host-Ordner ersetzt
 
 ## [0.1.6] — 2026-06-09
 

@@ -12,7 +12,7 @@ services:
       MM_PORT: "5667"
       MM_DATABASE_PATH: /app/data/marketmind.db
     volumes:
-      - marketmind-data:/app/data
+      - ${MARKETMIND_DATA_DIR:-/Users/mlp/Nextcloud/Apps/MarketMind}:/app/data
     restart: unless-stopped
     healthcheck:
       test:
@@ -26,6 +26,3 @@ services:
       timeout: 5s
       retries: 3
       start_period: 20s
-
-volumes:
-  marketmind-data:

@@ -1,6 +1,6 @@
 import { copyFileSync, existsSync, mkdirSync, unlinkSync } from "node:fs";
 import { dirname } from "node:path";
-import { getActivePath, resolveDbPath } from "./paths";
+import { getActivePath, isDatabasePathLocked, resolveDbPath } from "./paths";
 import { getDb, initDatabase, resetDb } from "./db";
 import { seedDatabase } from "./seed";
 import { setSetting } from "./settings";
@@ -13,9 +13,13 @@ const SQLITE_SIDECARS = ["-wal", "-shm"] as const;
  * - relocate/reset call resetDb() before switching files; WAL/SHM sidecars copied on relocate
  */
 
-export function getDatabaseInfo(): { path: string; exists: boolean } {
+export function getDatabaseInfo(): {
+  path: string;
+  exists: boolean;
+  pathLocked: boolean;
+} {
   const path = getActivePath();
-  return { path, exists: existsSync(path) };
+  return { path, exists: existsSync(path), pathLocked: isDatabasePathLocked() };
 }
 
 function copySqliteFiles(from: string, to: string): void {

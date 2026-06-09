@@ -39,14 +39,17 @@ Die App ist erreichbar unter **http://127.0.0.1:5666**.
 
 ### Variante B: Docker (Port 5667)
 
-Docker läuft getrennt von der Dev-Instanz auf einem eigenen Port und mit eigenem Daten-Volume.
+Docker läuft getrennt von der Dev-Instanz auf einem eigenen Port. Die SQLite-Datei liegt standardmäßig in einem Nextcloud-Ordner auf dem Host (Bind-Mount).
 
 ```bash
 git clone https://github.com/emelpe78/marketmind.git
 cd marketmind
 
+cp .env.example .env   # optional: MARKETMIND_DATA_DIR anpassen
 docker compose up -d --build
 ```
+
+Host-Pfad (Standard): `/Users/mlp/Nextcloud/Apps/MarketMind` → im Container `/app/data/marketmind.db`. Den Pfad in den App-Einstellungen ändern funktioniert unter Docker nicht — nur über `.env` / `docker-compose.yml`.
 
 Die App ist erreichbar unter **http://127.0.0.1:5667**.
 
@@ -91,7 +94,11 @@ Kopiere `marketmind/.env.example` nach `marketmind/.env`:
 | `MM_DATABASE_PATH` | `data/marketmind.db` | Pfad zur SQLite-Datenbank |
 | `MM_PORT`          | `5666`               | Port des Dev-Servers      |
 
-Unter Docker werden `PORT`, `HOST` und `MM_DATABASE_PATH` über `docker-compose.yml` gesetzt.
+Unter Docker werden `PORT`, `HOST` und `MM_DATABASE_PATH` über `docker-compose.yml` gesetzt. Den **Host-Datenordner** steuerst du im Repo-Root über `.env` (`MARKETMIND_DATA_DIR` — siehe `.env.example`).
+
+| Variable (Repo-Root, Docker) | Standard                               | Beschreibung                            |
+| ---------------------------- | -------------------------------------- | --------------------------------------- |
+| `MARKETMIND_DATA_DIR`        | `/Users/mlp/Nextcloud/Apps/MarketMind` | Host-Ordner, gemountet nach `/app/data` |
 
 ### KI-Provider (in der App)
 
@@ -124,10 +131,10 @@ Unter **Einstellungen → Scraper**:
 
 Unter **Einstellungen → Datenbank**:
 
-- **Pfad ändern** — verschiebt die DB (bestehende Datei wird kopiert)
+- **Pfad ändern** — verschiebt die DB (bestehende Datei wird kopiert); **nur ohne Docker** — bei gesetztem `MM_DATABASE_PATH` ist das Feld gesperrt
 - **Zurücksetzen** — löscht alle Daten, behält den Pfad; Standard-Agents und -Einstellungen werden neu angelegt
 
-Dev-Daten liegen in `marketmind/data/` (nicht versioniert). Docker-Daten im Volume `marketmind-data`.
+Dev-Daten liegen in `marketmind/data/` (nicht versioniert). Docker-Daten im Host-Ordner `MARKETMIND_DATA_DIR` (Standard: Nextcloud `Apps/MarketMind`), Datei `marketmind.db` plus `.settings-key` daneben.
 
 ## Projektstruktur
 
@@ -136,6 +143,7 @@ marketmind/           # Repository-Root
 ├── AGENTS.md         # Anleitung für Mitwirkende & KI-Agenten
 ├── CONTEXT.md        # Domänensprache & Modul-Begriffe
 ├── CHANGELOG.md
+├── .env.example      # Docker: MARKETMIND_DATA_DIR (Host-Datenordner)
 ├── docs/             # PRD, Agent-Prompt-Referenzen
 ├── docker-compose.yml
 └── marketmind/       # Nuxt-App (npm-Befehle hier ausführen)

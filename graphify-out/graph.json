@@ -763,7 +763,7 @@
       "label": "useDatabaseAdmin()",
       "file_type": "code",
       "source_file": "marketmind/app/composables/useDatabaseAdmin.ts",
-      "source_location": "L9",
+      "source_location": "L10",
       "id": "composables_usedatabaseadmin_usedatabaseadmin",
       "community": 158,
       "norm_label": "usedatabaseadmin()"
@@ -873,7 +873,7 @@
       "source_file": "marketmind/app/utils/detect-platform.ts",
       "source_location": "L1",
       "id": "marketmind_app_utils_detect_platform_ts",
-      "community": 61,
+      "community": 176,
       "norm_label": "detect-platform.ts"
     },
     {
@@ -882,7 +882,7 @@
       "source_file": "marketmind/app/utils/format-currency.ts",
       "source_location": "L1",
       "id": "marketmind_app_utils_format_currency_ts",
-      "community": 185,
+      "community": 98,
       "norm_label": "format-currency.ts"
     },
     {
@@ -990,7 +990,7 @@
       "source_file": "marketmind/app/utils/format-percent.ts",
       "source_location": "L1",
       "id": "marketmind_app_utils_format_percent_ts",
-      "community": 178,
+      "community": 98,
       "norm_label": "format-percent.ts"
     },
     {
@@ -1485,7 +1485,7 @@
       "source_file": "marketmind/test/database/agent-renames.test.ts",
       "source_location": "L1",
       "id": "marketmind_test_database_agent_renames_test_ts",
-      "community": 25,
+      "community": 168,
       "norm_label": "agent-renames.test.ts"
     },
     {
@@ -1494,7 +1494,7 @@
       "source_file": "marketmind/test/database/agent-renames.test.ts",
       "source_location": "L10",
       "id": "database_agent_renames_test_db",
-      "community": 25,
+      "community": 168,
       "norm_label": "db"
     },
     {
@@ -1908,7 +1908,7 @@
       "source_file": "marketmind/test/api/inventory-watchlist.test.ts",
       "source_location": "L1",
       "id": "marketmind_test_api_inventory_watchlist_test_ts",
-      "community": 83,
+      "community": 82,
       "norm_label": "inventory-watchlist.test.ts"
     },
     {
@@ -1917,7 +1917,7 @@
       "source_file": "marketmind/test/api/inventory-watchlist.test.ts",
       "source_location": "L17",
       "id": "api_inventory_watchlist_test_profit",
-      "community": 83,
+      "community": 82,
       "norm_label": "profit"
     },
     {
@@ -1926,7 +1926,7 @@
       "source_file": "marketmind/test/api/inventory-watchlist.test.ts",
       "source_location": "L55",
       "id": "api_inventory_watchlist_test_db",
-      "community": 83,
+      "community": 82,
       "norm_label": "db"
     },
     {
@@ -1935,7 +1935,7 @@
       "source_file": "marketmind/test/api/inventory-watchlist.test.ts",
       "source_location": "L63",
       "id": "api_inventory_watchlist_test_summary",
-      "community": 83,
+      "community": 82,
       "norm_label": "summary"
     },
     {
@@ -1944,7 +1944,7 @@
       "source_file": "marketmind/test/api/inventory-watchlist.test.ts",
       "source_location": "L93",
       "id": "api_inventory_watchlist_test_insert",
-      "community": 83,
+      "community": 82,
       "norm_label": "insert"
     },
     {
@@ -1953,7 +1953,7 @@
       "source_file": "marketmind/test/api/inventory-watchlist.test.ts",
       "source_location": "L99",
       "id": "api_inventory_watchlist_test_item",
-      "community": 83,
+      "community": 82,
       "norm_label": "item"
     },
     {
@@ -1962,7 +1962,7 @@
       "source_file": "marketmind/test/api/inventory-watchlist.test.ts",
       "source_location": "L112",
       "id": "api_inventory_watchlist_test_mockfetch",
-      "community": 83,
+      "community": 82,
       "norm_label": "mockfetch"
     },
     {
@@ -1971,7 +1971,7 @@
       "source_file": "marketmind/test/api/inventory-watchlist.test.ts",
       "source_location": "L127",
       "id": "api_inventory_watchlist_test_updated",
-      "community": 83,
+      "community": 82,
       "norm_label": "updated"
     },
     {
@@ -1980,7 +1980,7 @@
       "source_file": "marketmind/test/api/ai-config.test.ts",
       "source_location": "L1",
       "id": "marketmind_test_api_ai_config_test_ts",
-      "community": 106,
+      "community": 15,
       "norm_label": "ai-config.test.ts"
     },
     {
@@ -1989,7 +1989,7 @@
       "source_file": "marketmind/test/api/ai-config.test.ts",
       "source_location": "L14",
       "id": "api_ai_config_test_db",
-      "community": 106,
+      "community": 15,
       "norm_label": "db"
     },
     {
@@ -1998,7 +1998,7 @@
       "source_file": "marketmind/test/api/ai-config.test.ts",
       "source_location": "L19",
       "id": "api_ai_config_test_config",
-      "community": 106,
+      "community": 15,
       "norm_label": "config"
     },
     {
@@ -2007,7 +2007,7 @@
       "source_file": "marketmind/test/api/research-run.test.ts",
       "source_location": "L1",
       "id": "marketmind_test_api_research_run_test_ts",
-      "community": 175,
+      "community": 15,
       "norm_label": "research-run.test.ts"
     },
     {
@@ -2016,7 +2016,7 @@
       "source_file": "marketmind/test/api/research-run.test.ts",
       "source_location": "L16",
       "id": "api_research_run_test_callresearchrun",
-      "community": 175,
+      "community": 15,
       "norm_label": "callresearchrun()"
     },
     {
@@ -2025,7 +2025,7 @@
       "source_file": "marketmind/test/api/research-run.test.ts",
       "source_location": "L27",
       "id": "api_research_run_test_db",
-      "community": 175,
+      "community": 15,
       "norm_label": "db"
     },
     {
@@ -2034,7 +2034,7 @@
       "source_file": "marketmind/test/api/research-run.test.ts",
       "source_location": "L29",
       "id": "api_research_run_test_search",
-      "community": 175,
+      "community": 15,
       "norm_label": "search"
     },
     {
@@ -2043,7 +2043,7 @@
       "source_file": "marketmind/test/api/research-run.test.ts",
       "source_location": "L32",
       "id": "api_research_run_test_searchid",
-      "community": 175,
+      "community": 15,
       "norm_label": "searchid"
     },
     {
@@ -2052,7 +2052,7 @@
       "source_file": "marketmind/test/api/research-run.test.ts",
       "source_location": "L37",
       "id": "api_research_run_test_result",
-      "community": 175,
+      "community": 15,
       "norm_label": "result"
     },
     {
@@ -2275,16 +2275,16 @@
       "label": "setupDb()",
       "file_type": "code",
       "source_file": "marketmind/test/api/database.test.ts",
-      "source_location": "L17",
+      "source_location": "L18",
       "id": "api_database_test_setupdb",
-      "community": 81,
+      "community": 25,
       "norm_label": "setupdb()"
     },
     {
       "label": "dbPath",
       "file_type": "code",
       "source_file": "marketmind/test/api/database.test.ts",
-      "source_location": "L40",
+      "source_location": "L41",
       "id": "api_database_test_dbpath",
       "community": 81,
       "norm_label": "dbpath"
@@ -2293,7 +2293,7 @@
       "label": "info",
       "file_type": "code",
       "source_file": "marketmind/test/api/database.test.ts",
-      "source_location": "L43",
+      "source_location": "L44",
       "id": "api_database_test_info",
       "community": 81,
       "norm_label": "info"
@@ -2302,7 +2302,7 @@
       "label": "sourcePath",
       "file_type": "code",
       "source_file": "marketmind/test/api/database.test.ts",
-      "source_location": "L49",
+      "source_location": "L55",
       "id": "api_database_test_sourcepath",
       "community": 81,
       "norm_label": "sourcepath"
@@ -2311,7 +2311,7 @@
       "label": "targetPath",
       "file_type": "code",
       "source_file": "marketmind/test/api/database.test.ts",
-      "source_location": "L50",
+      "source_location": "L56",
       "id": "api_database_test_targetpath",
       "community": 81,
       "norm_label": "targetpath"
@@ -2320,7 +2320,7 @@
       "label": "db",
       "file_type": "code",
       "source_file": "marketmind/test/api/database.test.ts",
-      "source_location": "L53",
+      "source_location": "L59",
       "id": "api_database_test_db",
       "community": 81,
       "norm_label": "db"
@@ -2329,7 +2329,7 @@
       "label": "result",
       "file_type": "code",
       "source_file": "marketmind/test/api/database.test.ts",
-      "source_location": "L59",
+      "source_location": "L65",
       "id": "api_database_test_result",
       "community": 81,
       "norm_label": "result"
@@ -2338,7 +2338,7 @@
       "label": "copiedDb",
       "file_type": "code",
       "source_file": "marketmind/test/api/database.test.ts",
-      "source_location": "L67",
+      "source_location": "L73",
       "id": "api_database_test_copieddb",
       "community": 81,
       "norm_label": "copieddb"
@@ -2347,7 +2347,7 @@
       "label": "row",
       "file_type": "code",
       "source_file": "marketmind/test/api/database.test.ts",
-      "source_location": "L68",
+      "source_location": "L74",
       "id": "api_database_test_row",
       "community": 81,
       "norm_label": "row"
@@ -2356,7 +2356,7 @@
       "label": "freshDb",
       "file_type": "code",
       "source_file": "marketmind/test/api/database.test.ts",
-      "source_location": "L89",
+      "source_location": "L95",
       "id": "api_database_test_freshdb",
       "community": 81,
       "norm_label": "freshdb"
@@ -2365,7 +2365,7 @@
       "label": "rows",
       "file_type": "code",
       "source_file": "marketmind/test/api/database.test.ts",
-      "source_location": "L90",
+      "source_location": "L96",
       "id": "api_database_test_rows",
       "community": 81,
       "norm_label": "rows"
@@ -2376,7 +2376,7 @@
       "source_file": "marketmind/test/api/watchlist-scrape.test.ts",
       "source_location": "L1",
       "id": "marketmind_test_api_watchlist_scrape_test_ts",
-      "community": 83,
+      "community": 87,
       "norm_label": "watchlist-scrape.test.ts"
     },
     {
@@ -2385,7 +2385,7 @@
       "source_file": "marketmind/test/api/watchlist-scrape.test.ts",
       "source_location": "L8",
       "id": "api_watchlist_scrape_test_callscrapeitem",
-      "community": 83,
+      "community": 87,
       "norm_label": "callscrapeitem()"
     },
     {
@@ -2394,7 +2394,7 @@
       "source_file": "marketmind/test/api/watchlist-scrape.test.ts",
       "source_location": "L20",
       "id": "api_watchlist_scrape_test_db",
-      "community": 83,
+      "community": 87,
       "norm_label": "db"
     },
     {
@@ -2403,7 +2403,7 @@
       "source_file": "marketmind/test/api/watchlist-scrape.test.ts",
       "source_location": "L21",
       "id": "api_watchlist_scrape_test_insert",
-      "community": 83,
+      "community": 87,
       "norm_label": "insert"
     },
     {
@@ -2412,7 +2412,7 @@
       "source_file": "marketmind/test/api/watchlist-scrape.test.ts",
       "source_location": "L27",
       "id": "api_watchlist_scrape_test_id",
-      "community": 83,
+      "community": 87,
       "norm_label": "id"
     },
     {
@@ -2421,7 +2421,7 @@
       "source_file": "marketmind/test/api/watchlist-scrape.test.ts",
       "source_location": "L29",
       "id": "api_watchlist_scrape_test_mockfetch",
-      "community": 83,
+      "community": 87,
       "norm_label": "mockfetch"
     },
     {
@@ -2430,7 +2430,7 @@
       "source_file": "marketmind/test/api/watchlist-scrape.test.ts",
       "source_location": "L36",
       "id": "api_watchlist_scrape_test_result",
-      "community": 83,
+      "community": 87,
       "norm_label": "result"
     },
     {
@@ -2439,7 +2439,7 @@
       "source_file": "marketmind/test/api/generate-prompt.test.ts",
       "source_location": "L1",
       "id": "marketmind_test_api_generate_prompt_test_ts",
-      "community": 103,
+      "community": 177,
       "norm_label": "generate-prompt.test.ts"
     },
     {
@@ -2448,7 +2448,7 @@
       "source_file": "marketmind/test/api/generate-prompt.test.ts",
       "source_location": "L13",
       "id": "api_generate_prompt_test_mockchatcompletion",
-      "community": 103,
+      "community": 177,
       "norm_label": "mockchatcompletion"
     },
     {
@@ -2457,7 +2457,7 @@
       "source_file": "marketmind/test/api/generate-prompt.test.ts",
       "source_location": "L21",
       "id": "api_generate_prompt_test_db",
-      "community": 103,
+      "community": 177,
       "norm_label": "db"
     },
     {
@@ -2466,7 +2466,7 @@
       "source_file": "marketmind/test/api/generate-prompt.test.ts",
       "source_location": "L33",
       "id": "api_generate_prompt_test_event",
-      "community": 103,
+      "community": 177,
       "norm_label": "event"
     },
     {
@@ -2475,7 +2475,7 @@
       "source_file": "marketmind/test/api/generate-prompt.test.ts",
       "source_location": "L37",
       "id": "api_generate_prompt_test_result",
-      "community": 103,
+      "community": 177,
       "norm_label": "result"
     },
     {
@@ -2484,7 +2484,7 @@
       "source_file": "marketmind/test/api/generate-prompt.test.ts",
       "source_location": "L42",
       "id": "api_generate_prompt_test_history",
-      "community": 103,
+      "community": 177,
       "norm_label": "history"
     },
     {
@@ -2844,7 +2844,7 @@
       "source_file": "marketmind/test/helpers/test-db.ts",
       "source_location": "L31",
       "id": "helpers_test_db_expectalltables",
-      "community": 85,
+      "community": 25,
       "norm_label": "expectalltables()"
     },
     {
@@ -2889,7 +2889,7 @@
       "source_file": "marketmind/test/services/generate-listing.test.ts",
       "source_location": "L1",
       "id": "marketmind_test_services_generate_listing_test_ts",
-      "community": 79,
+      "community": 164,
       "norm_label": "generate-listing.test.ts"
     },
     {
@@ -2898,7 +2898,7 @@
       "source_file": "marketmind/test/services/generate-listing.test.ts",
       "source_location": "L22",
       "id": "services_generate_listing_test_db",
-      "community": 79,
+      "community": 164,
       "norm_label": "db"
     },
     {
@@ -2907,7 +2907,7 @@
       "source_file": "marketmind/test/services/scraper-runtime.test.ts",
       "source_location": "L1",
       "id": "marketmind_test_services_scraper_runtime_test_ts",
-      "community": 176,
+      "community": 78,
       "norm_label": "scraper-runtime.test.ts"
     },
     {
@@ -2916,7 +2916,7 @@
       "source_file": "marketmind/test/services/scraper-runtime.test.ts",
       "source_location": "L7",
       "id": "services_scraper_runtime_test_db",
-      "community": 176,
+      "community": 78,
       "norm_label": "db"
     },
     {
@@ -2925,7 +2925,7 @@
       "source_file": "marketmind/test/services/scraper-runtime.test.ts",
       "source_location": "L8",
       "id": "services_scraper_runtime_test_sleepfn",
-      "community": 176,
+      "community": 78,
       "norm_label": "sleepfn"
     },
     {
@@ -2934,7 +2934,7 @@
       "source_file": "marketmind/test/services/scraper-runtime.test.ts",
       "source_location": "L9",
       "id": "services_scraper_runtime_test_fetchfn",
-      "community": 176,
+      "community": 78,
       "norm_label": "fetchfn"
     },
     {
@@ -2943,7 +2943,7 @@
       "source_file": "marketmind/test/services/scraper-runtime.test.ts",
       "source_location": "L15",
       "id": "services_scraper_runtime_test_runtimea",
-      "community": 176,
+      "community": 78,
       "norm_label": "runtimea"
     },
     {
@@ -2952,7 +2952,7 @@
       "source_file": "marketmind/test/services/scraper-runtime.test.ts",
       "source_location": "L16",
       "id": "services_scraper_runtime_test_runtimeb",
-      "community": 176,
+      "community": 78,
       "norm_label": "runtimeb"
     },
     {
@@ -3051,7 +3051,7 @@
       "source_file": "marketmind/test/services/prompt-library-sync.test.ts",
       "source_location": "L1",
       "id": "marketmind_test_services_prompt_library_sync_test_ts",
-      "community": 86,
+      "community": 163,
       "norm_label": "prompt-library-sync.test.ts"
     },
     {
@@ -3060,7 +3060,7 @@
       "source_file": "marketmind/test/services/prompt-library-sync.test.ts",
       "source_location": "L12",
       "id": "services_prompt_library_sync_test_db",
-      "community": 86,
+      "community": 163,
       "norm_label": "db"
     },
     {
@@ -3069,7 +3069,7 @@
       "source_file": "marketmind/test/services/prompt-library-sync.test.ts",
       "source_location": "L15",
       "id": "services_prompt_library_sync_test_prompts",
-      "community": 86,
+      "community": 163,
       "norm_label": "prompts"
     },
     {
@@ -3078,7 +3078,7 @@
       "source_file": "marketmind/test/services/prompt-library-sync.test.ts",
       "source_location": "L16",
       "id": "services_prompt_library_sync_test_types",
-      "community": 86,
+      "community": 163,
       "norm_label": "types"
     },
     {
@@ -3087,7 +3087,7 @@
       "source_file": "marketmind/test/services/prompt-library-sync.test.ts",
       "source_location": "L19",
       "id": "services_prompt_library_sync_test_agent",
-      "community": 86,
+      "community": 163,
       "norm_label": "agent"
     },
     {
@@ -3096,7 +3096,7 @@
       "source_file": "marketmind/test/services/prompt-library-sync.test.ts",
       "source_location": "L20",
       "id": "services_prompt_library_sync_test_entry",
-      "community": 86,
+      "community": 163,
       "norm_label": "entry"
     },
     {
@@ -3159,7 +3159,7 @@
       "source_file": "marketmind/test/services/generate-prompt.test.ts",
       "source_location": "L1",
       "id": "marketmind_test_services_generate_prompt_test_ts",
-      "community": 103,
+      "community": 88,
       "norm_label": "generate-prompt.test.ts"
     },
     {
@@ -3168,7 +3168,7 @@
       "source_file": "marketmind/test/services/generate-prompt.test.ts",
       "source_location": "L21",
       "id": "services_generate_prompt_test_mockchatcompletion",
-      "community": 103,
+      "community": 88,
       "norm_label": "mockchatcompletion"
     },
     {
@@ -3177,7 +3177,7 @@
       "source_file": "marketmind/test/services/generate-prompt.test.ts",
       "source_location": "L29",
       "id": "services_generate_prompt_test_db",
-      "community": 103,
+      "community": 88,
       "norm_label": "db"
     },
     {
@@ -3186,7 +3186,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L1",
       "id": "marketmind_test_services_scraper_test_ts",
-      "community": 87,
+      "community": 78,
       "norm_label": "scraper.test.ts"
     },
     {
@@ -3195,7 +3195,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L26",
       "id": "services_scraper_test_fixturesdir",
-      "community": 87,
+      "community": 78,
       "norm_label": "fixturesdir"
     },
     {
@@ -3204,7 +3204,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L30",
       "id": "services_scraper_test_url",
-      "community": 87,
+      "community": 78,
       "norm_label": "url"
     },
     {
@@ -3213,7 +3213,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L38",
       "id": "services_scraper_test_html",
-      "community": 87,
+      "community": 78,
       "norm_label": "html"
     },
     {
@@ -3222,7 +3222,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L42",
       "id": "services_scraper_test_items",
-      "community": 87,
+      "community": 78,
       "norm_label": "items"
     },
     {
@@ -3231,7 +3231,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L67",
       "id": "services_scraper_test_db",
-      "community": 87,
+      "community": 78,
       "norm_label": "db"
     },
     {
@@ -3240,7 +3240,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L68",
       "id": "services_scraper_test_page1",
-      "community": 87,
+      "community": 78,
       "norm_label": "page1"
     },
     {
@@ -3249,7 +3249,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L69",
       "id": "services_scraper_test_page2",
-      "community": 87,
+      "community": 78,
       "norm_label": "page2"
     },
     {
@@ -3258,7 +3258,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L71",
       "id": "services_scraper_test_mockfetch",
-      "community": 87,
+      "community": 78,
       "norm_label": "mockfetch"
     },
     {
@@ -3267,7 +3267,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L141",
       "id": "services_scraper_test_idx",
-      "community": 87,
+      "community": 78,
       "norm_label": "idx"
     },
     {
@@ -3276,7 +3276,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L142",
       "id": "services_scraper_test_ua1",
-      "community": 87,
+      "community": 78,
       "norm_label": "ua1"
     },
     {
@@ -3285,7 +3285,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L143",
       "id": "services_scraper_test_ua2",
-      "community": 87,
+      "community": 78,
       "norm_label": "ua2"
     },
     {
@@ -3294,7 +3294,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L148",
       "id": "services_scraper_test_headers",
-      "community": 87,
+      "community": 78,
       "norm_label": "headers"
     },
     {
@@ -3303,7 +3303,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L187",
       "id": "services_scraper_test_dbpath",
-      "community": 87,
+      "community": 78,
       "norm_label": "dbpath"
     },
     {
@@ -3312,7 +3312,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L194",
       "id": "services_scraper_test_config",
-      "community": 87,
+      "community": 78,
       "norm_label": "config"
     },
     {
@@ -3321,7 +3321,7 @@
       "source_file": "marketmind/test/services/scraper.test.ts",
       "source_location": "L223",
       "id": "services_scraper_test_stats",
-      "community": 87,
+      "community": 78,
       "norm_label": "stats"
     },
     {
@@ -3330,7 +3330,7 @@
       "source_file": "marketmind/test/services/run-agent.test.ts",
       "source_location": "L1",
       "id": "marketmind_test_services_run_agent_test_ts",
-      "community": 177,
+      "community": 103,
       "norm_label": "run-agent.test.ts"
     },
     {
@@ -3339,7 +3339,7 @@
       "source_file": "marketmind/test/services/run-agent.test.ts",
       "source_location": "L12",
       "id": "services_run_agent_test_mockchatcompletion",
-      "community": 177,
+      "community": 103,
       "norm_label": "mockchatcompletion"
     },
     {
@@ -3348,7 +3348,7 @@
       "source_file": "marketmind/test/services/run-agent.test.ts",
       "source_location": "L26",
       "id": "services_run_agent_test_db",
-      "community": 177,
+      "community": 103,
       "norm_label": "db"
     },
     {
@@ -3357,7 +3357,7 @@
       "source_file": "marketmind/test/services/run-agent.test.ts",
       "source_location": "L64",
       "id": "services_run_agent_test_history",
-      "community": 177,
+      "community": 103,
       "norm_label": "history"
     },
     {
@@ -3402,7 +3402,7 @@
       "source_file": "marketmind/test/services/run-research.test.ts",
       "source_location": "L1",
       "id": "marketmind_test_services_run_research_test_ts",
-      "community": 82,
+      "community": 15,
       "norm_label": "run-research.test.ts"
     },
     {
@@ -3411,7 +3411,7 @@
       "source_file": "marketmind/test/services/run-research.test.ts",
       "source_location": "L9",
       "id": "services_run_research_test_fixturesdir",
-      "community": 82,
+      "community": 15,
       "norm_label": "fixturesdir"
     },
     {
@@ -3420,7 +3420,7 @@
       "source_file": "marketmind/test/services/run-research.test.ts",
       "source_location": "L22",
       "id": "services_run_research_test_db",
-      "community": 82,
+      "community": 15,
       "norm_label": "db"
     },
     {
@@ -3429,7 +3429,7 @@
       "source_file": "marketmind/test/services/run-research.test.ts",
       "source_location": "L24",
       "id": "services_run_research_test_search",
-      "community": 82,
+      "community": 15,
       "norm_label": "search"
     },
     {
@@ -3438,7 +3438,7 @@
       "source_file": "marketmind/test/services/run-research.test.ts",
       "source_location": "L27",
       "id": "services_run_research_test_searchid",
-      "community": 82,
+      "community": 15,
       "norm_label": "searchid"
     },
     {
@@ -3447,7 +3447,7 @@
       "source_file": "marketmind/test/services/run-research.test.ts",
       "source_location": "L63",
       "id": "services_run_research_test_saved",
-      "community": 82,
+      "community": 15,
       "norm_label": "saved"
     },
     {
@@ -3456,7 +3456,7 @@
       "source_file": "marketmind/test/services/run-research.test.ts",
       "source_location": "L66",
       "id": "services_run_research_test_analyses",
-      "community": 82,
+      "community": 15,
       "norm_label": "analyses"
     },
     {
@@ -3465,7 +3465,7 @@
       "source_file": "marketmind/test/services/run-research.test.ts",
       "source_location": "L106",
       "id": "services_run_research_test_page1",
-      "community": 82,
+      "community": 15,
       "norm_label": "page1"
     },
     {
@@ -3474,7 +3474,7 @@
       "source_file": "marketmind/test/services/run-research.test.ts",
       "source_location": "L107",
       "id": "services_run_research_test_page2",
-      "community": 82,
+      "community": 15,
       "norm_label": "page2"
     },
     {
@@ -3483,7 +3483,7 @@
       "source_file": "marketmind/test/services/run-research.test.ts",
       "source_location": "L109",
       "id": "services_run_research_test_mockfetch",
-      "community": 82,
+      "community": 15,
       "norm_label": "mockfetch"
     },
     {
@@ -3564,7 +3564,7 @@
       "source_file": "marketmind/server/database/settings.ts",
       "source_location": "L24",
       "id": "database_settings_getallsettings",
-      "community": 15,
+      "community": 78,
       "norm_label": "getallsettings()"
     },
     {
@@ -3582,7 +3582,7 @@
       "source_file": "marketmind/server/database/settings.ts",
       "source_location": "L50",
       "id": "database_settings_setsetting",
-      "community": 81,
+      "community": 15,
       "norm_label": "setsetting()"
     },
     {
@@ -3661,7 +3661,7 @@
       "label": "copySqliteFiles()",
       "file_type": "code",
       "source_file": "marketmind/server/database/lifecycle.ts",
-      "source_location": "L21",
+      "source_location": "L25",
       "id": "database_lifecycle_copysqlitefiles",
       "community": 81,
       "norm_label": "copysqlitefiles()"
@@ -3670,7 +3670,7 @@
       "label": "deleteSqliteFiles()",
       "file_type": "code",
       "source_file": "marketmind/server/database/lifecycle.ts",
-      "source_location": "L32",
+      "source_location": "L36",
       "id": "database_lifecycle_deletesqlitefiles",
       "community": 81,
       "norm_label": "deletesqlitefiles()"
@@ -3679,7 +3679,7 @@
       "label": "relocateDatabase()",
       "file_type": "code",
       "source_file": "marketmind/server/database/lifecycle.ts",
-      "source_location": "L44",
+      "source_location": "L48",
       "id": "database_lifecycle_relocatedatabase",
       "community": 81,
       "norm_label": "relocatedatabase()"
@@ -3688,9 +3688,9 @@
       "label": "resetDatabase()",
       "file_type": "code",
       "source_file": "marketmind/server/database/lifecycle.ts",
-      "source_location": "L74",
+      "source_location": "L78",
       "id": "database_lifecycle_resetdatabase",
-      "community": 81,
+      "community": 25,
       "norm_label": "resetdatabase()"
     },
     {
@@ -3717,7 +3717,7 @@
       "source_file": "marketmind/server/database/seed.ts",
       "source_location": "L31",
       "id": "database_seed_seeddatabase",
-      "community": 81,
+      "community": 25,
       "norm_label": "seeddatabase()"
     },
     {
@@ -3726,43 +3726,52 @@
       "source_file": "marketmind/server/database/paths.ts",
       "source_location": "L1",
       "id": "marketmind_server_database_paths_ts",
-      "community": 163,
+      "community": 81,
       "norm_label": "paths.ts"
+    },
+    {
+      "label": "isDatabasePathLocked()",
+      "file_type": "code",
+      "source_file": "marketmind/server/database/paths.ts",
+      "source_location": "L5",
+      "id": "database_paths_isdatabasepathlocked",
+      "community": 81,
+      "norm_label": "isdatabasepathlocked()"
     },
     {
       "label": "getRuntimeDefaultPath()",
       "file_type": "code",
       "source_file": "marketmind/server/database/paths.ts",
-      "source_location": "L5",
+      "source_location": "L9",
       "id": "database_paths_getruntimedefaultpath",
-      "community": 163,
+      "community": 81,
       "norm_label": "getruntimedefaultpath()"
     },
     {
       "label": "resolveDbPath()",
       "file_type": "code",
       "source_file": "marketmind/server/database/paths.ts",
-      "source_location": "L17",
+      "source_location": "L21",
       "id": "database_paths_resolvedbpath",
-      "community": 163,
+      "community": 81,
       "norm_label": "resolvedbpath()"
     },
     {
       "label": "getActivePath()",
       "file_type": "code",
       "source_file": "marketmind/server/database/paths.ts",
-      "source_location": "L32",
+      "source_location": "L36",
       "id": "database_paths_getactivepath",
-      "community": 163,
+      "community": 81,
       "norm_label": "getactivepath()"
     },
     {
       "label": "readConfiguredPathFromFile()",
       "file_type": "code",
       "source_file": "marketmind/server/database/paths.ts",
-      "source_location": "L50",
+      "source_location": "L54",
       "id": "database_paths_readconfiguredpathfromfile",
-      "community": 163,
+      "community": 81,
       "norm_label": "readconfiguredpathfromfile()"
     },
     {
@@ -3771,7 +3780,7 @@
       "source_file": "marketmind/server/database/db.ts",
       "source_location": "L1",
       "id": "marketmind_server_database_db_ts",
-      "community": 163,
+      "community": 168,
       "norm_label": "db.ts"
     },
     {
@@ -3780,7 +3789,7 @@
       "source_file": "marketmind/server/database/db.ts",
       "source_location": "L9",
       "id": "database_db_dirname",
-      "community": 163,
+      "community": 168,
       "norm_label": "__dirname"
     },
     {
@@ -3789,7 +3798,7 @@
       "source_file": "marketmind/server/database/db.ts",
       "source_location": "L11",
       "id": "database_db_resolveschemapath",
-      "community": 163,
+      "community": 168,
       "norm_label": "resolveschemapath()"
     },
     {
@@ -3816,7 +3825,7 @@
       "source_file": "marketmind/server/database/db.ts",
       "source_location": "L65",
       "id": "database_db_resetdb",
-      "community": 81,
+      "community": 25,
       "norm_label": "resetdb()"
     },
     {
@@ -3834,7 +3843,7 @@
       "source_file": "marketmind/server/database/db.ts",
       "source_location": "L82",
       "id": "database_db_initdatabase",
-      "community": 81,
+      "community": 25,
       "norm_label": "initdatabase()"
     },
     {
@@ -3843,7 +3852,7 @@
       "source_file": "marketmind/server/plugins/database.ts",
       "source_location": "L1",
       "id": "marketmind_server_plugins_database_ts",
-      "community": 86,
+      "community": 163,
       "norm_label": "database.ts"
     },
     {
@@ -3852,7 +3861,7 @@
       "source_file": "marketmind/server/plugins/database.ts",
       "source_location": "L7",
       "id": "plugins_database_db",
-      "community": 86,
+      "community": 163,
       "norm_label": "db"
     },
     {
@@ -3915,7 +3924,7 @@
       "source_file": "marketmind/server/api/settings/index.get.ts",
       "source_location": "L1",
       "id": "marketmind_server_api_settings_index_get_ts",
-      "community": 15,
+      "community": 85,
       "norm_label": "index.get.ts"
     },
     {
@@ -3924,7 +3933,7 @@
       "source_file": "marketmind/server/api/settings/index.get.ts",
       "source_location": "L5",
       "id": "settings_index_get_db",
-      "community": 15,
+      "community": 85,
       "norm_label": "db"
     },
     {
@@ -4003,7 +4012,7 @@
       "label": "body",
       "file_type": "code",
       "source_file": "marketmind/server/api/database/path.put.ts",
-      "source_location": "L4",
+      "source_location": "L13",
       "id": "database_path_put_body",
       "community": 81,
       "norm_label": "body"
@@ -4014,7 +4023,7 @@
       "source_file": "marketmind/server/api/agent-history/index.get.ts",
       "source_location": "L1",
       "id": "marketmind_server_api_agent_history_index_get_ts",
-      "community": 163,
+      "community": 85,
       "norm_label": "index.get.ts"
     },
     {
@@ -4023,7 +4032,7 @@
       "source_file": "marketmind/server/api/agent-history/index.get.ts",
       "source_location": "L4",
       "id": "agent_history_index_get_db",
-      "community": 163,
+      "community": 85,
       "norm_label": "db"
     },
     {
@@ -4032,7 +4041,7 @@
       "source_file": "marketmind/server/api/openrouter/models.get.ts",
       "source_location": "L1",
       "id": "marketmind_server_api_openrouter_models_get_ts",
-      "community": 88,
+      "community": 169,
       "norm_label": "models.get.ts"
     },
     {
@@ -4041,7 +4050,7 @@
       "source_file": "marketmind/server/api/openrouter/models.get.ts",
       "source_location": "L11",
       "id": "openrouter_models_get_db",
-      "community": 88,
+      "community": 169,
       "norm_label": "db"
     },
     {
@@ -4050,7 +4059,7 @@
       "source_file": "marketmind/server/api/openrouter/models.get.ts",
       "source_location": "L12",
       "id": "openrouter_models_get_ai",
-      "community": 88,
+      "community": 169,
       "norm_label": "ai"
     },
     {
@@ -4059,7 +4068,7 @@
       "source_file": "marketmind/server/api/openrouter/models.get.ts",
       "source_location": "L19",
       "id": "openrouter_models_get_domainerror",
-      "community": 88,
+      "community": 169,
       "norm_label": "domainerror"
     },
     {
@@ -4113,7 +4122,7 @@
       "source_file": "marketmind/server/api/listings/generate.post.ts",
       "source_location": "L1",
       "id": "marketmind_server_api_listings_generate_post_ts",
-      "community": 79,
+      "community": 164,
       "norm_label": "generate.post.ts"
     },
     {
@@ -4122,7 +4131,7 @@
       "source_file": "marketmind/server/api/listings/generate.post.ts",
       "source_location": "L6",
       "id": "listings_generate_post_body",
-      "community": 79,
+      "community": 164,
       "norm_label": "body"
     },
     {
@@ -4131,7 +4140,7 @@
       "source_file": "marketmind/server/api/listings/generate.post.ts",
       "source_location": "L22",
       "id": "listings_generate_post_db",
-      "community": 79,
+      "community": 164,
       "norm_label": "db"
     },
     {
@@ -4140,7 +4149,7 @@
       "source_file": "marketmind/server/api/listings/generate.post.ts",
       "source_location": "L34",
       "id": "listings_generate_post_domainerror",
-      "community": 79,
+      "community": 164,
       "norm_label": "domainerror"
     },
     {
@@ -4203,7 +4212,7 @@
       "source_file": "marketmind/server/api/agents/index.get.ts",
       "source_location": "L1",
       "id": "marketmind_server_api_agents_index_get_ts",
-      "community": 163,
+      "community": 86,
       "norm_label": "index.get.ts"
     },
     {
@@ -4212,7 +4221,7 @@
       "source_file": "marketmind/server/api/agents/index.get.ts",
       "source_location": "L5",
       "id": "agents_index_get_db",
-      "community": 163,
+      "community": 86,
       "norm_label": "db"
     },
     {
@@ -4356,7 +4365,7 @@
       "source_file": "marketmind/server/api/prompt-library/export.get.ts",
       "source_location": "L1",
       "id": "marketmind_server_api_prompt_library_export_get_ts",
-      "community": 85,
+      "community": 168,
       "norm_label": "export.get.ts"
     },
     {
@@ -4365,7 +4374,7 @@
       "source_file": "marketmind/server/api/prompt-library/export.get.ts",
       "source_location": "L4",
       "id": "prompt_library_export_get_db",
-      "community": 85,
+      "community": 168,
       "norm_label": "db"
     },
     {
@@ -4374,7 +4383,7 @@
       "source_file": "marketmind/server/api/prompt-library/export.get.ts",
       "source_location": "L6",
       "id": "prompt_library_export_get_prompts",
-      "community": 85,
+      "community": 168,
       "norm_label": "prompts"
     },
     {
@@ -4383,7 +4392,7 @@
       "source_file": "marketmind/server/api/prompt-library/export.get.ts",
       "source_location": "L11",
       "id": "prompt_library_export_get_text",
-      "community": 85,
+      "community": 168,
       "norm_label": "text"
     },
     {
@@ -4608,7 +4617,7 @@
       "source_file": "marketmind/server/api/inventory/summary.get.ts",
       "source_location": "L1",
       "id": "marketmind_server_api_inventory_summary_get_ts",
-      "community": 61,
+      "community": 106,
       "norm_label": "summary.get.ts"
     },
     {
@@ -4617,7 +4626,7 @@
       "source_file": "marketmind/server/api/inventory/summary.get.ts",
       "source_location": "L5",
       "id": "inventory_summary_get_db",
-      "community": 61,
+      "community": 106,
       "norm_label": "db"
     },
     {
@@ -4887,7 +4896,7 @@
       "source_file": "marketmind/server/api/watchlist/scrape-all.post.ts",
       "source_location": "L1",
       "id": "marketmind_server_api_watchlist_scrape_all_post_ts",
-      "community": 83,
+      "community": 87,
       "norm_label": "scrape-all.post.ts"
     },
     {
@@ -4896,7 +4905,7 @@
       "source_file": "marketmind/server/api/watchlist/scrape-all.post.ts",
       "source_location": "L6",
       "id": "watchlist_scrape_all_post_db",
-      "community": 83,
+      "community": 87,
       "norm_label": "db"
     },
     {
@@ -4905,7 +4914,7 @@
       "source_file": "marketmind/server/api/watchlist/scrape-all.post.ts",
       "source_location": "L7",
       "id": "watchlist_scrape_all_post_items",
-      "community": 83,
+      "community": 87,
       "norm_label": "items"
     },
     {
@@ -4914,7 +4923,7 @@
       "source_file": "marketmind/server/api/watchlist/scrape-all.post.ts",
       "source_location": "L8",
       "id": "watchlist_scrape_all_post_results",
-      "community": 83,
+      "community": 87,
       "norm_label": "results"
     },
     {
@@ -4941,7 +4950,7 @@
       "source_file": "marketmind/server/api/watchlist/[id]/scrape.post.ts",
       "source_location": "L1",
       "id": "marketmind_server_api_watchlist_id_scrape_post_ts",
-      "community": 83,
+      "community": 87,
       "norm_label": "scrape.post.ts"
     },
     {
@@ -4950,7 +4959,7 @@
       "source_file": "marketmind/server/api/watchlist/[id]/scrape.post.ts",
       "source_location": "L6",
       "id": "id_scrape_post_id",
-      "community": 83,
+      "community": 87,
       "norm_label": "id"
     },
     {
@@ -4959,7 +4968,7 @@
       "source_file": "marketmind/server/api/watchlist/[id]/scrape.post.ts",
       "source_location": "L7",
       "id": "id_scrape_post_db",
-      "community": 83,
+      "community": 87,
       "norm_label": "db"
     },
     {
@@ -4968,7 +4977,7 @@
       "source_file": "marketmind/server/api/watchlist/[id]/scrape.post.ts",
       "source_location": "L8",
       "id": "id_scrape_post_item",
-      "community": 83,
+      "community": 87,
       "norm_label": "item"
     },
     {
@@ -5040,7 +5049,7 @@
       "source_file": "marketmind/server/services/errors.ts",
       "source_location": "L15",
       "id": "services_errors_noanalysisdataerror",
-      "community": 166,
+      "community": 2,
       "norm_label": "noanalysisdataerror"
     },
     {
@@ -5049,7 +5058,7 @@
       "source_file": "marketmind/server/services/errors.ts",
       "source_location": "L16",
       "id": "services_errors_noanalysisdataerror_constructor",
-      "community": 166,
+      "community": 2,
       "norm_label": ".constructor()"
     },
     {
@@ -5058,7 +5067,7 @@
       "source_file": "marketmind/server/services/errors.ts",
       "source_location": "L22",
       "id": "services_errors_ainotconfigurederror",
-      "community": 2,
+      "community": 169,
       "norm_label": "ainotconfigurederror"
     },
     {
@@ -5067,7 +5076,7 @@
       "source_file": "marketmind/server/services/errors.ts",
       "source_location": "L23",
       "id": "services_errors_ainotconfigurederror_constructor",
-      "community": 2,
+      "community": 169,
       "norm_label": ".constructor()"
     },
     {
@@ -5112,7 +5121,7 @@
       "source_file": "marketmind/server/services/errors.ts",
       "source_location": "L43",
       "id": "services_errors_listingscrapeerror",
-      "community": 2,
+      "community": 141,
       "norm_label": "listingscrapeerror"
     },
     {
@@ -5121,7 +5130,7 @@
       "source_file": "marketmind/server/services/errors.ts",
       "source_location": "L44",
       "id": "services_errors_listingscrapeerror_constructor",
-      "community": 2,
+      "community": 141,
       "norm_label": ".constructor()"
     },
     {
@@ -5193,7 +5202,7 @@
       "source_file": "marketmind/server/services/research/run-research.ts",
       "source_location": "L43",
       "id": "research_run_research_researchrunresult",
-      "community": 92,
+      "community": 166,
       "norm_label": "researchrunresult"
     },
     {
@@ -5310,7 +5319,7 @@
       "source_file": "marketmind/server/services/research/saved-research.ts",
       "source_location": "L104",
       "id": "research_saved_research_createsavedresearch",
-      "community": 166,
+      "community": 92,
       "norm_label": "createsavedresearch()"
     },
     {
@@ -5418,7 +5427,7 @@
       "source_file": "marketmind/server/services/scraper/fetcher.ts",
       "source_location": "L13",
       "id": "scraper_fetcher_fetcherconfig",
-      "community": 141,
+      "community": 78,
       "norm_label": "fetcherconfig"
     },
     {
@@ -5454,7 +5463,7 @@
       "source_file": "marketmind/server/services/scraper/fetcher.ts",
       "source_location": "L39",
       "id": "scraper_fetcher_scraperfetcherror",
-      "community": 87,
+      "community": 78,
       "norm_label": "scraperfetcherror"
     },
     {
@@ -5463,7 +5472,7 @@
       "source_file": "marketmind/server/services/scraper/fetcher.ts",
       "source_location": "L40",
       "id": "scraper_fetcher_scraperfetcherror_constructor",
-      "community": 87,
+      "community": 78,
       "norm_label": ".constructor()"
     },
     {
@@ -5472,7 +5481,7 @@
       "source_file": "marketmind/server/services/scraper/fetcher.ts",
       "source_location": "L51",
       "id": "scraper_fetcher_createfetchersession",
-      "community": 141,
+      "community": 78,
       "norm_label": "createfetchersession()"
     },
     {
@@ -5598,7 +5607,7 @@
       "source_file": "marketmind/server/services/scraper/fetcher.ts",
       "source_location": "L243",
       "id": "scraper_fetcher_invalidatecachedhtml",
-      "community": 141,
+      "community": 78,
       "norm_label": "invalidatecachedhtml()"
     },
     {
@@ -5616,7 +5625,7 @@
       "source_file": "marketmind/server/services/scraper/kleinanzeigen.ts",
       "source_location": "L1",
       "id": "marketmind_server_services_scraper_kleinanzeigen_ts",
-      "community": 141,
+      "community": 78,
       "norm_label": "kleinanzeigen.ts"
     },
     {
@@ -5625,7 +5634,7 @@
       "source_file": "marketmind/server/services/scraper/kleinanzeigen.ts",
       "source_location": "L4",
       "id": "scraper_kleinanzeigen_kleinanzeigenlisting",
-      "community": 141,
+      "community": 78,
       "norm_label": "kleinanzeigenlisting"
     },
     {
@@ -5634,7 +5643,7 @@
       "source_file": "marketmind/server/services/scraper/kleinanzeigen.ts",
       "source_location": "L14",
       "id": "scraper_kleinanzeigen_kleinanzeigensearchslug",
-      "community": 141,
+      "community": 78,
       "norm_label": "kleinanzeigensearchslug()"
     },
     {
@@ -5643,7 +5652,7 @@
       "source_file": "marketmind/server/services/scraper/kleinanzeigen.ts",
       "source_location": "L24",
       "id": "scraper_kleinanzeigen_buildkleinanzeigensearchurl",
-      "community": 141,
+      "community": 78,
       "norm_label": "buildkleinanzeigensearchurl()"
     },
     {
@@ -5652,7 +5661,7 @@
       "source_file": "marketmind/server/services/scraper/kleinanzeigen.ts",
       "source_location": "L32",
       "id": "scraper_kleinanzeigen_parsekleinanzeigenprice",
-      "community": 169,
+      "community": 78,
       "norm_label": "parsekleinanzeigenprice()"
     },
     {
@@ -5661,7 +5670,7 @@
       "source_file": "marketmind/server/services/scraper/kleinanzeigen.ts",
       "source_location": "L36",
       "id": "scraper_kleinanzeigen_extractpricetext",
-      "community": 141,
+      "community": 78,
       "norm_label": "extractpricetext()"
     },
     {
@@ -5670,7 +5679,7 @@
       "source_file": "marketmind/server/services/scraper/kleinanzeigen.ts",
       "source_location": "L49",
       "id": "scraper_kleinanzeigen_parsekleinanzeigenhtml",
-      "community": 141,
+      "community": 78,
       "norm_label": "parsekleinanzeigenhtml()"
     },
     {
@@ -5679,7 +5688,7 @@
       "source_file": "marketmind/server/services/scraper/runtime.ts",
       "source_location": "L1",
       "id": "marketmind_server_services_scraper_runtime_ts",
-      "community": 141,
+      "community": 78,
       "norm_label": "runtime.ts"
     },
     {
@@ -5697,7 +5706,7 @@
       "source_file": "marketmind/server/services/scraper/runtime.ts",
       "source_location": "L18",
       "id": "scraper_runtime_scraperesult",
-      "community": 141,
+      "community": 78,
       "norm_label": "scraperesult"
     },
     {
@@ -5706,7 +5715,7 @@
       "source_file": "marketmind/server/services/scraper/runtime.ts",
       "source_location": "L29",
       "id": "scraper_runtime_buildfetcherconfig",
-      "community": 141,
+      "community": 78,
       "norm_label": "buildfetcherconfig()"
     },
     {
@@ -5715,7 +5724,7 @@
       "source_file": "marketmind/server/services/scraper/runtime.ts",
       "source_location": "L38",
       "id": "scraper_runtime_scraperruntime",
-      "community": 141,
+      "community": 78,
       "norm_label": "scraperruntime"
     },
     {
@@ -5724,7 +5733,7 @@
       "source_file": "marketmind/server/services/scraper/runtime.ts",
       "source_location": "L53",
       "id": "scraper_runtime_createscraperruntime",
-      "community": 83,
+      "community": 78,
       "norm_label": "createscraperruntime()"
     },
     {
@@ -5733,7 +5742,7 @@
       "source_file": "marketmind/server/services/scraper/ebay.ts",
       "source_location": "L1",
       "id": "marketmind_server_services_scraper_ebay_ts",
-      "community": 169,
+      "community": 78,
       "norm_label": "ebay.ts"
     },
     {
@@ -5742,7 +5751,7 @@
       "source_file": "marketmind/server/services/scraper/ebay.ts",
       "source_location": "L4",
       "id": "scraper_ebay_ebaylisting",
-      "community": 169,
+      "community": 78,
       "norm_label": "ebaylisting"
     },
     {
@@ -5751,7 +5760,7 @@
       "source_file": "marketmind/server/services/scraper/ebay.ts",
       "source_location": "L14",
       "id": "scraper_ebay_buildebaysearchurl",
-      "community": 169,
+      "community": 78,
       "norm_label": "buildebaysearchurl()"
     },
     {
@@ -5760,7 +5769,7 @@
       "source_file": "marketmind/server/services/scraper/ebay.ts",
       "source_location": "L28",
       "id": "scraper_ebay_parseebayprice",
-      "community": 169,
+      "community": 78,
       "norm_label": "parseebayprice()"
     },
     {
@@ -5769,7 +5778,7 @@
       "source_file": "marketmind/server/services/scraper/ebay.ts",
       "source_location": "L32",
       "id": "scraper_ebay_normalizecondition",
-      "community": 169,
+      "community": 78,
       "norm_label": "normalizecondition()"
     },
     {
@@ -5778,7 +5787,7 @@
       "source_file": "marketmind/server/services/scraper/ebay.ts",
       "source_location": "L39",
       "id": "scraper_ebay_ispromotitle",
-      "community": 169,
+      "community": 78,
       "norm_label": "ispromotitle()"
     },
     {
@@ -5787,7 +5796,7 @@
       "source_file": "marketmind/server/services/scraper/ebay.ts",
       "source_location": "L44",
       "id": "scraper_ebay_parselistingfromelement",
-      "community": 169,
+      "community": 78,
       "norm_label": "parselistingfromelement()"
     },
     {
@@ -5796,7 +5805,7 @@
       "source_file": "marketmind/server/services/scraper/ebay.ts",
       "source_location": "L90",
       "id": "scraper_ebay_parseebayhtml",
-      "community": 169,
+      "community": 78,
       "norm_label": "parseebayhtml()"
     },
     {
@@ -5814,7 +5823,7 @@
       "source_file": "marketmind/server/services/scraper/listing-detail.ts",
       "source_location": "L6",
       "id": "scraper_listing_detail_listingdetail",
-      "community": 98,
+      "community": 141,
       "norm_label": "listingdetail"
     },
     {
@@ -5895,7 +5904,7 @@
       "source_file": "marketmind/server/services/searches/repository.ts",
       "source_location": "L4",
       "id": "searches_repository_findrecentsearches",
-      "community": 106,
+      "community": 164,
       "norm_label": "findrecentsearches()"
     },
     {
@@ -5913,7 +5922,7 @@
       "source_file": "marketmind/server/services/searches/repository.ts",
       "source_location": "L16",
       "id": "searches_repository_getsearchstats",
-      "community": 98,
+      "community": 164,
       "norm_label": "getsearchstats()"
     },
     {
@@ -6003,7 +6012,7 @@
       "source_file": "marketmind/server/services/listings/generate-listing.ts",
       "source_location": "L1",
       "id": "marketmind_server_services_listings_generate_listing_ts",
-      "community": 79,
+      "community": 164,
       "norm_label": "generate-listing.ts"
     },
     {
@@ -6012,7 +6021,7 @@
       "source_file": "marketmind/server/services/listings/generate-listing.ts",
       "source_location": "L7",
       "id": "listings_generate_listing_generatelistinginput",
-      "community": 79,
+      "community": 164,
       "norm_label": "generatelistinginput"
     },
     {
@@ -6021,7 +6030,7 @@
       "source_file": "marketmind/server/services/listings/generate-listing.ts",
       "source_location": "L16",
       "id": "listings_generate_listing_generatelisting",
-      "community": 79,
+      "community": 164,
       "norm_label": "generatelisting()"
     },
     {
@@ -6165,7 +6174,7 @@
       "source_file": "marketmind/server/services/agents/repository.ts",
       "source_location": "L12",
       "id": "agents_repository_agentrow",
-      "community": 86,
+      "community": 163,
       "norm_label": "agentrow"
     },
     {
@@ -6201,7 +6210,7 @@
       "source_file": "marketmind/server/services/agents/repository.ts",
       "source_location": "L40",
       "id": "agents_repository_listagentswithstats",
-      "community": 106,
+      "community": 86,
       "norm_label": "listagentswithstats()"
     },
     {
@@ -6390,7 +6399,7 @@
       "source_file": "marketmind/server/services/prompt-library/agent-sync.ts",
       "source_location": "L1",
       "id": "marketmind_server_services_prompt_library_agent_sync_ts",
-      "community": 86,
+      "community": 163,
       "norm_label": "agent-sync.ts"
     },
     {
@@ -6399,7 +6408,7 @@
       "source_file": "marketmind/server/services/prompt-library/agent-sync.ts",
       "source_location": "L5",
       "id": "prompt_library_agent_sync_syncagentprompttolibrary",
-      "community": 86,
+      "community": 163,
       "norm_label": "syncagentprompttolibrary()"
     },
     {
@@ -6408,7 +6417,7 @@
       "source_file": "marketmind/server/services/prompt-library/agent-sync.ts",
       "source_location": "L28",
       "id": "prompt_library_agent_sync_syncallagentprompts",
-      "community": 86,
+      "community": 163,
       "norm_label": "syncallagentprompts()"
     },
     {
@@ -6498,7 +6507,7 @@
       "source_file": "marketmind/server/services/ai/config.ts",
       "source_location": "L1",
       "id": "marketmind_server_services_ai_config_ts",
-      "community": 106,
+      "community": 169,
       "norm_label": "config.ts"
     },
     {
@@ -6507,7 +6516,7 @@
       "source_file": "marketmind/server/services/ai/config.ts",
       "source_location": "L5",
       "id": "ai_config_aiprovider",
-      "community": 106,
+      "community": 169,
       "norm_label": "aiprovider"
     },
     {
@@ -6516,7 +6525,7 @@
       "source_file": "marketmind/server/services/ai/config.ts",
       "source_location": "L7",
       "id": "ai_config_aiconfig",
-      "community": 106,
+      "community": 169,
       "norm_label": "aiconfig"
     },
     {
@@ -6525,7 +6534,7 @@
       "source_file": "marketmind/server/services/ai/config.ts",
       "source_location": "L14",
       "id": "ai_config_aiconnection",
-      "community": 103,
+      "community": 169,
       "norm_label": "aiconnection"
     },
     {
@@ -6534,7 +6543,7 @@
       "source_file": "marketmind/server/services/ai/config.ts",
       "source_location": "L19",
       "id": "ai_config_normalizeaibaseurl",
-      "community": 106,
+      "community": 169,
       "norm_label": "normalizeaibaseurl()"
     },
     {
@@ -6543,7 +6552,7 @@
       "source_file": "marketmind/server/services/ai/config.ts",
       "source_location": "L25",
       "id": "ai_config_getaiconfig",
-      "community": 106,
+      "community": 169,
       "norm_label": "getaiconfig()"
     },
     {
@@ -6552,7 +6561,7 @@
       "source_file": "marketmind/server/services/ai/config.ts",
       "source_location": "L49",
       "id": "ai_config_getaiconnection",
-      "community": 88,
+      "community": 169,
       "norm_label": "getaiconnection()"
     },
     {
@@ -6570,7 +6579,7 @@
       "source_file": "marketmind/server/services/ai/config.ts",
       "source_location": "L63",
       "id": "ai_config_assertaiconfigured",
-      "community": 88,
+      "community": 169,
       "norm_label": "assertaiconfigured()"
     },
     {
@@ -6687,7 +6696,7 @@
       "source_file": "marketmind/server/services/flipping/analyze-flip.ts",
       "source_location": "L1",
       "id": "marketmind_server_services_flipping_analyze_flip_ts",
-      "community": 98,
+      "community": 141,
       "norm_label": "analyze-flip.ts"
     },
     {
@@ -6714,7 +6723,7 @@
       "source_file": "marketmind/server/services/flipping/analyze-flip.ts",
       "source_location": "L32",
       "id": "flipping_analyze_flip_analyzeflipresult",
-      "community": 98,
+      "community": 141,
       "norm_label": "analyzeflipresult"
     },
     {
@@ -6723,7 +6732,7 @@
       "source_file": "marketmind/server/services/flipping/analyze-flip.ts",
       "source_location": "L40",
       "id": "flipping_analyze_flip_empty_market_stats",
-      "community": 98,
+      "community": 141,
       "norm_label": "empty_market_stats"
     },
     {
@@ -6948,7 +6957,7 @@
       "source_file": "marketmind/server/services/watchlist/repository.ts",
       "source_location": "L5",
       "id": "watchlist_repository_watchlistitem",
-      "community": 83,
+      "community": 82,
       "norm_label": "watchlistitem"
     },
     {
@@ -7038,7 +7047,7 @@
       "source_file": "marketmind/server/services/watchlist/scraper.ts",
       "source_location": "L1",
       "id": "marketmind_server_services_watchlist_scraper_ts",
-      "community": 83,
+      "community": 82,
       "norm_label": "scraper.ts"
     },
     {
@@ -7056,7 +7065,7 @@
       "source_file": "marketmind/server/services/watchlist/scraper.ts",
       "source_location": "L24",
       "id": "watchlist_scraper_scrapewatchlistitem",
-      "community": 83,
+      "community": 82,
       "norm_label": "scrapewatchlistitem()"
     },
     {
@@ -7065,7 +7074,7 @@
       "source_file": "marketmind/server/services/watchlist/alerts.ts",
       "source_location": "L1",
       "id": "marketmind_server_services_watchlist_alerts_ts",
-      "community": 83,
+      "community": 82,
       "norm_label": "alerts.ts"
     },
     {
@@ -7074,7 +7083,7 @@
       "source_file": "marketmind/server/services/watchlist/alerts.ts",
       "source_location": "L1",
       "id": "watchlist_alerts_checkalert",
-      "community": 83,
+      "community": 82,
       "norm_label": "checkalert()"
     },
     {
@@ -7119,7 +7128,7 @@
       "source_file": "marketmind/shared/detect-platform.ts",
       "source_location": "L1",
       "id": "marketmind_shared_detect_platform_ts",
-      "community": 61,
+      "community": 176,
       "norm_label": "detect-platform.ts"
     },
     {
@@ -7128,7 +7137,7 @@
       "source_file": "marketmind/shared/detect-platform.ts",
       "source_location": "L1",
       "id": "shared_detect_platform_detectedplatform",
-      "community": 61,
+      "community": 176,
       "norm_label": "detectedplatform"
     },
     {
@@ -7137,7 +7146,7 @@
       "source_file": "marketmind/shared/detect-platform.ts",
       "source_location": "L2",
       "id": "shared_detect_platform_inventoryplatform",
-      "community": 61,
+      "community": 176,
       "norm_label": "inventoryplatform"
     },
     {
@@ -7146,7 +7155,7 @@
       "source_file": "marketmind/shared/detect-platform.ts",
       "source_location": "L4",
       "id": "shared_detect_platform_inventory_platforms",
-      "community": 61,
+      "community": 176,
       "norm_label": "inventory_platforms"
     },
     {
@@ -7155,7 +7164,7 @@
       "source_file": "marketmind/shared/detect-platform.ts",
       "source_location": "L10",
       "id": "shared_detect_platform_readplatformvalue",
-      "community": 61,
+      "community": 176,
       "norm_label": "readplatformvalue()"
     },
     {
@@ -7164,7 +7173,7 @@
       "source_file": "marketmind/shared/detect-platform.ts",
       "source_location": "L20",
       "id": "shared_detect_platform_normalizeplatform",
-      "community": 61,
+      "community": 176,
       "norm_label": "normalizeplatform()"
     },
     {
@@ -7173,7 +7182,7 @@
       "source_file": "marketmind/shared/detect-platform.ts",
       "source_location": "L26",
       "id": "shared_detect_platform_normalizeinventoryplatform",
-      "community": 61,
+      "community": 176,
       "norm_label": "normalizeinventoryplatform()"
     },
     {
@@ -7182,7 +7191,7 @@
       "source_file": "marketmind/shared/detect-platform.ts",
       "source_location": "L36",
       "id": "shared_detect_platform_detectplatformfromurl",
-      "community": 61,
+      "community": 98,
       "norm_label": "detectplatformfromurl()"
     },
     {
@@ -7191,7 +7200,7 @@
       "source_file": "marketmind/shared/detect-platform.ts",
       "source_location": "L46",
       "id": "shared_detect_platform_islistingurl",
-      "community": 61,
+      "community": 98,
       "norm_label": "islistingurl()"
     },
     {
@@ -7380,7 +7389,7 @@
       "source_file": "marketmind/shared/format-currency.ts",
       "source_location": "L1",
       "id": "marketmind_shared_format_currency_ts",
-      "community": 185,
+      "community": 98,
       "norm_label": "format-currency.ts"
     },
     {
@@ -7389,7 +7398,7 @@
       "source_file": "marketmind/shared/format-currency.ts",
       "source_location": "L1",
       "id": "shared_format_currency_formateuro",
-      "community": 185,
+      "community": 98,
       "norm_label": "formateuro()"
     },
     {
@@ -7398,7 +7407,7 @@
       "source_file": "marketmind/shared/format-currency.ts",
       "source_location": "L11",
       "id": "shared_format_currency_formateurodelta",
-      "community": 185,
+      "community": 98,
       "norm_label": "formateurodelta()"
     },
     {
@@ -7479,7 +7488,7 @@
       "source_file": "marketmind/shared/parse-german-price.ts",
       "source_location": "L1",
       "id": "marketmind_shared_parse_german_price_ts",
-      "community": 169,
+      "community": 78,
       "norm_label": "parse-german-price.ts"
     },
     {
@@ -7488,7 +7497,7 @@
       "source_file": "marketmind/shared/parse-german-price.ts",
       "source_location": "L5",
       "id": "shared_parse_german_price_parsegermanprice",
-      "community": 169,
+      "community": 78,
       "norm_label": "parsegermanprice()"
     },
     {
@@ -7497,7 +7506,7 @@
       "source_file": "marketmind/shared/format-percent.ts",
       "source_location": "L1",
       "id": "marketmind_shared_format_percent_ts",
-      "community": 178,
+      "community": 98,
       "norm_label": "format-percent.ts"
     },
     {
@@ -7506,7 +7515,7 @@
       "source_file": "marketmind/shared/format-percent.ts",
       "source_location": "L1",
       "id": "shared_format_percent_formatpercent",
-      "community": 178,
+      "community": 98,
       "norm_label": "formatpercent()"
     },
     {
@@ -7855,7 +7864,7 @@
       "label": "Entfernt",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L25",
+      "source_location": "L26",
       "id": "marketmind_changelog_entfernt",
       "community": 161,
       "norm_label": "entfernt"
@@ -7864,79 +7873,79 @@
       "label": "[0.1.6] \u2014 2026-06-09",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L29",
+      "source_location": "L30",
       "id": "marketmind_changelog_0_1_6_2026_06_09",
-      "community": 161,
+      "community": 175,
       "norm_label": "[0.1.6] \u2014 2026-06-09"
     },
     {
       "label": "Hinzugef\u00fcgt",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L33",
-      "id": "marketmind_changelog_hinzugef\u00fcgt_33",
-      "community": 161,
+      "source_location": "L34",
+      "id": "marketmind_changelog_hinzugef\u00fcgt_34",
+      "community": 175,
       "norm_label": "hinzugefugt"
     },
     {
       "label": "Ge\u00e4ndert",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L42",
-      "id": "marketmind_changelog_ge\u00e4ndert_42",
-      "community": 161,
+      "source_location": "L43",
+      "id": "marketmind_changelog_ge\u00e4ndert_43",
+      "community": 175,
       "norm_label": "geandert"
     },
     {
       "label": "Behoben",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L48",
+      "source_location": "L49",
       "id": "marketmind_changelog_behoben",
-      "community": 161,
+      "community": 175,
       "norm_label": "behoben"
     },
     {
       "label": "[0.1.5] \u2014 2026-06-09",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L52",
+      "source_location": "L53",
       "id": "marketmind_changelog_0_1_5_2026_06_09",
-      "community": 161,
+      "community": 175,
       "norm_label": "[0.1.5] \u2014 2026-06-09"
     },
     {
       "label": "Hinzugef\u00fcgt",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L56",
-      "id": "marketmind_changelog_hinzugef\u00fcgt_56",
-      "community": 161,
+      "source_location": "L57",
+      "id": "marketmind_changelog_hinzugef\u00fcgt_57",
+      "community": 175,
       "norm_label": "hinzugefugt"
     },
     {
       "label": "Ge\u00e4ndert",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L65",
-      "id": "marketmind_changelog_ge\u00e4ndert_65",
-      "community": 161,
+      "source_location": "L66",
+      "id": "marketmind_changelog_ge\u00e4ndert_66",
+      "community": 175,
       "norm_label": "geandert"
     },
     {
       "label": "Behoben",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L70",
-      "id": "marketmind_changelog_behoben_70",
-      "community": 161,
+      "source_location": "L71",
+      "id": "marketmind_changelog_behoben_71",
+      "community": 175,
       "norm_label": "behoben"
     },
     {
       "label": "[0.1.4] \u2014 2026-06-09",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L74",
+      "source_location": "L75",
       "id": "marketmind_changelog_0_1_4_2026_06_09",
       "community": 161,
       "norm_label": "[0.1.4] \u2014 2026-06-09"
@@ -7945,8 +7954,8 @@
       "label": "Hinzugef\u00fcgt",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L78",
-      "id": "marketmind_changelog_hinzugef\u00fcgt_78",
+      "source_location": "L79",
+      "id": "marketmind_changelog_hinzugef\u00fcgt_79",
       "community": 161,
       "norm_label": "hinzugefugt"
     },
@@ -7954,8 +7963,8 @@
       "label": "Ge\u00e4ndert",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L89",
-      "id": "marketmind_changelog_ge\u00e4ndert_89",
+      "source_location": "L90",
+      "id": "marketmind_changelog_ge\u00e4ndert_90",
       "community": 161,
       "norm_label": "geandert"
     },
@@ -7963,8 +7972,8 @@
       "label": "Entfernt",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L96",
-      "id": "marketmind_changelog_entfernt_96",
+      "source_location": "L97",
+      "id": "marketmind_changelog_entfernt_97",
       "community": 161,
       "norm_label": "entfernt"
     },
@@ -7972,7 +7981,7 @@
       "label": "[0.1.3] \u2014 2026-06-09",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L100",
+      "source_location": "L101",
       "id": "marketmind_changelog_0_1_3_2026_06_09",
       "community": 89,
       "norm_label": "[0.1.3] \u2014 2026-06-09"
@@ -7981,17 +7990,17 @@
       "label": "Hinzugef\u00fcgt",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L104",
-      "id": "marketmind_changelog_hinzugef\u00fcgt_104",
-      "community": 23,
+      "source_location": "L105",
+      "id": "marketmind_changelog_hinzugef\u00fcgt_105",
+      "community": 89,
       "norm_label": "hinzugefugt"
     },
     {
       "label": "Ge\u00e4ndert",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L118",
-      "id": "marketmind_changelog_ge\u00e4ndert_118",
+      "source_location": "L119",
+      "id": "marketmind_changelog_ge\u00e4ndert_119",
       "community": 89,
       "norm_label": "geandert"
     },
@@ -7999,8 +8008,8 @@
       "label": "Behoben",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L129",
-      "id": "marketmind_changelog_behoben_129",
+      "source_location": "L130",
+      "id": "marketmind_changelog_behoben_130",
       "community": 89,
       "norm_label": "behoben"
     },
@@ -8008,8 +8017,8 @@
       "label": "Entfernt",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L134",
-      "id": "marketmind_changelog_entfernt_134",
+      "source_location": "L135",
+      "id": "marketmind_changelog_entfernt_135",
       "community": 89,
       "norm_label": "entfernt"
     },
@@ -8017,7 +8026,7 @@
       "label": "[0.1.2] \u2014 2026-06-09",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L138",
+      "source_location": "L139",
       "id": "marketmind_changelog_0_1_2_2026_06_09",
       "community": 160,
       "norm_label": "[0.1.2] \u2014 2026-06-09"
@@ -8026,8 +8035,8 @@
       "label": "Hinzugef\u00fcgt",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L142",
-      "id": "marketmind_changelog_hinzugef\u00fcgt_142",
+      "source_location": "L143",
+      "id": "marketmind_changelog_hinzugef\u00fcgt_143",
       "community": 160,
       "norm_label": "hinzugefugt"
     },
@@ -8035,8 +8044,8 @@
       "label": "Ge\u00e4ndert",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L152",
-      "id": "marketmind_changelog_ge\u00e4ndert_152",
+      "source_location": "L153",
+      "id": "marketmind_changelog_ge\u00e4ndert_153",
       "community": 160,
       "norm_label": "geandert"
     },
@@ -8044,8 +8053,8 @@
       "label": "Behoben",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L163",
-      "id": "marketmind_changelog_behoben_163",
+      "source_location": "L164",
+      "id": "marketmind_changelog_behoben_164",
       "community": 160,
       "norm_label": "behoben"
     },
@@ -8053,7 +8062,7 @@
       "label": "Entfernt (Breaking)",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L168",
+      "source_location": "L169",
       "id": "marketmind_changelog_entfernt_breaking",
       "community": 160,
       "norm_label": "entfernt (breaking)"
@@ -8062,7 +8071,7 @@
       "label": "[0.1.1] \u2014 2026-06-09",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L176",
+      "source_location": "L177",
       "id": "marketmind_changelog_0_1_1_2026_06_09",
       "community": 90,
       "norm_label": "[0.1.1] \u2014 2026-06-09"
@@ -8071,8 +8080,8 @@
       "label": "Hinzugef\u00fcgt",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L180",
-      "id": "marketmind_changelog_hinzugef\u00fcgt_180",
+      "source_location": "L181",
+      "id": "marketmind_changelog_hinzugef\u00fcgt_181",
       "community": 90,
       "norm_label": "hinzugefugt"
     },
@@ -8080,8 +8089,8 @@
       "label": "Ge\u00e4ndert",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L194",
-      "id": "marketmind_changelog_ge\u00e4ndert_194",
+      "source_location": "L195",
+      "id": "marketmind_changelog_ge\u00e4ndert_195",
       "community": 90,
       "norm_label": "geandert"
     },
@@ -8089,8 +8098,8 @@
       "label": "Entfernt",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L204",
-      "id": "marketmind_changelog_entfernt_204",
+      "source_location": "L205",
+      "id": "marketmind_changelog_entfernt_205",
       "community": 90,
       "norm_label": "entfernt"
     },
@@ -8098,8 +8107,8 @@
       "label": "Behoben",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L208",
-      "id": "marketmind_changelog_behoben_208",
+      "source_location": "L209",
+      "id": "marketmind_changelog_behoben_209",
       "community": 90,
       "norm_label": "behoben"
     },
@@ -8107,7 +8116,7 @@
       "label": "[0.1.0] \u2014 2026-06-09",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L215",
+      "source_location": "L216",
       "id": "marketmind_changelog_0_1_0_2026_06_09",
       "community": 23,
       "norm_label": "[0.1.0] \u2014 2026-06-09"
@@ -8116,8 +8125,8 @@
       "label": "Hinzugef\u00fcgt",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L219",
-      "id": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "source_location": "L220",
+      "id": "marketmind_changelog_hinzugef\u00fcgt_220",
       "community": 23,
       "norm_label": "hinzugefugt"
     },
@@ -8125,7 +8134,7 @@
       "label": "Dashboard",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L224",
+      "source_location": "L225",
       "id": "marketmind_changelog_dashboard",
       "community": 23,
       "norm_label": "dashboard"
@@ -8134,7 +8143,7 @@
       "label": "Preisrecherche",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L231",
+      "source_location": "L232",
       "id": "marketmind_changelog_preisrecherche",
       "community": 23,
       "norm_label": "preisrecherche"
@@ -8143,7 +8152,7 @@
       "label": "Anzeigen-Generator",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L239",
+      "source_location": "L240",
       "id": "marketmind_changelog_anzeigen_generator",
       "community": 23,
       "norm_label": "anzeigen-generator"
@@ -8152,7 +8161,7 @@
       "label": "Flipping-Kalkulator",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L246",
+      "source_location": "L247",
       "id": "marketmind_changelog_flipping_kalkulator",
       "community": 23,
       "norm_label": "flipping-kalkulator"
@@ -8161,7 +8170,7 @@
       "label": "Watchlist",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L252",
+      "source_location": "L253",
       "id": "marketmind_changelog_watchlist",
       "community": 23,
       "norm_label": "watchlist"
@@ -8170,7 +8179,7 @@
       "label": "Inventar",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L260",
+      "source_location": "L261",
       "id": "marketmind_changelog_inventar",
       "community": 23,
       "norm_label": "inventar"
@@ -8179,7 +8188,7 @@
       "label": "Agent-Manager",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L268",
+      "source_location": "L269",
       "id": "marketmind_changelog_agent_manager",
       "community": 23,
       "norm_label": "agent-manager"
@@ -8188,7 +8197,7 @@
       "label": "Einstellungen",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L276",
+      "source_location": "L277",
       "id": "marketmind_changelog_einstellungen",
       "community": 23,
       "norm_label": "einstellungen"
@@ -8197,7 +8206,7 @@
       "label": "Docker",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L284",
+      "source_location": "L285",
       "id": "marketmind_changelog_docker",
       "community": 23,
       "norm_label": "docker"
@@ -8206,7 +8215,7 @@
       "label": "Entwicklung",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L291",
+      "source_location": "L292",
       "id": "marketmind_changelog_entwicklung",
       "community": 23,
       "norm_label": "entwicklung"
@@ -8215,7 +8224,7 @@
       "label": "Technik",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L295",
+      "source_location": "L296",
       "id": "marketmind_changelog_technik",
       "community": 23,
       "norm_label": "technik"
@@ -8224,8 +8233,8 @@
       "label": "Ge\u00e4ndert",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L304",
-      "id": "marketmind_changelog_ge\u00e4ndert_304",
+      "source_location": "L305",
+      "id": "marketmind_changelog_ge\u00e4ndert_305",
       "community": 23,
       "norm_label": "geandert"
     },
@@ -8233,8 +8242,8 @@
       "label": "Behoben",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L309",
-      "id": "marketmind_changelog_behoben_309",
+      "source_location": "L310",
+      "id": "marketmind_changelog_behoben_310",
       "community": 23,
       "norm_label": "behoben"
     },
@@ -8323,7 +8332,7 @@
       "label": "code:bash (docker compose down)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L55",
+      "source_location": "L58",
       "id": "marketmind_readme_codeblock_3",
       "community": 77,
       "norm_label": "code:bash (docker compose down)"
@@ -8332,7 +8341,7 @@
       "label": "Variante C: Production-Build ohne Docker",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L59",
+      "source_location": "L62",
       "id": "marketmind_readme_variante_c_production_build_ohne_docker",
       "community": 77,
       "norm_label": "variante c: production-build ohne docker"
@@ -8341,7 +8350,7 @@
       "label": "code:bash (cd marketmind/marketmind)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L61",
+      "source_location": "L64",
       "id": "marketmind_readme_codeblock_4",
       "community": 77,
       "norm_label": "code:bash (cd marketmind/marketmind)"
@@ -8350,7 +8359,7 @@
       "label": "code:bash (PORT=5666 node .output/server/index.mjs)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L70",
+      "source_location": "L73",
       "id": "marketmind_readme_codeblock_5",
       "community": 77,
       "norm_label": "code:bash (port=5666 node .output/server/index.mjs)"
@@ -8359,7 +8368,7 @@
       "label": "Erste Schritte nach der Installation",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L74",
+      "source_location": "L77",
       "id": "marketmind_readme_erste_schritte_nach_der_installation",
       "community": 77,
       "norm_label": "erste schritte nach der installation"
@@ -8368,7 +8377,7 @@
       "label": "Konfiguration",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L81",
+      "source_location": "L84",
       "id": "marketmind_readme_konfiguration",
       "community": 77,
       "norm_label": "konfiguration"
@@ -8377,7 +8386,7 @@
       "label": "Umgebungsvariablen (`.env`)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L85",
+      "source_location": "L88",
       "id": "marketmind_readme_umgebungsvariablen_env",
       "community": 77,
       "norm_label": "umgebungsvariablen (`.env`)"
@@ -8386,7 +8395,7 @@
       "label": "KI-Provider (in der App)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L96",
+      "source_location": "L99",
       "id": "marketmind_readme_ki_provider_in_der_app",
       "community": 77,
       "norm_label": "ki-provider (in der app)"
@@ -8395,7 +8404,7 @@
       "label": "Scraper (in der App)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L113",
+      "source_location": "L116",
       "id": "marketmind_readme_scraper_in_der_app",
       "community": 77,
       "norm_label": "scraper (in der app)"
@@ -8404,7 +8413,7 @@
       "label": "Datenbank (in der App)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L123",
+      "source_location": "L126",
       "id": "marketmind_readme_datenbank_in_der_app",
       "community": 77,
       "norm_label": "datenbank (in der app)"
@@ -8413,7 +8422,7 @@
       "label": "Projektstruktur",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L132",
+      "source_location": "L135",
       "id": "marketmind_readme_projektstruktur",
       "community": 77,
       "norm_label": "projektstruktur"
@@ -8422,7 +8431,7 @@
       "label": "code:block6 (marketmind/           # Repository-Root)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L134",
+      "source_location": "L137",
       "id": "marketmind_readme_codeblock_6",
       "community": 77,
       "norm_label": "code:block6 (marketmind/           # repository-root)"
@@ -8431,7 +8440,7 @@
       "label": "Entwicklung & Tests",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L150",
+      "source_location": "L153",
       "id": "marketmind_readme_entwicklung_tests",
       "community": 77,
       "norm_label": "entwicklung & tests"
@@ -8440,7 +8449,7 @@
       "label": "code:bash (cd marketmind/marketmind)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L152",
+      "source_location": "L155",
       "id": "marketmind_readme_codeblock_7",
       "community": 77,
       "norm_label": "code:bash (cd marketmind/marketmind)"
@@ -8449,7 +8458,7 @@
       "label": "Rechtlicher Hinweis zum Scraping",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L163",
+      "source_location": "L166",
       "id": "marketmind_readme_rechtlicher_hinweis_zum_scraping",
       "community": 77,
       "norm_label": "rechtlicher hinweis zum scraping"
@@ -8458,7 +8467,7 @@
       "label": "Lizenz & Status",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L179",
+      "source_location": "L182",
       "id": "marketmind_readme_lizenz_status",
       "community": 77,
       "norm_label": "lizenz & status"
@@ -8683,26 +8692,206 @@
       "label": "Hinzugef\u00fcgt",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L34",
-      "community": 161,
+      "source_location": "L33",
+      "community": 175,
       "norm_label": "hinzugefugt",
-      "id": "marketmind_changelog_hinzugef\u00fcgt_34"
+      "id": "marketmind_changelog_hinzugef\u00fcgt_33"
     },
     {
       "label": "Ge\u00e4ndert",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L43",
+      "source_location": "L42",
+      "community": 175,
+      "norm_label": "geandert",
+      "id": "marketmind_changelog_ge\u00e4ndert_42"
+    },
+    {
+      "label": "Hinzugef\u00fcgt",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L56",
+      "community": 175,
+      "norm_label": "hinzugefugt",
+      "id": "marketmind_changelog_hinzugef\u00fcgt_56"
+    },
+    {
+      "label": "Ge\u00e4ndert",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L65",
+      "community": 175,
+      "norm_label": "geandert",
+      "id": "marketmind_changelog_ge\u00e4ndert_65"
+    },
+    {
+      "label": "Behoben",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L70",
+      "community": 175,
+      "norm_label": "behoben",
+      "id": "marketmind_changelog_behoben_70"
+    },
+    {
+      "label": "Hinzugef\u00fcgt",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L78",
+      "community": 161,
+      "norm_label": "hinzugefugt",
+      "id": "marketmind_changelog_hinzugef\u00fcgt_78"
+    },
+    {
+      "label": "Ge\u00e4ndert",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L89",
       "community": 161,
       "norm_label": "geandert",
-      "id": "marketmind_changelog_ge\u00e4ndert_43"
+      "id": "marketmind_changelog_ge\u00e4ndert_89"
+    },
+    {
+      "label": "Entfernt",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L96",
+      "community": 161,
+      "norm_label": "entfernt",
+      "id": "marketmind_changelog_entfernt_96"
+    },
+    {
+      "label": "Hinzugef\u00fcgt",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L104",
+      "community": 23,
+      "norm_label": "hinzugefugt",
+      "id": "marketmind_changelog_hinzugef\u00fcgt_104"
+    },
+    {
+      "label": "Ge\u00e4ndert",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L118",
+      "community": 89,
+      "norm_label": "geandert",
+      "id": "marketmind_changelog_ge\u00e4ndert_118"
+    },
+    {
+      "label": "Behoben",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L129",
+      "community": 89,
+      "norm_label": "behoben",
+      "id": "marketmind_changelog_behoben_129"
+    },
+    {
+      "label": "Entfernt",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L134",
+      "community": 89,
+      "norm_label": "entfernt",
+      "id": "marketmind_changelog_entfernt_134"
+    },
+    {
+      "label": "Hinzugef\u00fcgt",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L142",
+      "community": 160,
+      "norm_label": "hinzugefugt",
+      "id": "marketmind_changelog_hinzugef\u00fcgt_142"
+    },
+    {
+      "label": "Ge\u00e4ndert",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L152",
+      "community": 160,
+      "norm_label": "geandert",
+      "id": "marketmind_changelog_ge\u00e4ndert_152"
+    },
+    {
+      "label": "Behoben",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L163",
+      "community": 160,
+      "norm_label": "behoben",
+      "id": "marketmind_changelog_behoben_163"
+    },
+    {
+      "label": "Hinzugef\u00fcgt",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L180",
+      "community": 90,
+      "norm_label": "hinzugefugt",
+      "id": "marketmind_changelog_hinzugef\u00fcgt_180"
+    },
+    {
+      "label": "Ge\u00e4ndert",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L194",
+      "community": 90,
+      "norm_label": "geandert",
+      "id": "marketmind_changelog_ge\u00e4ndert_194"
+    },
+    {
+      "label": "Entfernt",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L204",
+      "community": 90,
+      "norm_label": "entfernt",
+      "id": "marketmind_changelog_entfernt_204"
+    },
+    {
+      "label": "Behoben",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L208",
+      "community": 90,
+      "norm_label": "behoben",
+      "id": "marketmind_changelog_behoben_208"
+    },
+    {
+      "label": "Hinzugef\u00fcgt",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L219",
+      "community": 23,
+      "norm_label": "hinzugefugt",
+      "id": "marketmind_changelog_hinzugef\u00fcgt_219"
+    },
+    {
+      "label": "Ge\u00e4ndert",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L304",
+      "community": 23,
+      "norm_label": "geandert",
+      "id": "marketmind_changelog_ge\u00e4ndert_304"
+    },
+    {
+      "label": "Behoben",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L309",
+      "community": 23,
+      "norm_label": "behoben",
+      "id": "marketmind_changelog_behoben_309"
     },
     {
       "label": "Behoben",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
       "source_location": "L48",
-      "community": 161,
+      "community": 175,
       "norm_label": "behoben",
       "id": "marketmind_changelog_behoben_48"
     },
@@ -9449,7 +9638,7 @@
       "file_type": "code",
       "source_file": "marketmind/server/api/listings/generate.post.ts",
       "source_location": "L7",
-      "community": 79,
+      "community": 164,
       "norm_label": "listinginput",
       "id": "listings_generate_post_listinginput"
     },
@@ -9458,7 +9647,7 @@
       "file_type": "code",
       "source_file": "marketmind/server/api/listings/generate.post.ts",
       "source_location": "L29",
-      "community": 79,
+      "community": 164,
       "norm_label": "results",
       "id": "listings_generate_post_results"
     },
@@ -9467,7 +9656,7 @@
       "file_type": "code",
       "source_file": "marketmind/server/api/listings/generate.post.ts",
       "source_location": "L32",
-      "community": 79,
+      "community": 164,
       "norm_label": "stats",
       "id": "listings_generate_post_stats"
     },
@@ -9476,7 +9665,7 @@
       "file_type": "code",
       "source_file": "marketmind/server/api/listings/generate.post.ts",
       "source_location": "L51",
-      "community": 79,
+      "community": 164,
       "norm_label": "parsed",
       "id": "listings_generate_post_parsed"
     },
@@ -9593,7 +9782,7 @@
       "file_type": "code",
       "source_file": "marketmind/server/services/watchlist/scraper.ts",
       "source_location": "L6",
-      "community": 83,
+      "community": 82,
       "norm_label": "watchlistrow",
       "id": "watchlist_scraper_watchlistrow"
     },
@@ -9602,7 +9791,7 @@
       "file_type": "code",
       "source_file": "marketmind/server/services/watchlist/scraper.ts",
       "source_location": "L62",
-      "community": 83,
+      "community": 82,
       "norm_label": "checkalert()",
       "id": "watchlist_scraper_checkalert"
     },
@@ -12846,7 +13035,7 @@
       "granularity": "low",
       "heat": 0.186,
       "owner": "unowned",
-      "community": 0,
+      "community": 1,
       "norm_label": "getallsettings()",
       "id": "seed_getallsettings"
     },
@@ -16080,7 +16269,7 @@
       "granularity": "low",
       "heat": 0.108,
       "owner": "unowned",
-      "community": 0,
+      "community": 1,
       "norm_label": "config.ts",
       "id": "users_mlp_projekte_marketmind_marketmind_server_services_ai_config_ts"
     },
@@ -16096,7 +16285,7 @@
       "granularity": "low",
       "heat": 0.095,
       "owner": "unowned",
-      "community": 0,
+      "community": 1,
       "norm_label": "normalizeaibaseurl()",
       "id": "config_normalizeaibaseurl"
     },
@@ -16112,7 +16301,7 @@
       "granularity": "low",
       "heat": 0.225,
       "owner": "unowned",
-      "community": 0,
+      "community": 1,
       "norm_label": "getaiconfig()",
       "id": "config_getaiconfig"
     },
@@ -16128,7 +16317,7 @@
       "granularity": "low",
       "heat": 0.071,
       "owner": "unowned",
-      "community": 0,
+      "community": 1,
       "norm_label": "getaiconnection()",
       "id": "config_getaiconnection"
     },
@@ -16144,7 +16333,7 @@
       "granularity": "low",
       "heat": 0.114,
       "owner": "unowned",
-      "community": 0,
+      "community": 1,
       "norm_label": "isaiconfigured()",
       "id": "config_isaiconfigured"
     },
@@ -16160,7 +16349,7 @@
       "granularity": "low",
       "heat": 0.215,
       "owner": "unowned",
-      "community": 0,
+      "community": 1,
       "norm_label": "assertaiconfigured()",
       "id": "config_assertaiconfigured"
     },
@@ -20028,6 +20217,17 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "marketmind/test/api/database.test.ts",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "marketmind_test_api_database_test_ts",
+      "target": "database_paths_isdatabasepathlocked",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "marketmind/test/api/database.test.ts",
       "source_location": "L7",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -20077,6 +20277,17 @@
       "confidence_score": 1.0,
       "source": "marketmind_test_api_database_test_ts",
       "target": "marketmind_server_database_lifecycle_ts"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "marketmind/test/api/database.test.ts",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "marketmind_test_api_database_test_ts",
+      "target": "marketmind_server_database_paths_ts",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -23545,6 +23756,17 @@
       "source_file": "marketmind/server/database/lifecycle.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "source": "marketmind_server_database_lifecycle_ts",
+      "target": "database_paths_isdatabasepathlocked",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "marketmind/server/database/lifecycle.ts",
+      "source_location": "L3",
+      "weight": 1.0,
       "confidence_score": 1.0,
       "source": "marketmind_server_database_lifecycle_ts",
       "target": "database_paths_resolvedbpath"
@@ -23603,6 +23825,17 @@
       "weight": 1.0,
       "source": "database_lifecycle_getdatabaseinfo",
       "target": "database_paths_getactivepath"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "marketmind/server/database/lifecycle.ts",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "database_lifecycle_getdatabaseinfo",
+      "target": "database_paths_isdatabasepathlocked"
     },
     {
       "relation": "imports",
@@ -23815,6 +24048,17 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "marketmind/server/api/database/path.put.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "marketmind_server_api_database_path_put_ts",
+      "target": "marketmind_server_database_paths_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "marketmind/server/database/db.ts",
       "source_location": "L6",
       "weight": 1.0,
@@ -23846,6 +24090,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "marketmind/server/database/paths.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "marketmind_server_database_paths_ts",
+      "target": "database_paths_isdatabasepathlocked",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "marketmind/server/database/paths.ts",
       "source_location": "L50",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -23861,6 +24115,17 @@
       "confidence_score": 1.0,
       "source": "marketmind_server_database_paths_ts",
       "target": "database_paths_resolvedbpath"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "marketmind/server/api/database/path.put.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "marketmind_server_api_database_path_put_ts",
+      "target": "database_paths_isdatabasepathlocked",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -33427,9 +33692,9 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_changelog",
-      "target": "marketmind_changelog_0_1_7_2026_06_09",
-      "confidence_score": 1.0
+      "target": "marketmind_changelog_0_1_7_2026_06_09"
     },
     {
       "relation": "contains",
@@ -33437,9 +33702,9 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_7_2026_06_09",
-      "target": "marketmind_changelog_entfernt",
-      "confidence_score": 1.0
+      "target": "marketmind_changelog_entfernt"
     },
     {
       "relation": "contains",
@@ -33447,9 +33712,9 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_7_2026_06_09",
-      "target": "marketmind_changelog_ge\u00e4ndert",
-      "confidence_score": 1.0
+      "target": "marketmind_changelog_ge\u00e4ndert"
     },
     {
       "relation": "contains",
@@ -33457,9 +33722,9 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_7_2026_06_09",
-      "target": "marketmind_changelog_hinzugef\u00fcgt",
-      "confidence_score": 1.0
+      "target": "marketmind_changelog_hinzugef\u00fcgt"
     },
     {
       "relation": "contains",
@@ -33737,18 +34002,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L42",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_6_2026_06_09",
-      "target": "marketmind_changelog_ge\u00e4ndert_42",
-      "confidence_score": 1.0
+      "target": "marketmind_changelog_ge\u00e4ndert_42"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L33",
+      "source_location": "L43",
       "weight": 1.0,
       "source": "marketmind_changelog_0_1_6_2026_06_09",
-      "target": "marketmind_changelog_hinzugef\u00fcgt_33",
+      "target": "marketmind_changelog_ge\u00e4ndert_43",
       "confidence_score": 1.0
     },
     {
@@ -33758,8 +34023,38 @@
       "source_location": "L33",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "marketmind_changelog_0_1_4_2026_06_09",
+      "source": "marketmind_changelog_0_1_6_2026_06_09",
       "target": "marketmind_changelog_hinzugef\u00fcgt_33"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_6_2026_06_09",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_34",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L34",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_0_1_5_2026_06_09",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_34"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L43",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_0_1_5_2026_06_09",
+      "target": "marketmind_changelog_ge\u00e4ndert_43"
     },
     {
       "relation": "contains",
@@ -33827,19 +34122,19 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L70",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_5_2026_06_09",
-      "target": "marketmind_changelog_behoben_70",
-      "confidence_score": 1.0
+      "target": "marketmind_changelog_behoben_70"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L43",
+      "source_location": "L71",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_5_2026_06_09",
-      "target": "marketmind_changelog_ge\u00e4ndert_43"
+      "target": "marketmind_changelog_behoben_71",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -33847,28 +34142,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L65",
       "weight": 1.0,
-      "source": "marketmind_changelog_0_1_5_2026_06_09",
-      "target": "marketmind_changelog_ge\u00e4ndert_65",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
-      "source_location": "L34",
-      "weight": 1.0,
       "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_5_2026_06_09",
-      "target": "marketmind_changelog_hinzugef\u00fcgt_34"
+      "target": "marketmind_changelog_ge\u00e4ndert_65"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L56",
+      "source_location": "L66",
       "weight": 1.0,
       "source": "marketmind_changelog_0_1_5_2026_06_09",
-      "target": "marketmind_changelog_hinzugef\u00fcgt_56",
+      "target": "marketmind_changelog_ge\u00e4ndert_66",
       "confidence_score": 1.0
     },
     {
@@ -33878,18 +34163,18 @@
       "source_location": "L56",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "marketmind_changelog_0_1_4_2026_06_09",
+      "source": "marketmind_changelog_0_1_5_2026_06_09",
       "target": "marketmind_changelog_hinzugef\u00fcgt_56"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L70",
+      "source_location": "L57",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_0_1_2_2026_06_09",
-      "target": "marketmind_changelog_behoben_70"
+      "source": "marketmind_changelog_0_1_5_2026_06_09",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_57",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -33897,8 +34182,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L96",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_4_2026_06_09",
-      "target": "marketmind_changelog_entfernt_96",
+      "target": "marketmind_changelog_entfernt_96"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_4_2026_06_09",
+      "target": "marketmind_changelog_entfernt_97",
       "confidence_score": 1.0
     },
     {
@@ -33927,9 +34222,39 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L89",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_4_2026_06_09",
-      "target": "marketmind_changelog_ge\u00e4ndert_89",
+      "target": "marketmind_changelog_ge\u00e4ndert_89"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L90",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_4_2026_06_09",
+      "target": "marketmind_changelog_ge\u00e4ndert_90",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L33",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_0_1_4_2026_06_09",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_33"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L56",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_0_1_4_2026_06_09",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_56"
     },
     {
       "relation": "contains",
@@ -33937,8 +34262,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L78",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_4_2026_06_09",
-      "target": "marketmind_changelog_hinzugef\u00fcgt_78",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_78"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_4_2026_06_09",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_79",
       "confidence_score": 1.0
     },
     {
@@ -33957,8 +34292,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L129",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_3_2026_06_09",
-      "target": "marketmind_changelog_behoben_129",
+      "target": "marketmind_changelog_behoben_129"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L130",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_3_2026_06_09",
+      "target": "marketmind_changelog_behoben_130",
       "confidence_score": 1.0
     },
     {
@@ -33987,8 +34332,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L134",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_3_2026_06_09",
-      "target": "marketmind_changelog_entfernt_134",
+      "target": "marketmind_changelog_entfernt_134"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L135",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_3_2026_06_09",
+      "target": "marketmind_changelog_entfernt_135",
       "confidence_score": 1.0
     },
     {
@@ -34017,8 +34372,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L118",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_3_2026_06_09",
-      "target": "marketmind_changelog_ge\u00e4ndert_118",
+      "target": "marketmind_changelog_ge\u00e4ndert_118"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L119",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_3_2026_06_09",
+      "target": "marketmind_changelog_ge\u00e4ndert_119",
       "confidence_score": 1.0
     },
     {
@@ -34057,8 +34422,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L104",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_3_2026_06_09",
-      "target": "marketmind_changelog_hinzugef\u00fcgt_104",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_104"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L105",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_3_2026_06_09",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_105",
       "confidence_score": 1.0
     },
     {
@@ -34095,126 +34470,6 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L104",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_0_1_0_2026_06_09",
-      "target": "marketmind_changelog_hinzugef\u00fcgt_104"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
-      "source_location": "L153",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
-      "target": "marketmind_changelog_agent_manager"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
-      "source_location": "L124",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
-      "target": "marketmind_changelog_anzeigen_generator"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
-      "source_location": "L109",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
-      "target": "marketmind_changelog_dashboard"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
-      "source_location": "L169",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
-      "target": "marketmind_changelog_docker"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
-      "source_location": "L161",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
-      "target": "marketmind_changelog_einstellungen"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
-      "source_location": "L176",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
-      "target": "marketmind_changelog_entwicklung"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
-      "source_location": "L131",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
-      "target": "marketmind_changelog_flipping_kalkulator"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
-      "source_location": "L145",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
-      "target": "marketmind_changelog_inventar"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
-      "source_location": "L116",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
-      "target": "marketmind_changelog_preisrecherche"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
-      "source_location": "L180",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
-      "target": "marketmind_changelog_technik"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
-      "source_location": "L137",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
-      "target": "marketmind_changelog_watchlist"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
       "source_location": "L118",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -34237,8 +34492,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L163",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_2_2026_06_09",
-      "target": "marketmind_changelog_behoben_163",
+      "target": "marketmind_changelog_behoben_163"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L164",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_2_2026_06_09",
+      "target": "marketmind_changelog_behoben_164",
       "confidence_score": 1.0
     },
     {
@@ -34250,6 +34515,16 @@
       "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_2_2026_06_09",
       "target": "marketmind_changelog_behoben_66"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L70",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_0_1_2_2026_06_09",
+      "target": "marketmind_changelog_behoben_70"
     },
     {
       "relation": "contains",
@@ -34297,8 +34572,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L152",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_2_2026_06_09",
-      "target": "marketmind_changelog_ge\u00e4ndert_152",
+      "target": "marketmind_changelog_ge\u00e4ndert_152"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L153",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_2_2026_06_09",
+      "target": "marketmind_changelog_ge\u00e4ndert_153",
       "confidence_score": 1.0
     },
     {
@@ -34357,8 +34642,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L142",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_2_2026_06_09",
-      "target": "marketmind_changelog_hinzugef\u00fcgt_142",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_142"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L143",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_2_2026_06_09",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_143",
       "confidence_score": 1.0
     },
     {
@@ -34415,16 +34710,6 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L163",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "marketmind_changelog_0_1_1_2026_06_09",
-      "target": "marketmind_changelog_behoben_163"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CHANGELOG.md",
       "source_location": "L111",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -34455,6 +34740,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
+      "source_location": "L163",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_0_1_1_2026_06_09",
+      "target": "marketmind_changelog_behoben_163"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
       "source_location": "L186",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -34467,8 +34762,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L208",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_1_2026_06_09",
-      "target": "marketmind_changelog_behoben_208",
+      "target": "marketmind_changelog_behoben_208"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L209",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_1_2026_06_09",
+      "target": "marketmind_changelog_behoben_209",
       "confidence_score": 1.0
     },
     {
@@ -34547,8 +34852,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L204",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_1_2026_06_09",
-      "target": "marketmind_changelog_entfernt_204",
+      "target": "marketmind_changelog_entfernt_204"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L205",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_1_2026_06_09",
+      "target": "marketmind_changelog_entfernt_205",
       "confidence_score": 1.0
     },
     {
@@ -34597,8 +34912,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L194",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_1_2026_06_09",
-      "target": "marketmind_changelog_ge\u00e4ndert_194",
+      "target": "marketmind_changelog_ge\u00e4ndert_194"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L195",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_1_2026_06_09",
+      "target": "marketmind_changelog_ge\u00e4ndert_195",
       "confidence_score": 1.0
     },
     {
@@ -34677,8 +35002,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L180",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_1_2026_06_09",
-      "target": "marketmind_changelog_hinzugef\u00fcgt_180",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_180"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L181",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_1_2026_06_09",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_181",
       "confidence_score": 1.0
     },
     {
@@ -34817,8 +35152,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L309",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_0_2026_06_09",
-      "target": "marketmind_changelog_behoben_309",
+      "target": "marketmind_changelog_behoben_309"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L310",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_0_2026_06_09",
+      "target": "marketmind_changelog_behoben_310",
       "confidence_score": 1.0
     },
     {
@@ -34907,9 +35252,29 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L304",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_0_2026_06_09",
-      "target": "marketmind_changelog_ge\u00e4ndert_304",
+      "target": "marketmind_changelog_ge\u00e4ndert_304"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L305",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_0_2026_06_09",
+      "target": "marketmind_changelog_ge\u00e4ndert_305",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L104",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_0_1_0_2026_06_09",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_104"
     },
     {
       "relation": "contains",
@@ -34967,8 +35332,18 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L219",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "marketmind_changelog_0_1_0_2026_06_09",
-      "target": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_219"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L220",
+      "weight": 1.0,
+      "source": "marketmind_changelog_0_1_0_2026_06_09",
+      "target": "marketmind_changelog_hinzugef\u00fcgt_220",
       "confidence_score": 1.0
     },
     {
@@ -34995,9 +35370,9 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L268",
+      "source_location": "L269",
       "weight": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "source": "marketmind_changelog_hinzugef\u00fcgt_220",
       "target": "marketmind_changelog_agent_manager",
       "confidence_score": 1.0
     },
@@ -35005,9 +35380,9 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L239",
+      "source_location": "L240",
       "weight": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "source": "marketmind_changelog_hinzugef\u00fcgt_220",
       "target": "marketmind_changelog_anzeigen_generator",
       "confidence_score": 1.0
     },
@@ -35015,9 +35390,9 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L224",
+      "source_location": "L225",
       "weight": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "source": "marketmind_changelog_hinzugef\u00fcgt_220",
       "target": "marketmind_changelog_dashboard",
       "confidence_score": 1.0
     },
@@ -35025,9 +35400,9 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L284",
+      "source_location": "L285",
       "weight": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "source": "marketmind_changelog_hinzugef\u00fcgt_220",
       "target": "marketmind_changelog_docker",
       "confidence_score": 1.0
     },
@@ -35035,9 +35410,9 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L276",
+      "source_location": "L277",
       "weight": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "source": "marketmind_changelog_hinzugef\u00fcgt_220",
       "target": "marketmind_changelog_einstellungen",
       "confidence_score": 1.0
     },
@@ -35045,9 +35420,9 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L291",
+      "source_location": "L292",
       "weight": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "source": "marketmind_changelog_hinzugef\u00fcgt_220",
       "target": "marketmind_changelog_entwicklung",
       "confidence_score": 1.0
     },
@@ -35055,9 +35430,9 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L246",
+      "source_location": "L247",
       "weight": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "source": "marketmind_changelog_hinzugef\u00fcgt_220",
       "target": "marketmind_changelog_flipping_kalkulator",
       "confidence_score": 1.0
     },
@@ -35065,9 +35440,9 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L260",
+      "source_location": "L261",
       "weight": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "source": "marketmind_changelog_hinzugef\u00fcgt_220",
       "target": "marketmind_changelog_inventar",
       "confidence_score": 1.0
     },
@@ -35075,9 +35450,9 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L231",
+      "source_location": "L232",
       "weight": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "source": "marketmind_changelog_hinzugef\u00fcgt_220",
       "target": "marketmind_changelog_preisrecherche",
       "confidence_score": 1.0
     },
@@ -35085,9 +35460,9 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L295",
+      "source_location": "L296",
       "weight": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "source": "marketmind_changelog_hinzugef\u00fcgt_220",
       "target": "marketmind_changelog_technik",
       "confidence_score": 1.0
     },
@@ -35095,11 +35470,21 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L252",
+      "source_location": "L253",
       "weight": 1.0,
-      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "source": "marketmind_changelog_hinzugef\u00fcgt_220",
       "target": "marketmind_changelog_watchlist",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L109",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
+      "target": "marketmind_changelog_dashboard"
     },
     {
       "relation": "contains",
@@ -35155,6 +35540,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
+      "source_location": "L224",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "target": "marketmind_changelog_dashboard"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
       "source_location": "L86",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -35170,6 +35565,16 @@
       "confidence_score": 1.0,
       "source": "marketmind_changelog_hinzugef\u00fcgt_88",
       "target": "marketmind_changelog_dashboard"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L116",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
+      "target": "marketmind_changelog_preisrecherche"
     },
     {
       "relation": "contains",
@@ -35225,6 +35630,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
+      "source_location": "L231",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "target": "marketmind_changelog_preisrecherche"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
       "source_location": "L93",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -35240,6 +35655,16 @@
       "confidence_score": 1.0,
       "source": "marketmind_changelog_hinzugef\u00fcgt_88",
       "target": "marketmind_changelog_preisrecherche"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L124",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
+      "target": "marketmind_changelog_anzeigen_generator"
     },
     {
       "relation": "contains",
@@ -35295,6 +35720,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
+      "source_location": "L239",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "target": "marketmind_changelog_anzeigen_generator"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
       "source_location": "L101",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -35310,6 +35745,16 @@
       "confidence_score": 1.0,
       "source": "marketmind_changelog_hinzugef\u00fcgt_88",
       "target": "marketmind_changelog_anzeigen_generator"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L131",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
+      "target": "marketmind_changelog_flipping_kalkulator"
     },
     {
       "relation": "contains",
@@ -35365,6 +35810,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
+      "source_location": "L246",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "target": "marketmind_changelog_flipping_kalkulator"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
       "source_location": "L108",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -35380,6 +35835,16 @@
       "confidence_score": 1.0,
       "source": "marketmind_changelog_hinzugef\u00fcgt_88",
       "target": "marketmind_changelog_flipping_kalkulator"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L137",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
+      "target": "marketmind_changelog_watchlist"
     },
     {
       "relation": "contains",
@@ -35435,6 +35900,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
+      "source_location": "L252",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "target": "marketmind_changelog_watchlist"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
       "source_location": "L114",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -35450,6 +35925,16 @@
       "confidence_score": 1.0,
       "source": "marketmind_changelog_hinzugef\u00fcgt_88",
       "target": "marketmind_changelog_watchlist"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L145",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
+      "target": "marketmind_changelog_inventar"
     },
     {
       "relation": "contains",
@@ -35505,6 +35990,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
+      "source_location": "L260",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "target": "marketmind_changelog_inventar"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
       "source_location": "L122",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -35520,6 +36015,16 @@
       "confidence_score": 1.0,
       "source": "marketmind_changelog_hinzugef\u00fcgt_88",
       "target": "marketmind_changelog_inventar"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L153",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
+      "target": "marketmind_changelog_agent_manager"
     },
     {
       "relation": "contains",
@@ -35575,6 +36080,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
+      "source_location": "L268",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "target": "marketmind_changelog_agent_manager"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
       "source_location": "L130",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -35590,6 +36105,16 @@
       "confidence_score": 1.0,
       "source": "marketmind_changelog_hinzugef\u00fcgt_88",
       "target": "marketmind_changelog_agent_manager"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L161",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
+      "target": "marketmind_changelog_einstellungen"
     },
     {
       "relation": "contains",
@@ -35645,6 +36170,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
+      "source_location": "L276",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "target": "marketmind_changelog_einstellungen"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
       "source_location": "L138",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -35660,6 +36195,16 @@
       "confidence_score": 1.0,
       "source": "marketmind_changelog_hinzugef\u00fcgt_88",
       "target": "marketmind_changelog_einstellungen"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L169",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
+      "target": "marketmind_changelog_docker"
     },
     {
       "relation": "contains",
@@ -35715,6 +36260,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
+      "source_location": "L284",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "target": "marketmind_changelog_docker"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
       "source_location": "L146",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -35730,6 +36285,16 @@
       "confidence_score": 1.0,
       "source": "marketmind_changelog_hinzugef\u00fcgt_88",
       "target": "marketmind_changelog_docker"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L176",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
+      "target": "marketmind_changelog_entwicklung"
     },
     {
       "relation": "contains",
@@ -35785,6 +36350,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
+      "source_location": "L291",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
+      "target": "marketmind_changelog_entwicklung"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
       "source_location": "L153",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -35800,6 +36375,16 @@
       "confidence_score": 1.0,
       "source": "marketmind_changelog_hinzugef\u00fcgt_88",
       "target": "marketmind_changelog_entwicklung"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L180",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_104",
+      "target": "marketmind_changelog_technik"
     },
     {
       "relation": "contains",
@@ -35849,6 +36434,16 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "marketmind_changelog_hinzugef\u00fcgt_197",
+      "target": "marketmind_changelog_technik"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L295",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "marketmind_changelog_hinzugef\u00fcgt_219",
       "target": "marketmind_changelog_technik"
     },
     {
@@ -40983,5 +41578,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "bc7f95e9ef2262390b216c42f2a4cfb5471889be"
+  "built_at_commit": "c8f8e12383fecd6f990762c821fe48a3d4d7e5bd"
 }

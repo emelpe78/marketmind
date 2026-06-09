@@ -4,6 +4,7 @@ import { refreshFetchData } from "~/utils/refresh-fetch-data";
 export interface DatabaseInfo {
   path: string;
   exists: boolean;
+  pathLocked: boolean;
 }
 
 export async function useDatabaseAdmin() {

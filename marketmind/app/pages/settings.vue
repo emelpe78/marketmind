@@ -302,14 +302,27 @@ async function confirmResetDatabase() {
         <h3 class="font-semibold">Datenbank</h3>
       </template>
       <div class="space-y-4">
+        <UAlert
+          v-if="databaseInfo?.pathLocked"
+          color="info"
+          variant="subtle"
+          title="Pfad über Docker festgelegt"
+          description="MM_DATABASE_PATH ist gesetzt. Der Speicherort wird über docker-compose.yml bzw. MARKETMIND_DATA_DIR auf dem Host konfiguriert — nicht über dieses Feld."
+          data-testid="database-path-locked-hint"
+        />
         <UFormField
           label="Datenbankpfad"
-          hint="Relative oder absolute Pfade. Bestehende Datenbank wird beim Speichern kopiert."
+          :hint="
+            databaseInfo?.pathLocked
+              ? 'Nur lesbar — Änderungen in docker-compose.yml vornehmen.'
+              : 'Relative oder absolute Pfade. Bestehende Datenbank wird beim Speichern kopiert.'
+          "
         >
           <UInput
             v-model="databasePathInput"
             data-testid="database-path"
             placeholder="data/marketmind.db"
+            :disabled="databaseInfo?.pathLocked"
           />
         </UFormField>
         <p v-if="databaseInfo" class="text-sm text-muted">
@@ -320,6 +333,7 @@ async function confirmResetDatabase() {
         </p>
         <div class="flex flex-wrap gap-2">
           <UButton
+            v-if="!databaseInfo?.pathLocked"
             data-testid="save-database-path"
             :loading="relocatingDatabase"
             @click="saveDatabasePath"

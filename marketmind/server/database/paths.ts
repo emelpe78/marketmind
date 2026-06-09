@@ -2,6 +2,10 @@ import Database from "better-sqlite3";
 import { existsSync } from "node:fs";
 import { isAbsolute, join, resolve } from "node:path";
 
+export function isDatabasePathLocked(): boolean {
+  return Boolean(process.env.MM_DATABASE_PATH?.trim());
+}
+
 export function getRuntimeDefaultPath(): string {
   if (process.env.MM_DATABASE_PATH) {
     return process.env.MM_DATABASE_PATH;

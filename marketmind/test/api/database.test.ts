@@ -11,6 +11,7 @@ import {
   relocateDatabase,
   resetDatabase,
 } from "../../server/database/lifecycle";
+import { isDatabasePathLocked } from "../../server/database/paths";
 
 let tempDir: string | null = null;
 
@@ -43,6 +44,15 @@ describe("database admin", () => {
     const info = getDatabaseInfo();
     expect(info.path).toBe(dbPath);
     expect(info.exists).toBe(true);
+    expect(info.pathLocked).toBe(true);
+  });
+
+  it("reflects MM_DATABASE_PATH in pathLocked", () => {
+    delete process.env.MM_DATABASE_PATH;
+    expect(isDatabasePathLocked()).toBe(false);
+
+    process.env.MM_DATABASE_PATH = join(tempDir!, "locked.db");
+    expect(isDatabasePathLocked()).toBe(true);
   });
 
   it("copies an existing database to a new path", () => {

@@ -39,9 +39,9 @@ marketmind/                 # Repo-Root
 | Dev      | **5666** | `npm run dev`                      |
 | Docker   | **5667** | `docker compose up -d` (Repo-Root) |
 
-Env-Variablen: `MM_PORT`, `MM_DATABASE_PATH`, `PORT`, `HOST` — siehe `marketmind/.env.example`.
+Env-Variablen: `MM_PORT`, `MM_DATABASE_PATH`, `PORT`, `HOST` — siehe `marketmind/.env.example`. Docker-Host-Datenordner: `MARKETMIND_DATA_DIR` — Repo-Root `.env.example`.
 
-Dev-DB: `marketmind/data/` (gitignored). Docker-DB: Volume `marketmind-data` unter `/app/data/`.
+Dev-DB: `marketmind/data/` (gitignored). Docker-DB: Host-Bind-Mount `MARKETMIND_DATA_DIR` → `/app/data/`; `MM_DATABASE_PATH` sperrt Pfadänderungen in der UI (`isDatabasePathLocked()`, `pathLocked` in `GET /api/database`).
 
 ## Architektur
 
@@ -75,7 +75,7 @@ Dev-DB: `marketmind/data/` (gitignored). Docker-DB: Volume `marketmind-data` unt
 
 - **API:** `server/api/**/*.ts` — dünne HTTP-Adapter
 - **Services:** Use-Cases + Repositories unter `server/services/`
-- **DB:** `server/database/` — Schema, `settings.ts`, `lifecycle.ts`, `seed.ts`
+- **DB:** `server/database/` — Schema, `settings.ts`, `lifecycle.ts`, `paths.ts` (`isDatabasePathLocked`), `seed.ts`
 - **Plugin:** `server/plugins/database.ts` — Init, Seed, Migrationen, Agent-Prompt-Sync beim Start
 - **Prompt-Bibliothek:** `server/services/prompt-library/` — Repository, Zuweisung (`assign.ts`), Sync aus `agents` (`agent-sync.ts`)
 
@@ -115,7 +115,7 @@ Vor Architekturfragen: `graphify-out/GRAPH_REPORT.md` und `graphify-out/wiki/ind
 ### API & Daten
 
 - Validierung mit Zod wo sinnvoll
-- SQLite-Pfad konfigurierbar; Reset behält Pfad, löscht Daten
+- SQLite-Pfad konfigurierbar (Dev: Einstellungen; Docker: `MARKETMIND_DATA_DIR` + `MM_DATABASE_PATH`); `PUT /api/database/path` → 409 wenn Pfad gesperrt; Reset behält Pfad, löscht Daten
 - Agent-Aufrufe in `agent_history` loggen (Tokens, Kosten)
 - `ScraperFetchError` in Research- und Flipping-Routes als 502 mit lesbarer Meldung mappen
 
@@ -161,6 +161,7 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 | Fetch-Keys              | `app/utils/fetch-keys.ts` — `useFetch`-Keys für geteilten Cache                                |
 | UI nach Speichern       | `app/utils/refresh-fetch-data.ts` — `refreshAgentsData`, `refreshAllFetchData`, …              |
 | Agent-Prompt-Docs       | `docs/listing_agent.md`, `docs/flipping_agent.md`                                              |
+| Docker-Datenordner      | Repo-Root `.env` (`MARKETMIND_DATA_DIR`), `docker-compose.yml`                                 |
 
 ## Was vermeiden
 
@@ -174,4 +175,4 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 ## Referenzen
 
 - Releases: `CHANGELOG.md`
-- Env-Vorlage: `marketmind/.env.example`
+- Env-Vorlagen: `marketmind/.env.example` (Dev), `.env.example` (Docker-Datenordner)
