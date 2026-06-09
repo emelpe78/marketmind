@@ -4,6 +4,29 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.1.6] — 2026-06-09
+
+Preisrecherche mit Sidebar-Submenu und eigener Seite für gespeicherte Recherchen; Marktanalyse und Ergebnisliste als aufklappbare Accordion-/Collapsible-Ansicht.
+
+### Hinzugefügt
+
+- **Preisrecherche-Unterseiten** — `/research` (Recherche), `/research/saved` (Gespeicherte Recherchen)
+- **Preisrecherche-Submenu** — Sidebar wie bei Anzeigen, Flipping und Agents (`shared/research-nav.ts`)
+- **`useSavedResearches`** — Composable für Liste, Bearbeiten und Löschen; Fetch-Key `savedResearches`
+- **`ResearchAnalysisList`** — KI-Marktanalysen pro Plattform als Accordion (standardmäßig zugeklappt)
+- **`ResearchResultsTable`** — Suchergebnis-Tabelle als Collapsible über „X Ergebnisse“ (standardmäßig zugeklappt)
+- **`stripPlatformSuffixFromTitle()`** — Plattform in Klammern aus Analyse-Titeln entfernen (Badge bleibt)
+
+### Geändert
+
+- **Gespeicherte Recherchen** — eigene Seite statt Liste auf dem Dashboard; KPI-Zähler auf dem Dashboard bleibt
+- **Einzelansicht** — Zurück-Link zeigt auf `/research/saved` statt Dashboard
+- **ResearchAnalysisSummary** — Titel ohne Plattform-Suffix in Klammern
+
+### Behoben
+
+- **Accordion-Inhalt** — KI-Analyse-Tabs werden wieder korrekt im aufgeklappten Panel angezeigt (Slot-Zuordnung)
+
 ## [0.1.5] — 2026-06-09
 
 Anzeigen-Bereich in Generator und gespeicherte Liste aufgeteilt; Bearbeitung und Inventar-Übernahme per Modal; Inventar-Plattform „Sonstige“.
@@ -267,7 +290,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.5...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.6...HEAD
+[0.1.6]: https://github.com/emelpe78/marketmind/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/emelpe78/marketmind/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/emelpe78/marketmind/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/emelpe78/marketmind/compare/v0.1.2...v0.1.3

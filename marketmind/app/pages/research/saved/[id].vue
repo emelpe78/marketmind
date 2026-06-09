@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { TableColumn } from "@nuxt/ui";
 import { formatDateTime } from "shared/format-datetime";
 import {
   platformLabelFor,
@@ -43,49 +42,6 @@ const {
 
 const platformLabels = RESEARCH_PLATFORM_LABELS;
 
-const resultColumns: TableColumn<SavedResearchResult>[] = [
-  {
-    accessorKey: "title",
-    header: "Titel",
-    meta: {
-      class: {
-        th: "min-w-0 w-[62%]",
-        td: "min-w-0 w-[62%]",
-      },
-    },
-  },
-  {
-    accessorKey: "price",
-    header: "Preis",
-    meta: {
-      class: {
-        th: "w-[11%] text-right",
-        td: "w-[11%] px-3 text-right",
-      },
-    },
-  },
-  {
-    accessorKey: "platform",
-    header: "Plattform",
-    meta: {
-      class: {
-        th: "w-[14%]",
-        td: "w-[14%] px-3",
-      },
-    },
-  },
-  {
-    accessorKey: "condition",
-    header: "Zustand",
-    meta: {
-      class: {
-        th: "w-[13%]",
-        td: "w-[13%] px-3",
-      },
-    },
-  },
-];
-
 </script>
 
 <template>
@@ -93,13 +49,13 @@ const resultColumns: TableColumn<SavedResearchResult>[] = [
     <div class="flex flex-wrap items-start justify-between gap-4">
       <div>
         <UButton
-          to="/"
+          to="/research/saved"
           variant="ghost"
           color="neutral"
           icon="i-lucide-arrow-left"
           class="mb-2 -ml-2"
         >
-          Dashboard
+          Gespeicherte Recherchen
         </UButton>
         <h2 class="text-2xl font-bold text-highlighted">
           {{ saved?.title ?? "Gespeicherte Recherche" }}
@@ -154,63 +110,26 @@ const resultColumns: TableColumn<SavedResearchResult>[] = [
         </UCard>
       </div>
 
-      <div v-if="saved.analyses.length" class="space-y-4">
-        <ResearchAnalysisSummary
-          v-for="item in saved.analyses"
-          :key="item.platform"
-          :summary="item.summary"
-          :platform="item.platform"
-          :platform-label="
-            platformLabelFor(
+      <ResearchAnalysisList
+        v-if="saved.analyses.length"
+        :items="
+          saved.analyses.map((item) => ({
+            summary: item.summary,
+            platform: item.platform,
+            platformLabel: platformLabelFor(
               RESEARCH_PLATFORM_LABELS as Record<string, string>,
               item.platform,
               item.platform,
-            )
-          "
-        />
-      </div>
+            ),
+          }))
+        "
+      />
 
-      <UCard
+      <ResearchResultsTable
         v-if="saved.results.length"
-        class="min-w-0"
-        data-testid="saved-results-table"
-      >
-        <template #header>
-          <h3 class="font-semibold">{{ saved.results.length }} Ergebnisse</h3>
-        </template>
-        <UTable :data="saved.results" :columns="resultColumns">
-          <template #title-cell="{ row }">
-            <a
-              v-if="
-                row.original.platform === 'kleinanzeigen' && row.original.url
-              "
-              :href="row.original.url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="block min-w-0 whitespace-normal wrap-anywhere leading-snug text-primary hover:underline"
-            >
-              {{ row.original.title }}
-            </a>
-            <span
-              v-else
-              class="block min-w-0 whitespace-normal wrap-anywhere leading-snug"
-            >
-              {{ row.original.title }}
-            </span>
-          </template>
-          <template #price-cell="{ row }">
-            <span class="tabular-nums">{{
-              formatEuro(row.original.price)
-            }}</span>
-          </template>
-          <template #platform-cell="{ row }">
-            <span class="capitalize">{{ row.original.platform }}</span>
-          </template>
-          <template #condition-cell="{ row }">
-            {{ row.original.condition || "–" }}
-          </template>
-        </UTable>
-      </UCard>
+        :results="saved.results"
+        test-id="saved-results-table"
+      />
     </template>
   </div>
 </template>

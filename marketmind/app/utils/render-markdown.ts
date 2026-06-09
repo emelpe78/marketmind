@@ -133,6 +133,19 @@ export function extractMarkdownTitle(markdown: string): {
   return { title, body: text };
 }
 
+/** Entfernt Plattform-Hinweise in Klammern, wenn die Plattform separat angezeigt wird. */
+export function stripPlatformSuffixFromTitle(
+  title: string | null,
+): string | null {
+  if (!title) return title;
+  return title
+    .replace(
+      /\s*\([^)]*(?:ebay\.de|kleinanzeigen\.de|ebay|kleinanzeigen)[^)]*\)\s*$/i,
+      "",
+    )
+    .trim();
+}
+
 function renderBlockquote(lines: string[]): string {
   const content = lines
     .map(

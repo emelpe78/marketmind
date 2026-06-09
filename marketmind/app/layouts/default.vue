@@ -10,6 +10,11 @@ import {
   LISTINGS_NAV_ITEMS,
   isListingsRoute,
 } from "shared/listings-nav";
+import {
+  RESEARCH_ICON,
+  RESEARCH_NAV_ITEMS,
+  isResearchRoute,
+} from "shared/research-nav";
 
 const colorMode = useColorMode();
 const { public: publicConfig } = useRuntimeConfig();
@@ -17,7 +22,6 @@ const route = useRoute();
 
 const mainNavItems = [
   { label: "Dashboard", icon: "i-lucide-layout-dashboard", to: "/" },
-  { label: "Preisrecherche", icon: "i-lucide-search", to: "/research" },
   { label: "Watchlist", icon: "i-lucide-eye", to: "/watchlist" },
   { label: "Inventar", icon: "i-lucide-package", to: "/inventory" },
 ];
@@ -38,6 +42,7 @@ const navButtonProps = {
 const agentsNavOpen = ref(isAgentsRoute(route.path));
 const flippingNavOpen = ref(isFlippingRoute(route.path));
 const listingsNavOpen = ref(isListingsRoute(route.path));
+const researchNavOpen = ref(isResearchRoute(route.path));
 
 watch(
   () => route.path,
@@ -50,6 +55,9 @@ watch(
     }
     if (isListingsRoute(path)) {
       listingsNavOpen.value = true;
+    }
+    if (isResearchRoute(path)) {
+      researchNavOpen.value = true;
     }
   },
 );
@@ -64,6 +72,10 @@ function toggleFlippingNav() {
 
 function toggleListingsNav() {
   listingsNavOpen.value = !listingsNavOpen.value;
+}
+
+function toggleResearchNav() {
+  researchNavOpen.value = !researchNavOpen.value;
 }
 
 function toggleTheme() {
@@ -98,6 +110,42 @@ function toggleTheme() {
         >
           {{ item.label }}
         </UButton>
+
+        <div class="flex flex-col gap-1">
+          <UButton
+            data-testid="nav-research-toggle"
+            v-bind="navButtonProps"
+            :icon="RESEARCH_ICON"
+            :active="isResearchRoute(route.path)"
+            class="justify-start"
+            block
+            @click="toggleResearchNav"
+          >
+            <span class="flex-1 text-left">Preisrecherche</span>
+            <UIcon
+              name="i-lucide-chevron-down"
+              class="size-4 shrink-0 transition-transform"
+              :class="{ 'rotate-180': researchNavOpen }"
+            />
+          </UButton>
+          <div
+            v-show="researchNavOpen"
+            class="ml-3 flex flex-col gap-1 border-l border-muted pl-2"
+          >
+            <UButton
+              v-for="child in RESEARCH_NAV_ITEMS"
+              :key="child.to"
+              v-bind="navButtonProps"
+              :to="child.to"
+              :data-testid="child.testId"
+              size="sm"
+              class="justify-start"
+              block
+            >
+              {{ child.label }}
+            </UButton>
+          </div>
+        </div>
 
         <div class="flex flex-col gap-1">
           <UButton

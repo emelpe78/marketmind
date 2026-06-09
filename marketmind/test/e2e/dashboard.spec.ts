@@ -2,7 +2,18 @@ import { test, expect } from "@playwright/test";
 
 const pages = [
   { path: "/", heading: "Letzte Suchen" },
-  { path: "/research", heading: "Preisrecherche" },
+  {
+    path: "/research",
+    heading: "Preisrecherche",
+    navTestId: "nav-research-run",
+    navToggleTestId: "nav-research-toggle",
+  },
+  {
+    path: "/research/saved",
+    heading: "Gespeicherte Recherchen",
+    navTestId: "nav-research-saved",
+    navToggleTestId: "nav-research-toggle",
+  },
   {
     path: "/listings",
     heading: "Anzeigen-Generator",
@@ -25,6 +36,7 @@ test.describe("Dashboard & Navigation", () => {
     await page.goto("/");
     await expect(page.getByText("Gespeicherte Recherchen")).toBeVisible();
     await expect(page.getByText("Watchlist-Alerts")).toBeVisible();
+    await expect(page.getByTestId("saved-researches")).not.toBeVisible();
   });
 
   test("shows ai setup hint when provider is not configured", async ({

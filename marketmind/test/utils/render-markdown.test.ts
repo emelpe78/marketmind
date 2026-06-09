@@ -4,9 +4,26 @@ import {
   parseMarkdownSections,
   renderMarkdownBlock,
   renderMarkdownDocument,
+  stripPlatformSuffixFromTitle,
 } from "../../app/utils/render-markdown";
 
 describe("render-markdown", () => {
+  it("strips platform suffix from analysis titles", () => {
+    expect(
+      stripPlatformSuffixFromTitle("Marktanalyse: RTX 3060 12GB (eBay.de)"),
+    ).toBe("Marktanalyse: RTX 3060 12GB");
+    expect(
+      stripPlatformSuffixFromTitle(
+        "Marktanalyse für „RTX 3060 12GB“ (gebraucht, eBay.de)",
+      ),
+    ).toBe("Marktanalyse für „RTX 3060 12GB“");
+    expect(
+      stripPlatformSuffixFromTitle(
+        "Marktanalyse: RTX 3060 12GB (Kleinanzeigen.de)",
+      ),
+    ).toBe("Marktanalyse: RTX 3060 12GB");
+  });
+
   it("formats bold markdown safely", () => {
     expect(formatInlineMarkdown("Preis **249,99 €**")).toContain("<strong");
     expect(formatInlineMarkdown("Preis **249,99 €**")).toContain("249,99 €");

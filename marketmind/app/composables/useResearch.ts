@@ -1,6 +1,8 @@
+import { FETCH_KEYS } from "~/utils/fetch-keys";
 import {
   refreshAfterAgentCall,
   refreshDashboardData,
+  refreshFetchData,
 } from "~/utils/refresh-fetch-data";
 
 export interface SearchResult {
@@ -58,7 +60,10 @@ export function useResearch() {
         ...(analyses?.length ? { analyses } : {}),
       },
     });
-    await refreshDashboardData();
+    await Promise.all([
+      refreshDashboardData(),
+      refreshFetchData(FETCH_KEYS.savedResearches),
+    ]);
     return response;
   }
 

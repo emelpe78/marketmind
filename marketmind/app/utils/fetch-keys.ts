@@ -9,6 +9,7 @@ export const FETCH_KEYS = {
   database: "marketmind:database",
   settings: "marketmind:settings",
   listings: "marketmind:listings",
+  savedResearches: "marketmind:saved-researches",
   savedFlipAnalyses: "marketmind:saved-flip-analyses",
 } as const;
 

@@ -5,7 +5,16 @@ const props = defineProps<{
   platformLabel?: string;
 }>();
 
-const display = computed(() => renderMarkdownDocument(props.summary));
+const display = computed(() => {
+  const parsed = renderMarkdownDocument(props.summary);
+  return {
+    ...parsed,
+    title:
+      stripPlatformSuffixFromTitle(parsed.title) ??
+      parsed.title ??
+      "KI-Zusammenfassung",
+  };
+});
 </script>
 
 <template>

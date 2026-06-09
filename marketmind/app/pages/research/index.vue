@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TableColumn } from "@nuxt/ui";
-import type { Column } from "@tanstack/vue-table";
 import {
   platformLabelFor,
   PLATFORM_LABELS,
@@ -89,7 +87,7 @@ async function saveResearch() {
     );
     toast.add({
       title: "Recherche gespeichert",
-      description: "Im Dashboard unter „Gespeicherte Recherchen“ aufrufbar.",
+      description: "Unter Preisrecherche → Gespeicherte Recherchen aufrufbar.",
       color: "success",
     });
     if (saved.savedResearchId) {
@@ -107,62 +105,6 @@ const platformLabels = PLATFORM_LABELS;
 const hasAnalysis = computed(() => summaries.value.length > 0);
 
 const platformOptions = [...RESEARCH_PLATFORM_OPTIONS];
-
-function sortIcon(column: Column<SearchResult, unknown>) {
-  const direction = column.getIsSorted();
-  if (direction === "asc") return "i-lucide-arrow-up-narrow-wide";
-  if (direction === "desc") return "i-lucide-arrow-down-wide-narrow";
-  return "i-lucide-arrow-up-down";
-}
-
-function toggleSort(column: Column<SearchResult, unknown>) {
-  column.toggleSorting(column.getIsSorted() === "asc");
-}
-
-const resultColumns: TableColumn<SearchResult>[] = [
-  {
-    accessorKey: "title",
-    header: "Titel",
-    meta: {
-      class: {
-        th: "min-w-0 w-[62%]",
-        td: "min-w-0 w-[62%]",
-      },
-    },
-  },
-  {
-    accessorKey: "price",
-    header: "Preis",
-    sortingFn: "basic",
-    meta: {
-      class: {
-        th: "w-[11%] text-right",
-        td: "w-[11%] px-3 text-right",
-      },
-    },
-  },
-  {
-    accessorKey: "platform",
-    header: "Plattform",
-    meta: {
-      class: {
-        th: "w-[14%]",
-        td: "w-[14%] px-3",
-      },
-    },
-  },
-  {
-    accessorKey: "condition",
-    header: "Zustand",
-    sortingFn: "alphanumeric",
-    meta: {
-      class: {
-        th: "w-[13%]",
-        td: "w-[13%] px-3",
-      },
-    },
-  },
-];
 </script>
 
 <template>
@@ -263,82 +205,27 @@ const resultColumns: TableColumn<SearchResult>[] = [
       </UButton>
     </div>
 
-    <div v-if="summaries.length" class="space-y-4">
-      <ResearchAnalysisSummary
-        v-for="item in summaries"
-        :key="item.platform"
-        :summary="item.summary"
-        :platform="item.platform"
-        :platform-label="
-          platformLabelFor(
+    <ResearchAnalysisList
+      v-if="summaries.length"
+      :items="
+        summaries.map((item) => ({
+          summary: item.summary,
+          platform: item.platform,
+          platformLabel: platformLabelFor(
             PLATFORM_LABELS as Record<string, string>,
             item.platform,
             item.platform,
-          )
-        "
-      />
-    </div>
+          ),
+        }))
+      "
+    />
 
-    <UCard v-if="results.length" class="min-w-0" data-testid="results-table">
-      <template #header>
-        <h3 class="font-semibold">{{ results.length }} Ergebnisse</h3>
-      </template>
-      <UTable
-        v-model:sorting="sorting"
-        :data="results"
-        :columns="resultColumns"
-      >
-        <template #title-cell="{ row }">
-          <a
-            v-if="row.original.platform === 'kleinanzeigen' && row.original.url"
-            :href="row.original.url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="block min-w-0 whitespace-normal wrap-anywhere leading-snug text-primary hover:underline"
-          >
-            {{ row.original.title }}
-          </a>
-          <span
-            v-else
-            class="block min-w-0 whitespace-normal wrap-anywhere leading-snug"
-          >
-            {{ row.original.title }}
-          </span>
-        </template>
-        <template #price-header="{ column }">
-          <div class="flex justify-end">
-            <UButton
-              color="neutral"
-              variant="ghost"
-              size="sm"
-              label="Preis"
-              :icon="sortIcon(column)"
-              class="-mx-2.5"
-              @click="toggleSort(column)"
-            />
-          </div>
-        </template>
-        <template #condition-header="{ column }">
-          <UButton
-            color="neutral"
-            variant="ghost"
-            size="sm"
-            label="Zustand"
-            :icon="sortIcon(column)"
-            class="-mx-2.5"
-            @click="toggleSort(column)"
-          />
-        </template>
-        <template #price-cell="{ row }">
-          <span class="tabular-nums">{{ formatEuro(row.original.price) }}</span>
-        </template>
-        <template #platform-cell="{ row }">
-          <span class="capitalize">{{ row.original.platform }}</span>
-        </template>
-        <template #condition-cell="{ row }">
-          {{ row.original.condition || "–" }}
-        </template>
-      </UTable>
-    </UCard>
+    <ResearchResultsTable
+      v-if="results.length"
+      v-model:sorting="sorting"
+      :results="results"
+      sortable
+      test-id="results-table"
+    />
   </div>
 </template>
