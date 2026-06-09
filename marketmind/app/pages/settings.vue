@@ -2,10 +2,8 @@
 definePageMeta({ layout: "default" });
 
 const { settings, saving, refresh, saveSetting } = await useSettings();
-const { data: databaseInfo, refresh: refreshDatabase } = await useFetch<{
-  path: string;
-  exists: boolean;
-}>("/api/database");
+const { databaseInfo, refreshDatabase, relocateDatabase, resetDatabase } =
+  await useDatabaseAdmin();
 
 const databasePathInput = ref("");
 const relocatingDatabase = ref(false);
@@ -64,13 +62,7 @@ async function saveDatabasePath() {
 
   relocatingDatabase.value = true;
   try {
-    const result = await $fetch<{ path: string; copied: boolean }>(
-      "/api/database/path",
-      {
-        method: "PUT",
-        body: { path: databasePathInput.value.trim() },
-      },
-    );
+    const result = await relocateDatabase(databasePathInput.value.trim());
     databasePathInput.value = result.path;
     await Promise.all([refreshDatabase(), refresh()]);
     toast.add({
@@ -94,10 +86,7 @@ async function saveDatabasePath() {
 async function confirmResetDatabase() {
   resettingDatabase.value = true;
   try {
-    const result = await $fetch<{ path: string }>("/api/database/reset", {
-      method: "POST",
-      body: { confirm: true },
-    });
+    const result = await resetDatabase();
     databasePathInput.value = result.path;
     resetModalOpen.value = false;
     await Promise.all([refreshDatabase(), refresh()]);

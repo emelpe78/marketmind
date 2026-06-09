@@ -1,5 +1,6 @@
 import type Database from "better-sqlite3";
 import { getAllSettings } from "../../database/settings";
+import { AiNotConfiguredError } from "../errors";
 
 export type AiProvider = "openrouter" | "local";
 
@@ -61,21 +62,12 @@ export function isAiConfigured(config: AiConfig): boolean {
 
 export function assertAiConfigured(config: AiConfig): void {
   if (config.provider === "openrouter" && !config.apiKey.trim()) {
-    throw createError({
-      statusCode: 400,
-      message: "OpenRouter API-Key nicht konfiguriert",
-    });
+    throw new AiNotConfiguredError("OpenRouter API-Key nicht konfiguriert");
   }
   if (config.provider === "local" && !config.defaultModel.trim()) {
-    throw createError({
-      statusCode: 400,
-      message: "Lokales Modell nicht konfiguriert",
-    });
+    throw new AiNotConfiguredError("Lokales Modell nicht konfiguriert");
   }
   if (config.provider === "local" && !config.baseUrl.trim()) {
-    throw createError({
-      statusCode: 400,
-      message: "OpenAI API URL nicht konfiguriert",
-    });
+    throw new AiNotConfiguredError("OpenAI API URL nicht konfiguriert");
   }
 }

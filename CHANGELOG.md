@@ -4,6 +4,37 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.1.2] — 2026-06-09
+
+Architektur-Vertiefung: Shared-Seams, Use-Case-Module für KI-Features, Domain-Errors, konsolidierte Repositories, Frontend-Composables für Haupt-Flows.
+
+### Hinzugefügt
+
+- **`shared/platform-labels.ts`** — zentrale UI-Labels und Plattform-Select-Optionen
+- **`shared/flipping-calculator.ts`** — gemeinsame Margen-/Score-Logik für Client und Server
+- **KI-Use-Cases** — `generateListing`, `analyzeFlip`, `generateAgentPrompt`
+- **Domain-Errors** — `server/services/errors.ts` mit HTTP-Mapping in Routes
+- **Watchlist-Alerts** — `server/services/watchlist/alerts.ts` (entkoppelt vom Scraper)
+- **Frontend-Composables** — `useResearch`, `useFlipping`, `useDashboard`, `useDatabaseAdmin`
+- Tests für Research-API, Dashboard-Summary, Watchlist-Scrape, KI-Use-Cases
+
+### Geändert
+
+- **Agent-Manager** — alle Agent-SQL-Funktionen in `server/services/agents/repository.ts`
+- **ResearchRun** — Stats/Results über `searches/repository` statt dupliziertem SQL
+- **Preisrecherche** — einziger API-Einstieg `POST /api/research/run` (+ `saved-researches`)
+- Routes für Listings, Flipping und Prompt-Generierung sind dünne Adapter über Use-Cases
+- Inventar-Server nutzt `shared/detect-platform` für `normalizePlatform`
+- Watchlist-Scrape-Routes nutzen Repository statt inline SQL
+
+### Entfernt (Breaking)
+
+- `/api/searches/*` und `/api/search-results/*` (verwaist, durch `/api/research/run` ersetzt)
+- `/api/openrouter/chat` (ohne `agent_history`, ungenutzt)
+- `server/services/scraper/index.ts` (Pass-through-Fassade)
+- `server/services/database/admin.ts` (Reexport)
+- `server/services/openrouter/agents.ts` (nach Agent-Konsolidierung)
+
 ## [0.1.1] — 2026-06-09
 
 Architektur-Refactoring: klare Schichten (Routes, Use-Cases, Repositories, Shared), einheitliche KI- und Scraping-Pipeline, Frontend-Composables.

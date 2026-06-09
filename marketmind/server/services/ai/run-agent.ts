@@ -10,7 +10,7 @@ import {
   getAgentByType,
   logAgentHistory,
   resolveAgentModel,
-} from "../openrouter/agents";
+} from "../agents/repository";
 
 export type RunAgentMode = "required" | "optional" | "skip";
 

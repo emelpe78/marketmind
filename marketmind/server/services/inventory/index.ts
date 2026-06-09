@@ -14,16 +14,6 @@ export interface InventoryItem {
   notes: string | null;
 }
 
-export function normalizePlatform(value: unknown): string | null {
-  if (value == null || value === "") return null;
-  if (value === "ebay" || value === "kleinanzeigen") return value;
-  if (typeof value === "object" && value && "value" in value) {
-    const platform = (value as { value: unknown }).value;
-    if (platform === "ebay" || platform === "kleinanzeigen") return platform;
-  }
-  return String(value);
-}
-
 function toNumber(value: unknown): number | null {
   if (value == null || value === "") return null;
   const parsed = Number(value);

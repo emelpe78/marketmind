@@ -1,24 +1,21 @@
 <script setup lang="ts">
+import {
+  platformLabelFor,
+  RESEARCH_PLATFORM_LABELS,
+} from "shared/platform-labels";
+import type { SavedResearchListItem } from "~/composables/useDashboard";
+
 definePageMeta({ layout: "default" });
 
-interface SavedResearchListItem {
-  id: number;
-  title: string;
-  query: string;
-  platform: string;
-  results: unknown[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-const { data: dashboard, pending, refresh } = await useFetch("/api/dashboard");
+const {
+  dashboard,
+  pending,
+  updateSavedResearch,
+  deleteSavedResearch,
+} = await useDashboard();
 const toast = useToast();
 
-const platformLabels: Record<string, string> = {
-  ebay: "eBay",
-  kleinanzeigen: "Kleinanzeigen",
-  both: "Beide",
-};
+const platformLabels = RESEARCH_PLATFORM_LABELS;
 
 const editItem = ref<SavedResearchListItem | null>(null);
 const editModalOpen = computed({
@@ -60,12 +57,8 @@ async function confirmEdit() {
   }
 
   try {
-    await $fetch(`/api/saved-researches/${editItem.value.id}`, {
-      method: "PUT",
-      body: { title: editTitle.value.trim() },
-    });
+    await updateSavedResearch(editItem.value.id, editTitle.value.trim());
     editItem.value = null;
-    await refresh();
     toast.add({ title: "Recherche aktualisiert", color: "success" });
   } catch {
     toast.add({ title: "Speichern fehlgeschlagen", color: "error" });
@@ -76,11 +69,8 @@ async function confirmDelete() {
   if (!deleteItem.value) return;
 
   try {
-    await $fetch(`/api/saved-researches/${deleteItem.value.id}`, {
-      method: "DELETE",
-    });
+    await deleteSavedResearch(deleteItem.value.id);
     deleteItem.value = null;
-    await refresh();
     toast.add({ title: "Recherche gelöscht", color: "success" });
   } catch {
     toast.add({ title: "Löschen fehlgeschlagen", color: "error" });
@@ -160,7 +150,13 @@ async function confirmDelete() {
                 />
               </NuxtLink>
               <UBadge variant="subtle" color="neutral">
-                {{ platformLabels[item.platform] ?? item.platform }}
+                {{
+                  platformLabelFor(
+                    RESEARCH_PLATFORM_LABELS as Record<string, string>,
+                    item.platform,
+                    item.platform,
+                  )
+                }}
               </UBadge>
             </div>
             <p class="text-sm text-muted mt-1">

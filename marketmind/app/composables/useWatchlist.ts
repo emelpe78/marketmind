@@ -1,9 +1,5 @@
 import { detectPlatformFromUrl } from "shared/detect-platform";
-
-export const WATCHLIST_PLATFORM_LABELS: Record<string, string> = {
-  kleinanzeigen: "Kleinanzeigen",
-  ebay: "eBay",
-};
+import { PLATFORM_LABELS } from "shared/platform-labels";
 
 export function useWatchlist() {
   const { data: items, refresh } =
@@ -16,7 +12,7 @@ export function useWatchlist() {
       (item.platform === "ebay" || item.platform === "kleinanzeigen"
         ? item.platform
         : null);
-    return platform ? (WATCHLIST_PLATFORM_LABELS[platform] ?? null) : null;
+    return platform ? (PLATFORM_LABELS[platform] ?? null) : null;
   }
 
   async function createItem(body: Record<string, unknown>) {

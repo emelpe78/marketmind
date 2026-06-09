@@ -10,7 +10,7 @@ import {
   getDatabaseInfo,
   relocateDatabase,
   resetDatabase,
-} from "../../server/services/database/admin";
+} from "../../server/database/lifecycle";
 
 let tempDir: string | null = null;
 

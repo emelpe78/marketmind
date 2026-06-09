@@ -1,9 +1,6 @@
 import type Database from "better-sqlite3";
-import {
-  calculateProfit,
-  normalizePlatform,
-  type InventoryItem,
-} from "./index";
+import { normalizePlatform } from "shared/detect-platform";
+import { calculateProfit, type InventoryItem } from "./index";
 
 export interface InventoryFilters {
   status?: string;

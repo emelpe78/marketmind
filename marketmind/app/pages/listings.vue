@@ -2,6 +2,7 @@
 definePageMeta({ layout: "default" });
 
 import type { GeneratedListing, ListingItem } from "~/composables/useListings";
+import { platformLabelFor, PLATFORM_LABELS } from "shared/platform-labels";
 
 const query = ref("");
 const condition = ref("Gebraucht");
@@ -32,10 +33,7 @@ const {
 
 const conditionOptions = ["Neu", "Gebraucht", "Defekt"];
 
-const platformLabels: Record<string, string> = {
-  kleinanzeigen: "Kleinanzeigen",
-  ebay: "eBay",
-};
+const platformLabels = PLATFORM_LABELS;
 
 function resetEditor() {
   editingId.value = null;
@@ -277,7 +275,13 @@ function formatDate(value: string): string {
             <div class="flex flex-wrap items-center gap-2">
               <h4 class="font-semibold">{{ item.title }}</h4>
               <UBadge variant="subtle" color="neutral">
-                {{ platformLabels[item.platform] ?? item.platform }}
+                {{
+                  platformLabelFor(
+                    PLATFORM_LABELS as Record<string, string>,
+                    item.platform,
+                    item.platform,
+                  )
+                }}
               </UBadge>
             </div>
             <p class="text-sm text-muted mt-1 line-clamp-2">

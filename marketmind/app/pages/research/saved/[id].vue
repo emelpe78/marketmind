@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import type { TableColumn } from "@nuxt/ui";
+import {
+  platformLabelFor,
+  RESEARCH_PLATFORM_LABELS,
+} from "shared/platform-labels";
 
 definePageMeta({ layout: "default" });
 
@@ -36,11 +40,7 @@ const {
   error,
 } = await useFetch<SavedResearch>(`/api/saved-researches/${savedResearchId}`);
 
-const platformLabels: Record<string, string> = {
-  ebay: "eBay",
-  kleinanzeigen: "Kleinanzeigen",
-  both: "Beide",
-};
+const platformLabels = RESEARCH_PLATFORM_LABELS;
 
 const resultColumns: TableColumn<SavedResearchResult>[] = [
   {
@@ -110,7 +110,14 @@ function formatDate(value: string): string {
         </h2>
         <p v-if="saved" class="text-muted mt-1">
           {{ saved.query }} ·
-          {{ platformLabels[saved.platform] ?? saved.platform }} ·
+          {{
+            platformLabelFor(
+              RESEARCH_PLATFORM_LABELS as Record<string, string>,
+              saved.platform,
+              saved.platform,
+            )
+          }}
+          ·
           {{ formatDate(saved.createdAt) }}
         </p>
       </div>
@@ -157,7 +164,13 @@ function formatDate(value: string): string {
           :key="item.platform"
           :summary="item.summary"
           :platform="item.platform"
-          :platform-label="platformLabels[item.platform]"
+          :platform-label="
+            platformLabelFor(
+              RESEARCH_PLATFORM_LABELS as Record<string, string>,
+              item.platform,
+              item.platform,
+            )
+          "
         />
       </div>
 

@@ -1,20 +1,17 @@
 import { getDb } from "../../database/db";
-import { runAgent } from "../../services/ai/run-agent";
-import { formatEuro } from "shared/format-currency";
-import { parseListingGeneration } from "../../services/listings/parse-generation";
-import { analyzePrices } from "../../services/stats/price-analysis";
-
-interface ListingInput {
-  query: string;
-  platform: "kleinanzeigen" | "ebay";
-  condition: string;
-  extras?: string;
-  desiredPrice?: number;
-  searchId?: number;
-}
+import { mapDomainError } from "../../services/errors";
+import { generateListing } from "../../services/listings/generate-listing";
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody<ListingInput>(event);
+  const body = await readBody<{
+    query?: string;
+    platform?: "kleinanzeigen" | "ebay";
+    condition?: string;
+    extras?: string;
+    desiredPrice?: number;
+    searchId?: number;
+  }>(event);
+
   if (!body?.query || !body?.platform) {
     throw createError({
       statusCode: 400,
@@ -24,37 +21,20 @@ export default defineEventHandler(async (event) => {
 
   const db = getDb();
 
-  let priceContext = "";
-  if (body.searchId) {
-    const results = db
-      .prepare("SELECT price FROM search_results WHERE search_id = ?")
-      .all(body.searchId) as { price: number }[];
-    const stats = analyzePrices(
-      results.map((r) => ({ price: r.price, platform: body.platform })),
-    );
-    priceContext = `\nMarktdaten: Durchschnitt ${formatEuro(stats.avg)}, Median ${formatEuro(stats.median)}`;
+  try {
+    return await generateListing(db, {
+      query: body.query,
+      platform: body.platform,
+      condition: body.condition ?? "Gebraucht",
+      extras: body.extras,
+      desiredPrice: body.desiredPrice,
+      searchId: body.searchId,
+    });
+  } catch (error) {
+    const domainError = mapDomainError(error);
+    if (domainError) {
+      throw createError(domainError);
+    }
+    throw error;
   }
-
-  const platformHint =
-    body.platform === "kleinanzeigen"
-      ? "Erstelle eine Kleinanzeigen-Anzeige: Titel max 70 Zeichen, informeller Ton. Antworte als JSON mit: title, description, priceSuggestion, category."
-      : "Erstelle eine eBay-Anzeige: Titel max 80 Zeichen, professionell mit Bullet Points. Antworte als JSON mit: title, description, priceSuggestion, category, itemSpecifics (Objekt).";
-
-  const userInput = `${platformHint}\nProdukt: ${body.query}\nZustand: ${body.condition}\nZusatz: ${body.extras || "-"}\nWunschpreis: ${body.desiredPrice || "-"}${priceContext}`;
-
-  const { content } = await runAgent(db, {
-    agentType: "listing",
-    userInput,
-    mode: "required",
-  });
-
-  const parsed = parseListingGeneration(content, {
-    query: body.query,
-    desiredPrice: body.desiredPrice ?? null,
-  });
-
-  return {
-    platform: body.platform,
-    ...parsed,
-  };
 });

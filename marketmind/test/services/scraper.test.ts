@@ -20,7 +20,7 @@ import {
 } from "../../server/services/scraper/fetcher";
 import { createTestDb } from "../helpers/test-db";
 import { getDb, initDatabase } from "../../server/database/db";
-import { runSearch } from "../../server/services/scraper/index";
+import { createScraperRuntime } from "../../server/services/scraper/runtime";
 import { analyzePrices } from "../../server/services/stats/price-analysis";
 
 const fixturesDir = join(__dirname, "../fixtures");
@@ -79,12 +79,12 @@ describe("eBay scraper", () => {
       return Promise.resolve({ ok: true, text: async () => html });
     });
 
-    const { results } = await runSearch(db, "rtx 3060", "ebay", {
+    const { results } = await createScraperRuntime(db, {
       fetchFn: mockFetch as typeof fetch,
       sleepFn: async () => {},
       randomFn: () => 0,
       skipWarmUp: true,
-    });
+    }).runSearch("rtx 3060", "ebay");
 
     expect(results.length).toBe(4);
     expect(mockFetch).toHaveBeenCalledTimes(3);

@@ -4,7 +4,7 @@ import { getInventorySummary } from "../inventory/index";
 import { listSavedResearches } from "../research/saved-research";
 import { findRecentSearches } from "../searches/repository";
 import { findActiveWatchlistItems } from "../watchlist/repository";
-import { checkAlert } from "../watchlist/scraper";
+import { checkAlert } from "../watchlist/alerts";
 
 export function getDashboardSummary(db: Database.Database) {
   const recentSearches = findRecentSearches(db, 5);

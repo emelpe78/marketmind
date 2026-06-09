@@ -1,6 +1,6 @@
 import type Database from "better-sqlite3";
 import { detectPlatformFromUrl } from "shared/detect-platform";
-import { checkAlert } from "./scraper";
+import { checkAlert } from "./alerts";
 
 export interface WatchlistItem {
   id: number;

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatPlatformLabel } from "shared/platform-labels";
+
 definePageMeta({ layout: "default" });
 
 const {
@@ -16,13 +18,8 @@ const toast = useToast();
 
 const platformOptions = INVENTORY_PLATFORM_OPTIONS;
 
-const platformLabels = Object.fromEntries(
-  platformOptions.map((option) => [option.value, option.label]),
-) as Record<string, string>;
-
 function formatPlatform(value: unknown): string {
-  if (!value) return "–";
-  return platformLabels[String(value)] ?? String(value);
+  return formatPlatformLabel(value);
 }
 
 function formatDate(value: unknown): string {

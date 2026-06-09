@@ -1,4 +1,4 @@
-import { resetDatabase } from "../../services/database/admin";
+import { resetDatabase } from "../../database/lifecycle";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<{ confirm?: boolean }>(event);

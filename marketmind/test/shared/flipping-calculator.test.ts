@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calculateFlip } from "../../server/services/flipping/calculator";
+import { calculateFlip } from "../../shared/flipping-calculator";
 
 describe("flipping calculator", () => {
   it("calculates net proceeds profit and margin", () => {

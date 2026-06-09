@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import type { TableColumn } from "@nuxt/ui";
 import type { Column } from "@tanstack/vue-table";
+import {
+  platformLabelFor,
+  PLATFORM_LABELS,
+  RESEARCH_PLATFORM_OPTIONS,
+} from "shared/platform-labels";
+import type { PlatformSummary, SearchResult } from "~/composables/useResearch";
 
 definePageMeta({ layout: "default" });
 
-interface SearchResult {
-  title: string;
-  price: number;
-  url: string;
-  platform: string;
-  condition?: string | null;
-}
-
-interface PlatformSummary {
-  platform: "ebay" | "kleinanzeigen";
-  summary: string;
-}
+const {
+  runSearch: fetchResearch,
+  analyzeSearch: requestAnalyze,
+  saveResearch: requestSave,
+} = useResearch();
 
 const query = ref("");
 const platform = ref<"ebay" | "kleinanzeigen" | "both">("both");
@@ -35,14 +34,7 @@ async function runSearch() {
   summaries.value = [];
   sorting.value = [];
   try {
-    const response = await $fetch<{
-      searchId: number;
-      results: SearchResult[];
-      stats: Record<string, unknown>;
-    }>("/api/research/run", {
-      method: "POST",
-      body: { query: query.value, platform: platform.value },
-    });
+    const response = await fetchResearch(query.value, platform.value);
     searchId.value = response.searchId;
     results.value = response.results;
     stats.value = response.stats;
@@ -77,12 +69,7 @@ async function analyzeSearch() {
   if (!searchId.value) return;
   analyzing.value = true;
   try {
-    const response = await $fetch<{
-      summaries: PlatformSummary[];
-    }>("/api/research/run", {
-      method: "POST",
-      body: { searchId: searchId.value, analyze: true },
-    });
+    const response = await requestAnalyze(searchId.value);
     summaries.value = response.summaries ?? [];
   } catch {
     toast.add({ title: "Analyse fehlgeschlagen", color: "error" });
@@ -95,17 +82,7 @@ async function saveResearch() {
   if (!searchId.value || !stats.value || results.value.length === 0) return;
   saving.value = true;
   try {
-    const saved = await $fetch<{ savedResearchId: number }>(
-      "/api/research/run",
-      {
-        method: "POST",
-        body: {
-          searchId: searchId.value,
-          save: true,
-          saveName: query.value.trim(),
-        },
-      },
-    );
+    const saved = await requestSave(searchId.value, query.value.trim());
     toast.add({
       title: "Recherche gespeichert",
       description: "Im Dashboard unter „Gespeicherte Recherchen“ aufrufbar.",
@@ -121,18 +98,11 @@ async function saveResearch() {
   }
 }
 
-const platformLabels: Record<PlatformSummary["platform"], string> = {
-  ebay: "eBay",
-  kleinanzeigen: "Kleinanzeigen",
-};
+const platformLabels = PLATFORM_LABELS;
 
 const hasAnalysis = computed(() => summaries.value.length > 0);
 
-const platformOptions = [
-  { label: "eBay", value: "ebay" },
-  { label: "Kleinanzeigen", value: "kleinanzeigen" },
-  { label: "Beide", value: "both" },
-];
+const platformOptions = [...RESEARCH_PLATFORM_OPTIONS];
 
 function sortIcon(column: Column<SearchResult, unknown>) {
   const direction = column.getIsSorted();
@@ -295,7 +265,13 @@ const resultColumns: TableColumn<SearchResult>[] = [
         :key="item.platform"
         :summary="item.summary"
         :platform="item.platform"
-        :platform-label="platformLabels[item.platform]"
+        :platform-label="
+          platformLabelFor(
+            PLATFORM_LABELS as Record<string, string>,
+            item.platform,
+            item.platform,
+          )
+        "
       />
     </div>
 

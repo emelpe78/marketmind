@@ -1,5 +1,6 @@
 import { getDb } from "../../database/db";
-import { runAgent } from "../../services/ai/run-agent";
+import { generateAgentPrompt } from "../../services/agents/generate-prompt";
+import { mapDomainError } from "../../services/errors";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<{ description: string }>(event);
@@ -8,14 +9,14 @@ export default defineEventHandler(async (event) => {
   }
 
   const db = getDb();
-  const { content: prompt } = await runAgent(db, {
-    agentType: "strategy",
-    userInput: `Erstelle einen System-Prompt für folgendes Ziel:\n${body.description}`,
-    systemPrompt:
-      "Du erstellst präzise System-Prompts für KI-Agents. Antworte nur mit dem System-Prompt, ohne Erklärung.",
-    temperature: 0.7,
-    mode: "required",
-  });
 
-  return { prompt };
+  try {
+    return await generateAgentPrompt(db, body.description);
+  } catch (error) {
+    const domainError = mapDomainError(error);
+    if (domainError) {
+      throw createError(domainError);
+    }
+    throw error;
+  }
 });

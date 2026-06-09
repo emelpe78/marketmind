@@ -46,7 +46,7 @@ describe("runAgent", () => {
         userInput: "Test",
         mode: "required",
       }),
-    ).rejects.toMatchObject({ statusCode: 400 });
+    ).rejects.toThrow("OpenRouter API-Key nicht konfiguriert");
   });
 
   it("logs history by default when AI is configured", async () => {

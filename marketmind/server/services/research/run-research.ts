@@ -1,7 +1,18 @@
 import type Database from "better-sqlite3";
 import { createScraperRuntime } from "../scraper/runtime";
 import type { ScrapePlatform } from "../scraper/runtime";
-import { analyzePrices, type PriceStats } from "../stats/price-analysis";
+import type { FetcherDeps } from "../scraper/fetcher";
+import type { PriceStats } from "../stats/price-analysis";
+import {
+  findSearchById,
+  findSearchResults,
+  getSearchStats,
+} from "../searches/repository";
+import {
+  MissingQueryError,
+  NoAnalysisDataError,
+  SearchNotFoundError,
+} from "../errors";
 import { analyzeSearchByPlatform } from "./analyze-search";
 import { createSavedResearch } from "./saved-research";
 
@@ -25,6 +36,7 @@ export interface ResearchRunInput {
   analyze?: boolean;
   save?: boolean;
   saveName?: string;
+  scraperDeps?: FetcherDeps;
 }
 
 export interface ResearchRunResult {
@@ -35,29 +47,16 @@ export interface ResearchRunResult {
   savedResearchId?: number;
 }
 
-function loadSearchResults(
-  db: Database.Database,
-  searchId: number,
+function mapSearchResults(
+  rows: Array<Record<string, unknown>>,
 ): ResearchRunResultRow[] {
-  return db
-    .prepare(
-      "SELECT title, price, url, platform, condition FROM search_results WHERE search_id = ?",
-    )
-    .all(searchId) as ResearchRunResultRow[];
-}
-
-function loadStats(db: Database.Database, searchId: number): PriceStats {
-  const rows = db
-    .prepare(
-      "SELECT price, condition, platform, sold FROM search_results WHERE search_id = ?",
-    )
-    .all(searchId) as {
-    price: number;
-    condition: string;
-    platform: string;
-    sold: number;
-  }[];
-  return analyzePrices(rows);
+  return rows.map((row) => ({
+    title: String(row.title ?? ""),
+    price: Number(row.price),
+    url: String(row.url ?? ""),
+    platform: String(row.platform ?? ""),
+    condition: (row.condition as string | null | undefined) ?? null,
+  }));
 }
 
 export async function runResearch(
@@ -70,20 +69,20 @@ export async function runResearch(
   let results: ResearchRunResultRow[] = [];
 
   if (searchId) {
-    const search = db
-      .prepare("SELECT query, platform FROM searches WHERE id = ?")
-      .get(searchId) as { query: string; platform: string } | undefined;
+    const search = findSearchById(db, searchId);
     if (!search) {
-      throw createError({ statusCode: 404, message: "Suche nicht gefunden" });
+      throw new SearchNotFoundError();
     }
     query = search.query;
     platform = search.platform as ScrapePlatform;
-    results = loadSearchResults(db, searchId);
+    results = mapSearchResults(
+      findSearchResults(db, searchId) as Array<Record<string, unknown>>,
+    );
   } else {
     if (!query) {
-      throw createError({ statusCode: 400, message: "Suchbegriff fehlt" });
+      throw new MissingQueryError();
     }
-    const runtime = createScraperRuntime(db);
+    const runtime = createScraperRuntime(db, input.scraperDeps);
     const searchResult = await runtime.runSearch(query, platform);
     searchId = searchResult.searchId;
     results = searchResult.results.map((r) => ({
@@ -95,7 +94,7 @@ export async function runResearch(
     }));
   }
 
-  const stats = loadStats(db, searchId);
+  const stats = getSearchStats(db, searchId);
   let summaries: ResearchRunSummary[] | undefined;
   let savedResearchId: number | undefined;
 
@@ -106,10 +105,7 @@ export async function runResearch(
       { query, platform },
     );
     if (!platformSummaries.length) {
-      throw createError({
-        statusCode: 400,
-        message: "Keine Preisdaten für die Analyse vorhanden",
-      });
+      throw new NoAnalysisDataError();
     }
     summaries = platformSummaries;
   }

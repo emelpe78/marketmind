@@ -2,11 +2,9 @@ import {
   normalizePlatform,
   type DetectedPlatform,
 } from "shared/detect-platform";
+import { PLATFORM_SELECT_OPTIONS } from "shared/platform-labels";
 
-export const INVENTORY_PLATFORM_OPTIONS = [
-  { label: "Kleinanzeigen", value: "kleinanzeigen" },
-  { label: "eBay", value: "ebay" },
-];
+export const INVENTORY_PLATFORM_OPTIONS = [...PLATFORM_SELECT_OPTIONS];
 
 export function useInventory() {
   const { data: items, refresh } =

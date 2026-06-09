@@ -1,13 +1,13 @@
 import { describe, it, expect, vi } from "vitest";
 import { createTestDb } from "../helpers/test-db";
 import { getDb } from "../../server/database/db";
+import { normalizePlatform } from "shared/detect-platform";
 import {
   calculateProfit,
   getInventorySummary,
-  normalizePlatform,
 } from "../../server/services/inventory/index";
+import { checkAlert } from "../../server/services/watchlist/alerts";
 import {
-  checkAlert,
   scrapeListingPrice,
   scrapeWatchlistItem,
 } from "../../server/services/watchlist/scraper";

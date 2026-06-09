@@ -1,4 +1,4 @@
-import { relocateDatabase } from "../../services/database/admin";
+import { relocateDatabase } from "../../database/lifecycle";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<{ path?: string }>(event);

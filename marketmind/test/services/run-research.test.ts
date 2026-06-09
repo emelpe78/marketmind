@@ -1,7 +1,12 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, it, expect, vi } from "vitest";
+import { createTestDb } from "../helpers/test-db";
 import { getDb } from "../../server/database/db";
 import { setSetting } from "../../server/database/settings";
 import { runResearch } from "../../server/services/research/run-research";
+
+const fixturesDir = join(__dirname, "../fixtures");
 
 vi.mock("../../server/services/openrouter/client", () => ({
   chatCompletion: vi.fn().mockResolvedValue({
@@ -59,5 +64,38 @@ describe("runResearch", () => {
       .prepare("SELECT title FROM saved_researches WHERE id = ?")
       .get(result.savedResearchId) as { title: string };
     expect(saved.title).toBe("GTX Test");
+  });
+
+  it("scrapes fresh results from query and platform", async () => {
+    createTestDb();
+    const db = getDb();
+    const page1 = readFileSync(join(fixturesDir, "ebay/page1.html"), "utf-8");
+    const page2 = readFileSync(join(fixturesDir, "ebay/page2.html"), "utf-8");
+    let callCount = 0;
+    const mockFetch = vi.fn().mockImplementation(() => {
+      callCount++;
+      const html =
+        callCount === 1
+          ? page1
+          : callCount === 2
+            ? page2
+            : '<html><ul class="srp-results"></ul></html>';
+      return Promise.resolve({ ok: true, text: async () => html });
+    });
+
+    const result = await runResearch(db, {
+      query: "rtx 3060",
+      platform: "ebay",
+      scraperDeps: {
+        fetchFn: mockFetch as typeof fetch,
+        sleepFn: async () => {},
+        randomFn: () => 0,
+        skipWarmUp: true,
+      },
+    });
+
+    expect(result.searchId).toBeGreaterThan(0);
+    expect(result.results.length).toBeGreaterThan(0);
+    expect(result.stats.count).toBe(result.results.length);
   });
 });

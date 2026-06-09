@@ -6,8 +6,7 @@ import {
   listAgentsWithStats,
   resolveAgentModel,
   logAgentHistory,
-  generateSystemPrompt,
-} from "../../server/services/openrouter/agents";
+} from "../../server/services/agents/repository";
 
 describe("agents service", () => {
   it("returns default research agent", () => {
@@ -72,23 +71,5 @@ describe("agents service", () => {
     expect(listingStats?.total_cost_usd).toBeCloseTo(0.0005);
     expect(strategyStats?.call_count).toBe(0);
     expect(strategyStats?.total_cost_usd).toBe(0);
-  });
-
-  it("generateSystemPrompt returns prompt from meta-agent", async () => {
-    const mockFetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({
-        choices: [{ message: { content: "Du bist ein Experte für..." } }],
-        usage: { total_tokens: 50 },
-        model: "google/gemini-2.5-pro",
-      }),
-    });
-    const prompt = await generateSystemPrompt(
-      { apiKey: "key", baseUrl: "https://openrouter.ai/api/v1" },
-      "google/gemini-2.5-pro",
-      "Marktanalyse für GPUs",
-      mockFetch as typeof fetch,
-    );
-    expect(prompt).toContain("Experte");
   });
 });

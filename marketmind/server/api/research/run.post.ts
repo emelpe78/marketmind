@@ -1,4 +1,5 @@
 import { getDb } from "../../database/db";
+import { mapDomainError } from "../../services/errors";
 import { runResearch } from "../../services/research/run-research";
 import { ScraperFetchError } from "../../services/scraper/fetcher";
 
@@ -24,6 +25,10 @@ export default defineEventHandler(async (event) => {
       saveName: body?.saveName,
     });
   } catch (error) {
+    const domainError = mapDomainError(error);
+    if (domainError) {
+      throw createError(domainError);
+    }
     if (error instanceof ScraperFetchError) {
       throw createError({
         statusCode: 502,

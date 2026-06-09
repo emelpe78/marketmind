@@ -2,17 +2,8 @@ import type Database from "better-sqlite3";
 import { load } from "cheerio";
 import { parseGermanPrice } from "shared/parse-german-price";
 import { createScraperRuntime } from "../scraper/runtime";
-
-export interface WatchlistRow {
-  id: number;
-  title: string;
-  url: string | null;
-  platform: string | null;
-  target_price: number | null;
-  current_price: number | null;
-  alert_active: number;
-  status: string;
-}
+import { checkAlert } from "./alerts";
+import type { WatchlistItem } from "./repository";
 
 export function scrapeListingPrice(html: string): number | null {
   const $ = load(html);
@@ -32,7 +23,7 @@ export function scrapeListingPrice(html: string): number | null {
 
 export async function scrapeWatchlistItem(
   db: Database.Database,
-  item: WatchlistRow,
+  item: WatchlistItem,
   fetchFn: typeof fetch = fetch,
 ): Promise<{ price: number | null; alertTriggered: boolean }> {
   if (!item.url) return { price: null, alertTriggered: false };
@@ -57,17 +48,4 @@ export async function scrapeWatchlistItem(
   );
 
   return { price, alertTriggered };
-}
-
-export function checkAlert(
-  currentPrice: number | null,
-  targetPrice: number | null,
-  alertActive: number,
-): boolean {
-  return (
-    currentPrice !== null &&
-    targetPrice !== null &&
-    currentPrice <= targetPrice &&
-    alertActive === 1
-  );
 }

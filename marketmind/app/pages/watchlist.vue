@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { detectPlatformFromUrl } from "shared/detect-platform";
+import { PLATFORM_LABELS } from "shared/platform-labels";
+
 definePageMeta({ layout: "default" });
 
 const {
@@ -14,7 +17,7 @@ const {
 } = await useWatchlist();
 const toast = useToast();
 
-const platformLabels = WATCHLIST_PLATFORM_LABELS;
+const platformLabels = PLATFORM_LABELS;
 
 const newItem = ref({
   title: "",

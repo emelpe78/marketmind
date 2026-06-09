@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { FlipAnalysisResult } from "~/composables/useFlipping";
+
 definePageMeta({ layout: "default" });
 
 const buyPrice = ref(100);
@@ -6,63 +8,38 @@ const sellPrice = ref(200);
 const shipping = ref(10);
 const packaging = ref(5);
 const productName = ref("");
-const loading = ref(false);
-const result = ref<Record<string, unknown> | null>(null);
+const result = ref<FlipAnalysisResult | null>(null);
 
-const scoreColor = computed(() => {
-  const score = result.value?.score as string;
-  if (score === "Sehr lohnenswert") return "success";
-  if (score === "Solide") return "primary";
-  if (score === "Grenzwertig") return "warning";
-  return "error";
-});
+const { loading, computeFlip, mergeRecommendation, analyzeWithAI, scoreColor } =
+  useFlipping();
+
+const scoreColorComputed = computed(() => scoreColor(result.value?.score));
 
 watch(
   [buyPrice, sellPrice, shipping, packaging],
   () => {
-    const calc = {
-      netProceeds: sellPrice.value - shipping.value - packaging.value,
-      profit:
-        sellPrice.value - shipping.value - packaging.value - buyPrice.value,
-      marginPercent:
-        buyPrice.value > 0
-          ? ((sellPrice.value -
-              shipping.value -
-              packaging.value -
-              buyPrice.value) /
-              buyPrice.value) *
-            100
-          : 0,
-    };
-    let score = "Nicht empfehlenswert";
-    if (calc.marginPercent > 30) score = "Sehr lohnenswert";
-    else if (calc.marginPercent >= 15) score = "Solide";
-    else if (calc.marginPercent >= 5) score = "Grenzwertig";
-    result.value = {
-      ...calc,
-      score,
-      recommendation: result.value?.recommendation || "",
-    };
+    const calc = computeFlip({
+      buyPrice: buyPrice.value,
+      sellPrice: sellPrice.value,
+      shipping: shipping.value,
+      packaging: packaging.value,
+    });
+    result.value = mergeRecommendation(
+      calc,
+      result.value?.recommendation || "",
+    );
   },
   { immediate: true },
 );
 
-async function analyzeWithAI() {
-  loading.value = true;
-  try {
-    result.value = await $fetch("/api/flipping/analyze", {
-      method: "POST",
-      body: {
-        buyPrice: buyPrice.value,
-        sellPrice: sellPrice.value,
-        shipping: shipping.value,
-        packaging: packaging.value,
-        productName: productName.value,
-      },
-    });
-  } finally {
-    loading.value = false;
-  }
+async function runAnalyzeWithAI() {
+  result.value = await analyzeWithAI({
+    buyPrice: buyPrice.value,
+    sellPrice: sellPrice.value,
+    shipping: shipping.value,
+    packaging: packaging.value,
+    productName: productName.value,
+  });
 }
 </script>
 
@@ -111,7 +88,7 @@ async function analyzeWithAI() {
             data-testid="ai-analyze"
             icon="i-lucide-sparkles"
             :loading="loading"
-            @click="analyzeWithAI"
+            @click="runAnalyzeWithAI"
           >
             KI-Empfehlung
           </UButton>
@@ -138,7 +115,7 @@ async function analyzeWithAI() {
           </div>
           <UBadge
             data-testid="flip-score"
-            :color="scoreColor"
+            :color="scoreColorComputed"
             size="lg"
             class="mt-2"
           >
