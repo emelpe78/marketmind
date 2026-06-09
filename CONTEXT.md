@@ -11,7 +11,19 @@ Glossar für Architektur-Reviews und Code. Begriffe aus dem PRD plus technische 
 | **Anzeigen-Generator** | KI-erzeugte Verkaufstexte, plattformspezifisch (eBay / Kleinanzeigen)                                                                                                                                                                        |
 | **Watchlist**          | Beobachtete Artikel mit Preis-Scraping und Zielpreis-Alarm                                                                                                                                                                                   |
 | **Inventar**           | Gekaufte/verkaufte Artikel mit Gewinn/Verlust; Server liefert berechnetes `profit`                                                                                                                                                           |
-| **Agent-Manager**      | Konfigurierbare KI-Agents (System-Prompt, Modell, Temperatur); Persistenz in `agents/repository.ts`                                                                                                                                          |
+| **Agent-Manager**      | KI-Agents in drei UI-Bereichen: Feature-Agents (`/agents/feature-agents`), System-Prompt-Generator (`/agents/prompt-generator`), Verlauf (`/agents/history`); Sidebar-Submenu unter „Agents“                                                 |
+| **Prompt-Bibliothek**  | Gespeicherte System-Prompts mit CRUD; optionale Zuordnung zu genau einem Agent (`agent_id`); Sync mit `agents.system_prompt`                                                                                                                 |
+
+## Vordefinierte Agents
+
+| Anzeigename    | Typ `type`  | Einsatz                                                    | Bearbeitung Feature-Agents       |
+| -------------- | ----------- | ---------------------------------------------------------- | -------------------------------- |
+| Research Agent | `research`  | KI-Marktanalyse in der Preisrecherche (`mode: required`)   | Ja                               |
+| Listing Agent  | `listing`   | Anzeigen-Generator (`mode: required`)                      | Ja                               |
+| Flipping Agent | `analytics` | KI-Empfehlung im Flipping-Kalkulator (`mode: optional`)    | Ja                               |
+| Prompt Agent   | `strategy`  | System-Prompt-Generator (`mode: required`); **Meta-Agent** | Nein (Prompt in Bibliothek/Code) |
+
+Pro Agent ist höchstens **ein** Prompt in der Bibliothek zugeordnet; eine neue Zuweisung ersetzt die bisherige.
 
 ## Technische Module
 
@@ -23,9 +35,14 @@ Glossar für Architektur-Reviews und Code. Begriffe aus dem PRD plus technische 
 | **ResearchRun**         | `server/services/research/run-research.ts`     | Preisrecherche: Scrape → Stats → optionale Analyse → optionales Speichern (inkl. `analyses` im Snapshot) |
 | **AnalysisSectionTabs** | `app/components/AnalysisSectionTabs.vue`       | KI-Marktanalyse: `###`-Abschnitte als vertikale Tabs (links/rechts)                                      |
 | **MarkdownRenderer**    | `app/utils/render-markdown.ts`                 | KI-Markdown → HTML; `parseMarkdownSections`, erlaubte Tags (`<small>`, `<br>`)                           |
-| **generateListing**     | `server/services/listings/generate-listing.ts` | Anzeigen-Generator: Marktkontext → `RunAgent` → Parsing                                                  |
-| **analyzeFlip**         | `server/services/flipping/analyze-flip.ts`     | Flipping: `calculateFlip` → optionale KI-Empfehlung                                                      |
-| **generateAgentPrompt** | `server/services/agents/generate-prompt.ts`    | Meta-Prompt-Generierung für Agent-Manager                                                                |
+| **generateListing**     | `server/services/listings/generate-listing.ts` | Anzeigen-Generator: Marktkontext → `RunAgent` (`listing`) → Parsing                                      |
+| **analyzeFlip**         | `server/services/flipping/analyze-flip.ts`     | Flipping: `calculateFlip` → optionale KI-Empfehlung (`analytics`)                                        |
+| **generateAgentPrompt** | `server/services/agents/generate-prompt.ts`    | Prompt-Generierung über Prompt Agent (`strategy`); nutzt `resolveAgentPromptText()`                      |
+| **PromptLibrary**       | `server/services/prompt-library/`              | CRUD, Agent-Zuordnung, Sync aus `agents`                                                                 |
+| **AgentPromptSync**     | `server/services/prompt-library/agent-sync.ts` | Übernimmt Feature-Agent-Prompts in die Bibliothek beim Start und nach Agent-Speichern                    |
+| **AgentUsage**          | `shared/agent-usage.ts`                        | UI-Zuordnung: Feature, Route, Auslöser, KI-Modus pro `type`                                              |
+| **AgentMeta**           | `shared/agent-meta.ts`                         | Meta-Agent-Typ (`strategy`), Generator-Prompt und Temperatur `0.2`                                       |
+| **FormatDateTime**      | `shared/format-datetime.ts`                    | SQLite-UTC → lokale `de-DE`-Anzeige                                                                      |
 | **DatabaseLifecycle**   | `server/database/lifecycle.ts`                 | Relocate, Reset, Pfad-Info                                                                               |
 | **Repository**          | `server/services/*/repository.ts`              | SQL + Row-Mapping pro Domäne                                                                             |
 | **PlatformLabels**      | `shared/platform-labels.ts`                    | Kanonische UI-Labels für eBay / Kleinanzeigen / Beide                                                    |
@@ -37,4 +54,4 @@ Glossar für Architektur-Reviews und Code. Begriffe aus dem PRD plus technische 
 - **Use-Case-Module** — Geschäftslogik (`RunAgent`, `ResearchRun`, `generateListing`, `ScraperRuntime`)
 - **Repository-Module** — SQL + Row-Mapping pro Domäne
 - **Shared** — Plattformübergreifende Pure Functions (`shared/`)
-- **Composables** — Frontend-State aligned mit Server-APIs (`useResearch`, `useFlipping`, `useDashboard`, …)
+- **Composables** — Frontend-State aligned mit Server-APIs (`useResearch`, `useFlipping`, `useDashboard`, `useAgents`, …)

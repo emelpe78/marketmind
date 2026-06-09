@@ -8,10 +8,8 @@ export default defineEventHandler((event) => {
     .all();
 
   if (format === "txt") {
-    const text = (
-      prompts as { name: string; prompt: string; category: string }[]
-    )
-      .map((p) => `# ${p.name} (${p.category || "Allgemein"})\n${p.prompt}\n`)
+    const text = (prompts as { name: string; prompt: string }[])
+      .map((p) => `# ${p.name}\n${p.prompt}\n`)
       .join("\n---\n\n");
     setHeader(event, "Content-Type", "text/plain; charset=utf-8");
     setHeader(event, "Content-Disposition", "attachment; filename=prompts.txt");

@@ -2,6 +2,7 @@
 definePageMeta({ layout: "default" });
 
 import type { GeneratedListing, ListingItem } from "~/composables/useListings";
+import { formatDateTime } from "shared/format-datetime";
 import { platformLabelFor, PLATFORM_LABELS } from "shared/platform-labels";
 
 const query = ref("");
@@ -136,11 +137,6 @@ function copyText(text: string) {
   toast.add({ title: "Kopiert", color: "success" });
 }
 
-function formatDate(value: string): string {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleString("de-DE");
-}
 </script>
 
 <template>
@@ -291,7 +287,7 @@ function formatDate(value: string): string {
               <span v-if="item.price_suggestion != null">
                 {{ formatEuro(item.price_suggestion) }} ·
               </span>
-              {{ formatDate(item.created_at) }}
+              {{ formatDateTime(item.created_at) }}
             </p>
           </div>
           <div class="flex gap-2">

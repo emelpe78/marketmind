@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mkdirSync } from "node:fs";
 import { getActivePath } from "./paths";
+import { runMigrations } from "./migrations";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -82,5 +83,6 @@ export function initDatabase(dbPath?: string): Database.Database {
   const db = getDb(dbPath);
   const schema = readFileSync(resolveSchemaPath(), "utf-8");
   db.exec(schema);
+  runMigrations(db);
   return db;
 }

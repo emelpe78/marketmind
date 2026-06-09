@@ -15,16 +15,16 @@ const DEFAULT_AGENTS = [
       "Du erstellst optimierte Verkaufsanzeigen für eBay und Kleinanzeigen. Passe Ton und Struktur an die Plattform an. Antworte auf Deutsch.",
   },
   {
-    name: "Analytics Agent",
+    name: "Flipping Agent",
     type: "analytics",
     system_prompt:
       "Du bewertest Flipping-Potenzial, Margen und Markttrends für privaten Verkauf ohne Plattformgebühren. Antworte auf Deutsch mit klarer Empfehlung.",
   },
   {
-    name: "Strategy Agent",
+    name: "Prompt Agent",
     type: "strategy",
-    system_prompt:
-      "Du berätst zu optimalem Kauf- und Verkaufszeitpunkt sowie Risikoeinschätzung. Antworte auf Deutsch, strategisch und handlungsorientiert.",
+    system_prompt: "",
+    temperature: 0.2,
   },
 ];
 
@@ -41,10 +41,14 @@ export function seedDatabase(db: Database.Database): void {
     .get() as { count: number };
   if (agentCount.count === 0) {
     const insertAgent = db.prepare(
-      "INSERT INTO agents (name, type, system_prompt, temperature) VALUES (?, ?, ?, 0.7)",
+      "INSERT INTO agents (name, type, system_prompt, temperature) VALUES (?, ?, ?, ?)",
     );
     for (const agent of DEFAULT_AGENTS) {
-      insertAgent.run(agent.name, agent.type, agent.system_prompt);
+      const temperature =
+        "temperature" in agent && agent.temperature !== undefined
+          ? agent.temperature
+          : 0.7;
+      insertAgent.run(agent.name, agent.type, agent.system_prompt, temperature);
     }
   }
 }

@@ -1,4 +1,5 @@
 import type Database from "better-sqlite3";
+import { syncAgentPromptToLibrary } from "../prompt-library/agent-sync";
 
 export interface AgentInput {
   name: string;
@@ -105,7 +106,9 @@ export function updateAgent(
     body.temperature ?? 0.7,
     id,
   );
-  return findAgentById(db, id);
+  const updated = findAgentById(db, id) as AgentRow;
+  syncAgentPromptToLibrary(db, updated);
+  return updated;
 }
 
 export function deleteAgent(db: Database.Database, id: number): boolean {

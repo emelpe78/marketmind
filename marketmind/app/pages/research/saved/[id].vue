@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from "@nuxt/ui";
+import { formatDateTime } from "shared/format-datetime";
 import {
   platformLabelFor,
   RESEARCH_PLATFORM_LABELS,
@@ -85,11 +86,6 @@ const resultColumns: TableColumn<SavedResearchResult>[] = [
   },
 ];
 
-function formatDate(value: string): string {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleString("de-DE");
-}
 </script>
 
 <template>
@@ -118,7 +114,7 @@ function formatDate(value: string): string {
             )
           }}
           ·
-          {{ formatDate(saved.createdAt) }}
+          {{ formatDateTime(saved.createdAt) }}
         </p>
       </div>
       <UButton to="/research" variant="outline" icon="i-lucide-search">

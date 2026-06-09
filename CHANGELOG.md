@@ -4,6 +4,40 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.1.3] — 2026-06-09
+
+Agent-Manager in Unterseiten aufgeteilt, Prompt-Bibliothek mit Agent-Zuordnung, Sync zwischen Feature-Agents und Bibliothek.
+
+### Hinzugefügt
+
+- **Agent-Unterseiten** — `/agents/feature-agents`, `/agents/prompt-generator`, `/agents/history` (Redirect von `/agents`)
+- **Sidebar-Submenu** — „Agents“ mit Feature-Agents, System-Prompt-Generator, Verlauf (`shared/agent-nav.ts`)
+- **Feature-Zuordnung** — pro Agent-Karte: Feature, Auslöser, KI-Modus (`shared/agent-usage.ts`)
+- **Prompt-Bibliothek (CRUD)** — Anzeigen, Bearbeiten, Löschen (mit Bestätigung); Agent-Dropdown in Tabelle und Modals
+- **Agent-Zuordnung** — optional ein Prompt pro Agent (`agent_id`); neue Zuweisung ersetzt die bisherige (Hinweis in UI)
+- **Agent-Prompt-Sync** — Feature-Agent-Prompts erscheinen in der Bibliothek (`server/services/prompt-library/agent-sync.ts`); Zuweisung schreibt in `agents.system_prompt`
+- **Meta-Agent (Prompt Agent)** — Badge auf der Feature-Agents-Seite; fester Generator-Prompt im Code (`shared/agent-meta.ts`, `shared/agent-prompt.ts`)
+- **`shared/format-datetime.ts`** — SQLite-UTC-Zeitstempel korrekt als lokale `de-DE`-Zeit
+- **`shared/prompt-library-agents.ts`** — Agent-Dropdown-Optionen und Zuordnungs-Hinweise
+- DB-Migrationen — `agent_id` in `prompt_library`, Unique-Index pro Agent, Kategorie entfernt, Agent-Umbenennungen
+- Tests für Prompt-Bibliothek, Agent-Sync, Datumsformatierung und Agent-Renames
+
+### Geändert
+
+- **Agent-Namen** — „Analytics Agent“ → **Flipping Agent** (`analytics`), „Strategy Agent“ → **Prompt Agent** (`strategy`); Migration für bestehende DBs
+- **Prompt Agent** — im System-Prompt-Generator zuweisbar; `generateAgentPrompt` nutzt `resolveAgentPromptText()` (DB-Prompt oder Code-Fallback)
+- **Prompt Agent** — auf Feature-Agents nicht bearbeitbar (Meta-Agent); Flipping/Research/Listing weiterhin per Modal
+- **System-Prompt-Generator** — ausführlicher Meta-Prompt, Temperatur fest `0.2`
+- **Agent-Verlauf** — eigene Seite mit Agent-Namen in der Tabelle
+
+### Behoben
+
+- **Zeitstempel** — `created_at` aus SQLite wurde ohne UTC-Konvertierung angezeigt (falsche lokale Uhrzeit)
+
+### Entfernt
+
+- **Kategorie** — Spalte und UI-Feld in der Prompt-Bibliothek
+
 ## [0.1.2] — 2026-06-09
 
 Architektur-Vertiefung: Shared-Seams, Use-Case-Module für KI-Features, Domain-Errors, konsolidierte Repositories, Frontend-Composables für Haupt-Flows.
@@ -181,7 +215,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/emelpe78/marketmind/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/emelpe78/marketmind/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/emelpe78/marketmind/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/emelpe78/marketmind/releases/tag/v0.1.0

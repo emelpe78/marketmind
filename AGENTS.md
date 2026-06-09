@@ -1,6 +1,6 @@
 # MarketMind — Agent Guide
 
-Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.1.2**.
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.1.3**.
 
 ## Repository-Layout
 
@@ -59,7 +59,8 @@ Dev-DB: `marketmind/data/` (gitignored). Docker-DB: Volume `marketmind-data` unt
 
 - **Pages:** file-based routing unter `app/pages/`
 - **Composables:** `useResearch`, `useFlipping`, `useDashboard`, `useInventory`, `useWatchlist`, `useSettings`, `useListings`, `useAgents`, `useDatabaseAdmin`
-- **Layout:** `app/layouts/default.vue` — Sidebar, Theme-Toggle, Versionsbadge
+- **Agents-UI:** `/agents/feature-agents` (Konfiguration), `/agents/prompt-generator` (Bibliothek + Generator), `/agents/history` (KI-Verlauf); Submenu in `default.vue`
+- **Layout:** `app/layouts/default.vue` — Sidebar mit Agents-Submenu, Theme-Toggle, Versionsbadge
 - **KI-Analyse-UI:** `ResearchAnalysisSummary` + `AnalysisSectionTabs` (vertikale Tabs); Markdown über `app/utils/render-markdown.ts` (`parseMarkdownSections`, erlaubte HTML-Tags)
 - **Utils:** Re-Exports aus `shared/`; `render-markdown.ts` bleibt app-lokal
 - Keine Pinia-Stores — State über Composables, `useFetch`, `ref`, `reactive`
@@ -69,7 +70,8 @@ Dev-DB: `marketmind/data/` (gitignored). Docker-DB: Volume `marketmind-data` unt
 - **API:** `server/api/**/*.ts` — dünne HTTP-Adapter
 - **Services:** Use-Cases + Repositories unter `server/services/`
 - **DB:** `server/database/` — Schema, `settings.ts`, `lifecycle.ts`, `seed.ts`
-- **Plugin:** `server/plugins/database.ts` — Init + Seed beim Start
+- **Plugin:** `server/plugins/database.ts` — Init, Seed, Migrationen, Agent-Prompt-Sync beim Start
+- **Prompt-Bibliothek:** `server/services/prompt-library/` — Repository, Zuweisung (`assign.ts`), Sync aus `agents` (`agent-sync.ts`)
 
 ### KI-Konfiguration
 
@@ -89,7 +91,7 @@ Vor Architekturfragen: `graphify-out/GRAPH_REPORT.md` und `graphify-out/wiki/ind
 - **UI-Texte:** Deutsch
 - **Euro:** `formatEuro()` / `formatEuroDelta()` — `de-DE` (`1.000,00 €`)
 - **Prozent:** `formatPercent()` — `de-DE` (`33,33 %`)
-- **Datum:** `toLocaleDateString("de-DE")` / `toLocaleString("de-DE")`
+- **Datum/Uhrzeit:** `formatDateTime()` / `formatDate()` aus `shared/format-datetime.ts` für SQLite-`DATETIME` (UTC); sonst `toLocaleDateString("de-DE")` / `toLocaleString("de-DE")`
 
 ### TypeScript
 
@@ -128,16 +130,19 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 
 ## Häufige Aufgaben
 
-| Aufgabe            | Ort                                          |
-| ------------------ | -------------------------------------------- |
-| Neue API-Route     | `server/api/<name>.<method>.ts`              |
-| Neue Seite         | `app/pages/<route>.vue`                      |
-| Scraper-Logik      | `server/services/scraper/`                   |
-| DB-Schema          | `server/database/schema.sql` + Seed anpassen |
-| Formatierung       | `shared/format-*.ts` wiederverwenden         |
-| Einstellungen-Keys | `server/database/settings.ts`, Settings-UI   |
-| KI-Aufruf          | `server/services/ai/run-agent.ts`            |
-| Preisrecherche     | `server/services/research/run-research.ts`   |
+| Aufgabe            | Ort                                                                        |
+| ------------------ | -------------------------------------------------------------------------- |
+| Neue API-Route     | `server/api/<name>.<method>.ts`                                            |
+| Neue Seite         | `app/pages/<route>.vue`                                                    |
+| Scraper-Logik      | `server/services/scraper/`                                                 |
+| DB-Schema          | `server/database/schema.sql` + Seed anpassen                               |
+| Formatierung       | `shared/format-*.ts` wiederverwenden                                       |
+| Einstellungen-Keys | `server/database/settings.ts`, Settings-UI                                 |
+| KI-Aufruf          | `server/services/ai/run-agent.ts`                                          |
+| Preisrecherche     | `server/services/research/run-research.ts`                                 |
+| Prompt-Bibliothek  | `server/services/prompt-library/`, `server/api/prompt-library/`            |
+| Agent-Seed/Namen   | `server/database/seed.ts`, `server/database/migrations.ts`                 |
+| Default-Agents     | Research, Listing, Flipping (`analytics`), Prompt (`strategy`, Meta-Agent) |
 
 ## Was vermeiden
 

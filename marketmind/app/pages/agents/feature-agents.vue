@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { isMetaAgent, PROMPT_GENERATOR_TEMPERATURE } from "shared/agent-meta";
+import { formatAgentUsageMode, getAgentUsage } from "shared/agent-usage";
+
 definePageMeta({ layout: "default" });
 
 interface Agent {
@@ -14,14 +17,7 @@ interface Agent {
 
 const {
   agents,
-  prompts,
-  history,
-  loading,
-  refresh,
-  refreshPrompts,
   saveAgent: persistAgent,
-  generatePrompt: runGeneratePrompt,
-  savePromptToLibrary: persistPromptToLibrary,
   formatTemperature,
   formatUsdCost,
   formatCallsLabel,
@@ -34,8 +30,6 @@ const agentModalOpen = computed({
     if (!open) editingAgent.value = null;
   },
 });
-const promptDescription = ref("");
-const generatedPrompt = ref("");
 const toast = useToast();
 
 async function saveAgent() {
@@ -45,53 +39,88 @@ async function saveAgent() {
   editingAgent.value = null;
 }
 
-async function generatePrompt() {
-  if (!promptDescription.value) return;
-  try {
-    const result = await runGeneratePrompt(promptDescription.value);
-    generatedPrompt.value = result.prompt;
-  } catch {
-    toast.add({ title: "Prompt-Generierung fehlgeschlagen", color: "error" });
-  }
-}
-
-async function savePromptToLibrary() {
-  if (!generatedPrompt.value) return;
-  await persistPromptToLibrary(
-    promptDescription.value.slice(0, 50),
-    generatedPrompt.value,
-  );
-  toast.add({ title: "In Bibliothek gespeichert", color: "success" });
-}
-
 const temperatureMarks = [0, 0.2, 0.4, 0.6, 0.8, 1];
+
+const agentsWithUsage = computed(() =>
+  (agents.value ?? []).map((agent) => ({
+    agent,
+    usage: getAgentUsage(agent.type),
+  })),
+);
 </script>
 
 <template>
   <div class="space-y-6">
     <div>
-      <h2 class="text-2xl font-bold text-highlighted">Agent-Manager</h2>
+      <h2 class="text-2xl font-bold text-highlighted">Feature-Agents</h2>
       <p class="text-muted mt-1">
-        KI-Agents konfigurieren und System-Prompts verwalten
+        KI-Agents für Preisrecherche, Anzeigen, Flipping und Prompt-Generierung
       </p>
     </div>
 
     <div class="grid gap-4">
-      <UCard v-for="agent in agents" :key="agent.id as number">
+      <UCard
+        v-for="{ agent, usage } in agentsWithUsage"
+        :key="agent.id as number"
+      >
         <div class="flex justify-between items-start">
           <div>
-            <h3 class="font-semibold">
-              {{ agent.name }}
-            </h3>
+            <div class="flex flex-wrap items-center gap-2">
+              <h3 class="font-semibold">
+                {{ agent.name }}
+              </h3>
+              <UBadge
+                v-if="isMetaAgent(agent.type)"
+                color="neutral"
+                variant="subtle"
+                data-testid="meta-agent-badge"
+              >
+                Meta-Agent
+              </UBadge>
+            </div>
             <p class="text-sm text-muted">
-              {{ agent.type }} · Temp {{ formatTemperature(agent.temperature) }}
+              <template v-if="isMetaAgent(agent.type)">
+                Meta-Agent · Temp
+                {{ formatTemperature(PROMPT_GENERATOR_TEMPERATURE) }} (fest)
+              </template>
+              <template v-else>
+                {{ agent.type }} · Temp
+                {{ formatTemperature(agent.temperature) }}
+              </template>
             </p>
             <p class="text-sm text-muted mt-0.5">
               {{ formatCallsLabel(agent.call_count) }} · Kosten
               {{ formatUsdCost(agent.total_cost_usd) }}
             </p>
+            <div
+              v-if="usage"
+              class="mt-3 space-y-1 text-sm"
+              :data-testid="`agent-usage-${agent.type}`"
+            >
+              <p class="text-muted">
+                <span class="text-default font-medium">Feature:</span>
+                <NuxtLink
+                  :to="usage.route"
+                  class="text-primary hover:underline ml-1"
+                >
+                  {{ usage.feature }}
+                </NuxtLink>
+              </p>
+              <p class="text-muted">
+                <span class="text-default font-medium">Auslöser:</span>
+                {{ usage.trigger }}
+              </p>
+              <p class="text-muted">
+                <span class="text-default font-medium">KI-Modus:</span>
+                {{ formatAgentUsageMode(usage.mode) }}
+              </p>
+              <p v-if="usage.note" class="text-xs text-muted italic">
+                {{ usage.note }}
+              </p>
+            </div>
           </div>
           <UButton
+            v-if="!isMetaAgent(agent.type)"
             data-testid="edit-agent"
             variant="outline"
             size="sm"
@@ -115,10 +144,24 @@ const temperatureMarks = [0, 0.2, 0.4, 0.6, 0.8, 1];
               placeholder="Fallback: Default-Modell"
             />
           </UFormField>
-          <UFormField label="System-Prompt">
+          <UFormField
+            v-if="!isMetaAgent(editingAgent.type)"
+            label="System-Prompt"
+          >
             <UTextarea v-model="editingAgent.system_prompt" :rows="8" />
           </UFormField>
-          <UFormField label="Temperatur" class="mt-6! mb-6!">
+          <UAlert
+            v-else
+            color="neutral"
+            variant="subtle"
+            title="Meta-Agent"
+            description="System-Prompt und Temperatur sind für diesen Agent im Code fest definiert und können hier nicht bearbeitet werden."
+          />
+          <UFormField
+            v-if="!isMetaAgent(editingAgent.type)"
+            label="Temperatur"
+            class="mt-6! mb-6!"
+          >
             <div class="space-y-4 py-2">
               <div class="flex items-center justify-between text-sm">
                 <span class="text-muted">Aktueller Wert</span>
@@ -146,71 +189,5 @@ const temperatureMarks = [0, 0.2, 0.4, 0.6, 0.8, 1];
         </div>
       </template>
     </UModal>
-
-    <UCard>
-      <template #header>
-        <h3 class="font-semibold">System-Prompt-Generator</h3>
-      </template>
-      <div class="space-y-4">
-        <UFormField label="Beschreibe das Ziel des Agents">
-          <UTextarea
-            v-model="promptDescription"
-            data-testid="prompt-description"
-            :rows="3"
-          />
-        </UFormField>
-        <UButton
-          data-testid="generate-prompt"
-          icon="i-lucide-sparkles"
-          :loading="loading"
-          @click="generatePrompt"
-        >
-          Prompt generieren
-        </UButton>
-        <UTextarea
-          v-if="generatedPrompt"
-          v-model="generatedPrompt"
-          data-testid="generated-prompt"
-          class="w-full"
-          :rows="6"
-        />
-        <UButton
-          v-if="generatedPrompt"
-          variant="outline"
-          @click="savePromptToLibrary"
-        >
-          In Bibliothek speichern
-        </UButton>
-      </div>
-    </UCard>
-
-    <UCard v-if="prompts?.length" class="min-w-0">
-      <template #header>
-        <h3 class="font-semibold">Prompt-Bibliothek</h3>
-      </template>
-      <UTable
-        :data="prompts"
-        :columns="[
-          { accessorKey: 'name', header: 'Name' },
-          { accessorKey: 'category', header: 'Kategorie' },
-          { accessorKey: 'created_at', header: 'Erstellt' },
-        ]"
-      />
-    </UCard>
-
-    <UCard v-if="history?.length" class="min-w-0">
-      <template #header>
-        <h3 class="font-semibold">Verlauf</h3>
-      </template>
-      <UTable
-        :data="history.slice(0, 10)"
-        :columns="[
-          { accessorKey: 'agent_id', header: 'Agent' },
-          { accessorKey: 'tokens_used', header: 'Tokens' },
-          { accessorKey: 'cost_usd', header: 'Kosten ($)' },
-          { accessorKey: 'created_at', header: 'Datum' },
-        ]"
-      />
-    </UCard>
   </div>
 </template>

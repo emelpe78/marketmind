@@ -17,5 +17,11 @@ describe("default agents seed", () => {
       "analytics",
       "strategy",
     ]);
+    expect(agents.map((a) => a.name)).toEqual([
+      "Research Agent",
+      "Listing Agent",
+      "Flipping Agent",
+      "Prompt Agent",
+    ]);
   });
 });

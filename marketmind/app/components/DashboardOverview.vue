@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatDateTime } from "shared/format-datetime";
 import {
   platformLabelFor,
   RESEARCH_PLATFORM_LABELS,
@@ -33,12 +34,6 @@ const deleteModalOpen = computed({
     if (!open) deleteItem.value = null;
   },
 });
-
-function formatDate(value: string): string {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleString("de-DE");
-}
 
 function openEditModal(item: SavedResearchListItem) {
   editItem.value = item;
@@ -161,7 +156,7 @@ async function confirmDelete() {
             </div>
             <p class="text-sm text-muted mt-1">
               {{ item.query }} · {{ item.results.length }} Ergebnisse ·
-              {{ formatDate(item.updatedAt) }}
+              {{ formatDateTime(item.updatedAt) }}
             </p>
           </div>
           <div class="flex gap-2">

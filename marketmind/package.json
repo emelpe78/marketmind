@@ -1,6 +1,6 @@
 {
   "name": "marketmind",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Lokales Reseller-Tool für Marktpreisrecherche, Flipping-Kalkulation und KI-gestützte Anzeigen auf eBay.de und Kleinanzeigen.de",
   "author": "Marc Lettau-Poelchen <lettau.poelchen@emelpe.de>",
   "license": "UNLICENSED",

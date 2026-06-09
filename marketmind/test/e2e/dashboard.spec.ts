@@ -7,7 +7,11 @@ const pages = [
   { path: "/flipping", heading: "Flipping-Kalkulator" },
   { path: "/watchlist", heading: "Watchlist" },
   { path: "/inventory", heading: "Inventar" },
-  { path: "/agents", heading: "Agent-Manager" },
+  {
+    path: "/agents/feature-agents",
+    heading: "Feature-Agents",
+    navTestId: "nav-agents-feature",
+  },
   { path: "/settings", heading: "Einstellungen" },
 ];
 
@@ -29,13 +33,18 @@ test.describe("Dashboard & Navigation", () => {
     ).toBeVisible();
   });
 
-  for (const { path, heading } of pages.slice(1)) {
+  for (const { path, heading, navTestId } of pages.slice(1)) {
     test(`navigates to ${path}`, async ({ page }) => {
       await page.goto("/");
-      await page
-        .getByRole("link", { name: new RegExp(heading.split("-")[0], "i") })
-        .first()
-        .click();
+      if (navTestId) {
+        await page.getByTestId("nav-agents-toggle").click();
+        await page.getByTestId(navTestId).click();
+      } else {
+        await page
+          .getByRole("link", { name: new RegExp(heading.split("-")[0]!, "i") })
+          .first()
+          .click();
+      }
       await expect(page).toHaveURL(
         new RegExp(path.replace("/", "\\/") + "(\\/)?$"),
       );

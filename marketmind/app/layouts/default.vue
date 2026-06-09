@@ -1,17 +1,39 @@
 <script setup lang="ts">
+import { AGENTS_NAV_ITEMS, isAgentsRoute } from "shared/agent-nav";
+
 const colorMode = useColorMode();
 const { public: publicConfig } = useRuntimeConfig();
+const route = useRoute();
 
-const navItems = [
+const mainNavItems = [
   { label: "Dashboard", icon: "i-lucide-layout-dashboard", to: "/" },
   { label: "Preisrecherche", icon: "i-lucide-search", to: "/research" },
   { label: "Anzeigen", icon: "i-lucide-file-text", to: "/listings" },
   { label: "Flipping", icon: "i-lucide-calculator", to: "/flipping" },
   { label: "Watchlist", icon: "i-lucide-eye", to: "/watchlist" },
   { label: "Inventar", icon: "i-lucide-package", to: "/inventory" },
-  { label: "Agents", icon: "i-lucide-bot", to: "/agents" },
-  { label: "Einstellungen", icon: "i-lucide-settings", to: "/settings" },
 ];
+
+const settingsNavItem = {
+  label: "Einstellungen",
+  icon: "i-lucide-settings",
+  to: "/settings",
+};
+
+const agentsNavOpen = ref(isAgentsRoute(route.path));
+
+watch(
+  () => route.path,
+  (path) => {
+    if (isAgentsRoute(path)) {
+      agentsNavOpen.value = true;
+    }
+  },
+);
+
+function toggleAgentsNav() {
+  agentsNavOpen.value = !agentsNavOpen.value;
+}
 
 function toggleTheme() {
   colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
@@ -34,7 +56,7 @@ function toggleTheme() {
       </div>
       <nav class="flex flex-col gap-1">
         <UButton
-          v-for="item in navItems"
+          v-for="item in mainNavItems"
           :key="item.to"
           :to="item.to"
           :icon="item.icon"
@@ -44,6 +66,56 @@ function toggleTheme() {
           block
         >
           {{ item.label }}
+        </UButton>
+
+        <div class="flex flex-col gap-1">
+          <UButton
+            data-testid="nav-agents-toggle"
+            icon="i-lucide-bot"
+            variant="ghost"
+            color="neutral"
+            class="justify-start"
+            block
+            :class="{ 'bg-elevated': isAgentsRoute(route.path) }"
+            @click="toggleAgentsNav"
+          >
+            <span class="flex-1 text-left">Agents</span>
+            <UIcon
+              name="i-lucide-chevron-down"
+              class="size-4 shrink-0 transition-transform"
+              :class="{ 'rotate-180': agentsNavOpen }"
+            />
+          </UButton>
+          <div
+            v-show="agentsNavOpen"
+            class="ml-3 flex flex-col gap-1 border-l border-muted pl-2"
+          >
+            <UButton
+              v-for="child in AGENTS_NAV_ITEMS"
+              :key="child.to"
+              :to="child.to"
+              :data-testid="child.testId"
+              variant="ghost"
+              color="neutral"
+              size="sm"
+              class="justify-start"
+              block
+              :class="{ 'bg-elevated': route.path === child.to }"
+            >
+              {{ child.label }}
+            </UButton>
+          </div>
+        </div>
+
+        <UButton
+          :to="settingsNavItem.to"
+          :icon="settingsNavItem.icon"
+          variant="ghost"
+          color="neutral"
+          class="justify-start"
+          block
+        >
+          {{ settingsNavItem.label }}
         </UButton>
       </nav>
     </aside>
