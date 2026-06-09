@@ -10,7 +10,6 @@ marketmind/                 # Repo-Root
 ├── CONTEXT.md              # Domänensprache & Modul-Begriffe
 ├── CHANGELOG.md
 ├── docker-compose.yml      # Production-Container (Port 5667)
-├── docs/PRD.md             # Produktanforderungen
 └── marketmind/             # Nuxt-App (Arbeitsverzeichnis für npm)
     ├── app/                # Pages, Components, Composables, Layouts
     ├── shared/             # Plattformübergreifende Pure Functions
@@ -150,6 +149,5 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 
 ## Referenzen
 
-- Produkt-Spec: `docs/PRD.md`
 - Releases: `CHANGELOG.md`
 - Env-Vorlage: `marketmind/.env.example`

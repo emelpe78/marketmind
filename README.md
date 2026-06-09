@@ -133,7 +133,6 @@ marketmind/           # Repository-Root
 ├── CONTEXT.md        # Domänensprache & Modul-Begriffe
 ├── CHANGELOG.md
 ├── docker-compose.yml
-├── docs/PRD.md
 └── marketmind/       # Nuxt-App (npm-Befehle hier ausführen)
     ├── app/          # Frontend (Pages, Composables, Components)
     ├── shared/       # Formatierung, Plattform-Erkennung, Preisparser
