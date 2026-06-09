@@ -33,3 +33,6 @@ test/playwright-report/
 test-results/
 playwright-report/
 coverage/
+
+# AI
+graphify-out
