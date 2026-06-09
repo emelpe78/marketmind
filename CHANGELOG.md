@@ -29,10 +29,14 @@ Agent-Manager in Unterseiten aufgeteilt, Prompt-Bibliothek mit Agent-Zuordnung, 
 - **Prompt Agent** — auf Feature-Agents nicht bearbeitbar (Meta-Agent); Flipping/Research/Listing weiterhin per Modal
 - **System-Prompt-Generator** — ausführlicher Meta-Prompt, Temperatur fest `0.2`
 - **Agent-Verlauf** — eigene Seite mit Agent-Namen in der Tabelle
+- **Composables** — nach Speichern/Löschen/KI-Aufruf werden verknüpfte Daten mitaktualisiert (z. B. Inventar/Watchlist → Dashboard, KI-Features → Agent-Verlauf + Token-Kosten, DB-Reset → alle Keys)
+- **Frontend-Datenrefresh** — stabile `useFetch`-Keys (`app/utils/fetch-keys.ts`) und zentrale Invalidierung über `refreshNuxtData` (`app/utils/refresh-fetch-data.ts`); nach Mutationen werden abhängige Views sofort aktualisiert (ohne Seiten-Reload)
+- **Agent-Prompt-Dokumentation** — Referenz-Prompts für Listing und Flipping Agent unter `docs/`
 
 ### Behoben
 
 - **Zeitstempel** — `created_at` aus SQLite wurde ohne UTC-Konvertierung angezeigt (falsche lokale Uhrzeit)
+- **Prompt-Bibliothek / Agents-UI** — gespeicherte Prompts und Zuordnungen erschienen erst nach Reload; `saveAgent` aktualisierte die Bibliothek in der UI nicht (fehlendes gemeinsames Refresh von Agents + Bibliothek)
 
 ### Entfernt
 

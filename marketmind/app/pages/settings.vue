@@ -1,8 +1,10 @@
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
 
-const { settings, saving, refresh, saveSetting } = await useSettings();
-const { databaseInfo, refreshDatabase, relocateDatabase, resetDatabase } =
+import { refreshAllFetchData } from "~/utils/refresh-fetch-data";
+
+const { settings, saving, saveSetting } = await useSettings();
+const { databaseInfo, relocateDatabase, resetDatabase } =
   await useDatabaseAdmin();
 
 const databasePathInput = ref("");
@@ -64,7 +66,7 @@ async function saveDatabasePath() {
   try {
     const result = await relocateDatabase(databasePathInput.value.trim());
     databasePathInput.value = result.path;
-    await Promise.all([refreshDatabase(), refresh()]);
+    await refreshAllFetchData();
     toast.add({
       title: "Datenbankpfad gespeichert",
       description: result.copied
@@ -89,7 +91,7 @@ async function confirmResetDatabase() {
     const result = await resetDatabase();
     databasePathInput.value = result.path;
     resetModalOpen.value = false;
-    await Promise.all([refreshDatabase(), refresh()]);
+    await refreshAllFetchData();
     toast.add({
       title: "Datenbank zurückgesetzt",
       description: result.path,

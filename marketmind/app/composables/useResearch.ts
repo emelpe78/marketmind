@@ -1,3 +1,8 @@
+import {
+  refreshAfterAgentCall,
+  refreshDashboardData,
+} from "~/utils/refresh-fetch-data";
+
 export interface SearchResult {
   title: string;
   price: number;
@@ -31,10 +36,12 @@ export function useResearch() {
   }
 
   async function analyzeSearch(searchId: number) {
-    return $fetch<ResearchRunResponse>("/api/research/run", {
+    const response = await $fetch<ResearchRunResponse>("/api/research/run", {
       method: "POST",
       body: { searchId, analyze: true },
     });
+    await refreshAfterAgentCall();
+    return response;
   }
 
   async function saveResearch(
@@ -42,7 +49,7 @@ export function useResearch() {
     saveName: string,
     analyses?: PlatformSummary[],
   ) {
-    return $fetch<ResearchRunResponse>("/api/research/run", {
+    const response = await $fetch<ResearchRunResponse>("/api/research/run", {
       method: "POST",
       body: {
         searchId,
@@ -51,6 +58,8 @@ export function useResearch() {
         ...(analyses?.length ? { analyses } : {}),
       },
     });
+    await refreshDashboardData();
+    return response;
   }
 
   return {

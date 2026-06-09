@@ -64,6 +64,7 @@ Dev-DB: `marketmind/data/` (gitignored). Docker-DB: Volume `marketmind-data` unt
 - **KI-Analyse-UI:** `ResearchAnalysisSummary` + `AnalysisSectionTabs` (vertikale Tabs); Markdown über `app/utils/render-markdown.ts` (`parseMarkdownSections`, erlaubte HTML-Tags)
 - **Utils:** Re-Exports aus `shared/`; `render-markdown.ts` bleibt app-lokal
 - Keine Pinia-Stores — State über Composables, `useFetch`, `ref`, `reactive`
+- **Datenrefresh:** stabile Keys in `app/utils/fetch-keys.ts`; nach Mutationen `refreshNuxtData` über `app/utils/refresh-fetch-data.ts` — **Speichern = alle relevanten Stellen aktualisieren** (z. B. `refreshAgentsData()` für Agents + Bibliothek + Verlauf)
 
 ### Backend (`marketmind/server/`)
 
@@ -130,19 +131,22 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 
 ## Häufige Aufgaben
 
-| Aufgabe            | Ort                                                                        |
-| ------------------ | -------------------------------------------------------------------------- |
-| Neue API-Route     | `server/api/<name>.<method>.ts`                                            |
-| Neue Seite         | `app/pages/<route>.vue`                                                    |
-| Scraper-Logik      | `server/services/scraper/`                                                 |
-| DB-Schema          | `server/database/schema.sql` + Seed anpassen                               |
-| Formatierung       | `shared/format-*.ts` wiederverwenden                                       |
-| Einstellungen-Keys | `server/database/settings.ts`, Settings-UI                                 |
-| KI-Aufruf          | `server/services/ai/run-agent.ts`                                          |
-| Preisrecherche     | `server/services/research/run-research.ts`                                 |
-| Prompt-Bibliothek  | `server/services/prompt-library/`, `server/api/prompt-library/`            |
-| Agent-Seed/Namen   | `server/database/seed.ts`, `server/database/migrations.ts`                 |
-| Default-Agents     | Research, Listing, Flipping (`analytics`), Prompt (`strategy`, Meta-Agent) |
+| Aufgabe            | Ort                                                                               |
+| ------------------ | --------------------------------------------------------------------------------- |
+| Neue API-Route     | `server/api/<name>.<method>.ts`                                                   |
+| Neue Seite         | `app/pages/<route>.vue`                                                           |
+| Scraper-Logik      | `server/services/scraper/`                                                        |
+| DB-Schema          | `server/database/schema.sql` + Seed anpassen                                      |
+| Formatierung       | `shared/format-*.ts` wiederverwenden                                              |
+| Einstellungen-Keys | `server/database/settings.ts`, Settings-UI                                        |
+| KI-Aufruf          | `server/services/ai/run-agent.ts`                                                 |
+| Preisrecherche     | `server/services/research/run-research.ts`                                        |
+| Prompt-Bibliothek  | `server/services/prompt-library/`, `server/api/prompt-library/`                   |
+| Agent-Seed/Namen   | `server/database/seed.ts`, `server/database/migrations.ts`                        |
+| Default-Agents     | Research, Listing, Flipping (`analytics`), Prompt (`strategy`, Meta-Agent)        |
+| Fetch-Keys         | `app/utils/fetch-keys.ts` — `useFetch`-Keys für geteilten Cache                   |
+| UI nach Speichern  | `app/utils/refresh-fetch-data.ts` — `refreshAgentsData`, `refreshAllFetchData`, … |
+| Agent-Prompt-Docs  | `docs/listing_agent.md`, `docs/flipping_agent.md`                                 |
 
 ## Was vermeiden
 

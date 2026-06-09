@@ -80,6 +80,7 @@ async function confirmDelete() {
       v-if="dashboard && !dashboard.aiConfigured"
       data-testid="ai-setup-hint"
       color="warning"
+      variant="subtle"
       icon="i-lucide-sparkles"
       title="KI-Provider konfigurieren"
       description="Nach dem ersten Start oder einem Datenbank-Reset sind die KI-Funktionen noch nicht nutzbar. Hinterlege unter Einstellungen → API entweder OpenRouter oder eine lokale OpenAI-kompatible KI."

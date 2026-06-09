@@ -8,7 +8,9 @@
 
 MarketMind hilft beim **Einkaufen und Wiederverkaufen** gebrauchter Artikel: Du recherchierst Marktpreise per Scraper, lässt die Ergebnisse von einer KI auswerten (Abschnitte wie Preisübersicht und Marktbewertung in einer Tab-Ansicht) und speicherst Recherchen inklusive KI-Analyse für später. Der **Flipping-Kalkulator** berechnet Marge und Score für den privaten Weiterverkauf (ohne Plattformgebühren). Der **Anzeigen-Generator** erstellt plattformgerechte Texte für eBay und Kleinanzeigen. Mit der **Watchlist** beobachtest du einzelne Angebote und erhältst Preisalarme, im **Inventar** trackst du Einkauf, Verkauf und Gewinn.
 
-Der **Agent-Manager** (Sidebar-Submenu) umfasst **Feature-Agents** (Research, Listing, Flipping, Prompt Agent), einen **System-Prompt-Generator** mit **Prompt-Bibliothek** (CRUD, optionale Agent-Zuordnung — ein Prompt pro Agent) und den **KI-Verlauf**.
+Der **Agent-Manager** (Sidebar-Submenu) umfasst **Feature-Agents** (Research, Listing, Flipping, Prompt Agent), einen **System-Prompt-Generator** mit **Prompt-Bibliothek** (CRUD, optionale Agent-Zuordnung — ein Prompt pro Agent) und den **KI-Verlauf**. Änderungen an Agents, Prompts und Zuordnungen erscheinen sofort in der UI — ohne manuellen Reload.
+
+Referenz-System-Prompts für Listing und Flipping Agent: [`docs/listing_agent.md`](docs/listing_agent.md), [`docs/flipping_agent.md`](docs/flipping_agent.md).
 
 ## Voraussetzungen
 
@@ -134,6 +136,7 @@ marketmind/           # Repository-Root
 ├── AGENTS.md         # Anleitung für Mitwirkende & KI-Agenten
 ├── CONTEXT.md        # Domänensprache & Modul-Begriffe
 ├── CHANGELOG.md
+├── docs/             # PRD, Agent-Prompt-Referenzen
 ├── docker-compose.yml
 └── marketmind/       # Nuxt-App (npm-Befehle hier ausführen)
     ├── app/          # Frontend (Pages, Composables, Components)

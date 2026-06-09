@@ -43,6 +43,8 @@ Pro Agent ist höchstens **ein** Prompt in der Bibliothek zugeordnet; eine neue 
 | **AgentUsage**          | `shared/agent-usage.ts`                        | UI-Zuordnung: Feature, Route, Auslöser, KI-Modus pro `type`                                              |
 | **AgentMeta**           | `shared/agent-meta.ts`                         | Meta-Agent-Typ (`strategy`), Generator-Prompt und Temperatur `0.2`                                       |
 | **FormatDateTime**      | `shared/format-datetime.ts`                    | SQLite-UTC → lokale `de-DE`-Anzeige                                                                      |
+| **FetchKeys**           | `app/utils/fetch-keys.ts`                      | Stabile `useFetch`-Cache-Keys pro API-Endpoint                                                           |
+| **RefreshFetchData**    | `app/utils/refresh-fetch-data.ts`              | Globales UI-Refresh nach Mutationen (`refreshNuxtData`); z. B. `refreshAgentsData()`                     |
 | **DatabaseLifecycle**   | `server/database/lifecycle.ts`                 | Relocate, Reset, Pfad-Info                                                                               |
 | **Repository**          | `server/services/*/repository.ts`              | SQL + Row-Mapping pro Domäne                                                                             |
 | **PlatformLabels**      | `shared/platform-labels.ts`                    | Kanonische UI-Labels für eBay / Kleinanzeigen / Beide                                                    |
@@ -54,4 +56,4 @@ Pro Agent ist höchstens **ein** Prompt in der Bibliothek zugeordnet; eine neue 
 - **Use-Case-Module** — Geschäftslogik (`RunAgent`, `ResearchRun`, `generateListing`, `ScraperRuntime`)
 - **Repository-Module** — SQL + Row-Mapping pro Domäne
 - **Shared** — Plattformübergreifende Pure Functions (`shared/`)
-- **Composables** — Frontend-State aligned mit Server-APIs (`useResearch`, `useFlipping`, `useDashboard`, `useAgents`, …)
+- **Composables** — Frontend-State aligned mit Server-APIs (`useResearch`, `useFlipping`, `useDashboard`, `useAgents`, …); Mutationen invalidieren verknüpfte Fetch-Keys (Speichern → sofortige UI-Aktualisierung)

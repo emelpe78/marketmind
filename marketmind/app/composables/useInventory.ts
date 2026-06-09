@@ -3,18 +3,31 @@ import {
   type DetectedPlatform,
 } from "shared/detect-platform";
 import { PLATFORM_SELECT_OPTIONS } from "shared/platform-labels";
+import { FETCH_KEYS } from "~/utils/fetch-keys";
+import { refreshFetchData } from "~/utils/refresh-fetch-data";
 
 export const INVENTORY_PLATFORM_OPTIONS = [...PLATFORM_SELECT_OPTIONS];
 
 export function useInventory() {
-  const { data: items, refresh } =
-    useFetch<Array<Record<string, unknown>>>("/api/inventory");
-  const { data: summary, refresh: refreshSummary } = useFetch<
-    Record<string, unknown>
-  >("/api/inventory/summary");
+  const { data: items } = useFetch<Array<Record<string, unknown>>>(
+    "/api/inventory",
+    {
+      key: FETCH_KEYS.inventory,
+    },
+  );
+  const { data: summary } = useFetch<Record<string, unknown>>(
+    "/api/inventory/summary",
+    {
+      key: FETCH_KEYS.inventorySummary,
+    },
+  );
 
   async function refreshInventory() {
-    await Promise.all([refresh(), refreshSummary()]);
+    await refreshFetchData(
+      FETCH_KEYS.inventory,
+      FETCH_KEYS.inventorySummary,
+      FETCH_KEYS.dashboard,
+    );
   }
 
   function todayIsoDate(): string {

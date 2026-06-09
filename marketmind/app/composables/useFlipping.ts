@@ -3,6 +3,7 @@ import {
   type FlipResult,
   type FlippingScore,
 } from "shared/flipping-calculator";
+import { refreshAfterAgentCall } from "~/utils/refresh-fetch-data";
 
 export interface FlipAnalysisResult extends FlipResult {
   recommendation: string;
@@ -39,10 +40,12 @@ export function useFlipping() {
   }): Promise<FlipAnalysisResult> {
     loading.value = true;
     try {
-      return await $fetch<FlipAnalysisResult>("/api/flipping/analyze", {
+      const result = await $fetch<FlipAnalysisResult>("/api/flipping/analyze", {
         method: "POST",
         body: input,
       });
+      await refreshAfterAgentCall();
+      return result;
     } finally {
       loading.value = false;
     }

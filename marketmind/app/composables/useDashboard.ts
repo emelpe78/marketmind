@@ -1,3 +1,6 @@
+import { FETCH_KEYS } from "~/utils/fetch-keys";
+import { refreshFetchData } from "~/utils/refresh-fetch-data";
+
 export interface SavedResearchListItem {
   id: number;
   title: string;
@@ -25,31 +28,36 @@ export interface DashboardSummary {
 }
 
 export async function useDashboard() {
-  const {
-    data: dashboard,
-    pending,
-    refresh,
-  } = await useFetch<DashboardSummary>("/api/dashboard");
+  const { data: dashboard, pending } = await useFetch<DashboardSummary>(
+    "/api/dashboard",
+    {
+      key: FETCH_KEYS.dashboard,
+    },
+  );
+
+  async function refreshDashboard() {
+    await refreshFetchData(FETCH_KEYS.dashboard);
+  }
 
   async function updateSavedResearch(id: number, title: string) {
     await $fetch(`/api/saved-researches/${id}`, {
       method: "PUT",
       body: { title },
     });
-    await refresh();
+    await refreshDashboard();
   }
 
   async function deleteSavedResearch(id: number) {
     await $fetch(`/api/saved-researches/${id}`, {
       method: "DELETE",
     });
-    await refresh();
+    await refreshDashboard();
   }
 
   return {
     dashboard,
     pending,
-    refresh,
+    refreshDashboard,
     updateSavedResearch,
     deleteSavedResearch,
   };

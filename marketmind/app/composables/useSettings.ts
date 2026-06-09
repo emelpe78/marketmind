@@ -1,7 +1,15 @@
+import { FETCH_KEYS } from "~/utils/fetch-keys";
+import { refreshFetchData } from "~/utils/refresh-fetch-data";
+
 export function useSettings() {
-  const { data: settings, refresh } =
-    useFetch<Record<string, string>>("/api/settings");
+  const { data: settings } = useFetch<Record<string, string>>("/api/settings", {
+    key: FETCH_KEYS.settings,
+  });
   const saving = ref(false);
+
+  async function refreshSettings() {
+    await refreshFetchData(FETCH_KEYS.settings, FETCH_KEYS.dashboard);
+  }
 
   async function saveSetting(key: string, value: string) {
     saving.value = true;
@@ -10,7 +18,7 @@ export function useSettings() {
         method: "PUT",
         body: { value },
       });
-      await refresh();
+      await refreshSettings();
     } finally {
       saving.value = false;
     }
@@ -24,11 +32,17 @@ export function useSettings() {
           $fetch(`/api/settings/${key}`, { method: "PUT", body: { value } }),
         ),
       );
-      await refresh();
+      await refreshSettings();
     } finally {
       saving.value = false;
     }
   }
 
-  return { settings, saving, refresh, saveSetting, saveSettings };
+  return {
+    settings,
+    saving,
+    refreshSettings,
+    saveSetting,
+    saveSettings,
+  };
 }

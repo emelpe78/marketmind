@@ -3,6 +3,11 @@ import {
   formatTemperature,
   formatUsdCost,
 } from "shared/format-agent";
+import { FETCH_KEYS } from "~/utils/fetch-keys";
+import {
+  refreshAfterAgentCall,
+  refreshAgentsData,
+} from "~/utils/refresh-fetch-data";
 
 export interface Agent {
   id: number;
@@ -24,26 +29,40 @@ export interface PromptLibraryEntry {
 }
 
 export function useAgents() {
-  const { data: agents, refresh } = useFetch<Agent[]>("/api/agents");
-  const { data: prompts, refresh: refreshPrompts } = useFetch<
-    PromptLibraryEntry[]
-  >("/api/prompt-library");
-  const { data: history } =
-    useFetch<Array<Record<string, unknown>>>("/api/agent-history");
+  const { data: agents } = useFetch<Agent[]>("/api/agents", {
+    key: FETCH_KEYS.agents,
+  });
+  const { data: prompts } = useFetch<PromptLibraryEntry[]>(
+    "/api/prompt-library",
+    {
+      key: FETCH_KEYS.promptLibrary,
+    },
+  );
+  const { data: history } = useFetch<Array<Record<string, unknown>>>(
+    "/api/agent-history",
+    {
+      key: FETCH_KEYS.agentHistory,
+    },
+  );
   const loading = ref(false);
 
   async function saveAgent(agent: Agent) {
     await $fetch(`/api/agents/${agent.id}`, { method: "PUT", body: agent });
-    await refresh();
+    await refreshAgentsData();
   }
 
   async function generatePrompt(description: string) {
     loading.value = true;
     try {
-      return await $fetch<{ prompt: string }>("/api/agents/generate-prompt", {
-        method: "POST",
-        body: { description },
-      });
+      const result = await $fetch<{ prompt: string }>(
+        "/api/agents/generate-prompt",
+        {
+          method: "POST",
+          body: { description },
+        },
+      );
+      await refreshAfterAgentCall();
+      return result;
     } finally {
       loading.value = false;
     }
@@ -62,7 +81,7 @@ export function useAgents() {
         agent_id: agentId ?? null,
       },
     });
-    await Promise.all([refreshPrompts(), refresh()]);
+    await refreshAgentsData();
   }
 
   async function updatePromptLibrary(entry: PromptLibraryEntry) {
@@ -74,12 +93,12 @@ export function useAgents() {
         agent_id: entry.agent_id ?? null,
       },
     });
-    await Promise.all([refreshPrompts(), refresh()]);
+    await refreshAgentsData();
   }
 
   async function deletePromptLibrary(id: number) {
     await $fetch(`/api/prompt-library/${id}`, { method: "DELETE" });
-    await refreshPrompts();
+    await refreshAgentsData();
   }
 
   return {
@@ -87,8 +106,7 @@ export function useAgents() {
     prompts,
     history,
     loading,
-    refresh,
-    refreshPrompts,
+    refreshAgentsData,
     saveAgent,
     generatePrompt,
     savePromptToLibrary,

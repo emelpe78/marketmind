@@ -1,3 +1,9 @@
+import { FETCH_KEYS } from "~/utils/fetch-keys";
+import {
+  refreshAfterAgentCall,
+  refreshFetchData,
+} from "~/utils/refresh-fetch-data";
+
 export interface ListingItem {
   id: number;
   query: string;
@@ -19,15 +25,21 @@ export interface GeneratedListing {
 }
 
 export function useListings() {
-  const { data: listings, refresh } = useFetch<ListingItem[]>("/api/listings");
+  const { data: listings } = useFetch<ListingItem[]>("/api/listings", {
+    key: FETCH_KEYS.listings,
+  });
   const generating = ref(false);
+
+  async function refreshListings() {
+    await refreshFetchData(FETCH_KEYS.listings);
+  }
 
   async function saveListing(body: Record<string, unknown>) {
     const result = await $fetch<ListingItem>("/api/listings", {
       method: "POST",
       body,
     });
-    await refresh();
+    await refreshListings();
     return result;
   }
 
@@ -36,22 +48,24 @@ export function useListings() {
       method: "PUT",
       body,
     });
-    await refresh();
+    await refreshListings();
     return result;
   }
 
   async function deleteListing(id: number) {
     await $fetch(`/api/listings/${id}`, { method: "DELETE" });
-    await refresh();
+    await refreshListings();
   }
 
   async function generateListing(body: Record<string, unknown>) {
     generating.value = true;
     try {
-      return await $fetch<GeneratedListing>("/api/listings/generate", {
+      const result = await $fetch<GeneratedListing>("/api/listings/generate", {
         method: "POST",
         body,
       });
+      await refreshAfterAgentCall();
+      return result;
     } finally {
       generating.value = false;
     }
@@ -60,7 +74,7 @@ export function useListings() {
   return {
     listings,
     generating,
-    refresh,
+    refreshListings,
     saveListing,
     updateListing,
     deleteListing,

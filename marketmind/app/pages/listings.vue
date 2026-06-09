@@ -25,7 +25,7 @@ const toast = useToast();
 const {
   listings,
   generating: loading,
-  refresh: refreshListings,
+  refreshListings,
   generateListing: runGenerateListing,
   saveListing: persistListing,
   updateListing: persistListingUpdate,

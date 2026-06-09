@@ -7,7 +7,6 @@ definePageMeta({ layout: "default" });
 const {
   items,
   loading,
-  refresh,
   getPlatformLabel,
   createItem: createWatchlistItem,
   updateItem: updateWatchlistItem,

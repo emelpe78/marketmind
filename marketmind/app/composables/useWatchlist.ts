@@ -1,10 +1,20 @@
 import { detectPlatformFromUrl } from "shared/detect-platform";
 import { PLATFORM_LABELS } from "shared/platform-labels";
+import { FETCH_KEYS } from "~/utils/fetch-keys";
+import { refreshFetchData } from "~/utils/refresh-fetch-data";
 
 export function useWatchlist() {
-  const { data: items, refresh } =
-    useFetch<Array<Record<string, unknown>>>("/api/watchlist");
+  const { data: items } = useFetch<Array<Record<string, unknown>>>(
+    "/api/watchlist",
+    {
+      key: FETCH_KEYS.watchlist,
+    },
+  );
   const loading = ref(false);
+
+  async function refreshWatchlist() {
+    await refreshFetchData(FETCH_KEYS.watchlist, FETCH_KEYS.dashboard);
+  }
 
   function getPlatformLabel(item: Record<string, unknown>): string | null {
     const platform =
@@ -17,17 +27,17 @@ export function useWatchlist() {
 
   async function createItem(body: Record<string, unknown>) {
     await $fetch("/api/watchlist", { method: "POST", body });
-    await refresh();
+    await refreshWatchlist();
   }
 
   async function updateItem(id: number, body: Record<string, unknown>) {
     await $fetch(`/api/watchlist/${id}`, { method: "PUT", body });
-    await refresh();
+    await refreshWatchlist();
   }
 
   async function deleteItem(id: number) {
     await $fetch(`/api/watchlist/${id}`, { method: "DELETE" });
-    await refresh();
+    await refreshWatchlist();
   }
 
   async function scrapeItem(id: number) {
@@ -36,7 +46,7 @@ export function useWatchlist() {
       return await $fetch(`/api/watchlist/${id}/scrape`, { method: "POST" });
     } finally {
       loading.value = false;
-      await refresh();
+      await refreshWatchlist();
     }
   }
 
@@ -46,14 +56,14 @@ export function useWatchlist() {
       return await $fetch("/api/watchlist/scrape-all", { method: "POST" });
     } finally {
       loading.value = false;
-      await refresh();
+      await refreshWatchlist();
     }
   }
 
   return {
     items,
     loading,
-    refresh,
+    refreshWatchlist,
     getPlatformLabel,
     createItem,
     updateItem,
