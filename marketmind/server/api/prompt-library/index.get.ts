@@ -1,8 +1,4 @@
 import { getDb } from "../../database/db";
+import { findAllPrompts } from "../../services/prompt-library/repository";
 
-export default defineEventHandler(() => {
-  const db = getDb();
-  return db
-    .prepare("SELECT * FROM prompt_library ORDER BY created_at DESC")
-    .all();
-});
+export default defineEventHandler(() => findAllPrompts(getDb()));

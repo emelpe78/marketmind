@@ -3,11 +3,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mkdirSync } from "node:fs";
-import {
-  getRuntimeDefaultPath,
-  readConfiguredPathFromFile,
-  resolveDbPath,
-} from "./paths";
+import { getActivePath } from "./paths";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -28,10 +24,8 @@ let currentPath: string | null = null;
 
 export function getDbPath(): string {
   if (process.env.MM_DATABASE_PATH) {
-    return resolveDbPath(process.env.MM_DATABASE_PATH);
+    return getActivePath();
   }
-
-  const bootstrapPath = resolveDbPath(getRuntimeDefaultPath());
 
   if (dbInstance && currentPath) {
     try {
@@ -39,20 +33,15 @@ export function getDbPath(): string {
         .prepare("SELECT value FROM settings WHERE key = 'database-path'")
         .get() as { value: string } | undefined;
       if (row?.value?.trim()) {
-        return resolveDbPath(row.value);
+        return getActivePath(row.value);
       }
     } catch {
-      return currentPath;
+      return getActivePath(currentPath);
     }
-    return currentPath;
+    return getActivePath(currentPath);
   }
 
-  const configured = readConfiguredPathFromFile(bootstrapPath);
-  if (configured) {
-    return resolveDbPath(configured);
-  }
-
-  return bootstrapPath;
+  return getActivePath();
 }
 
 export function getDb(dbPath?: string): Database.Database {

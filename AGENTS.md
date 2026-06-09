@@ -7,11 +7,13 @@ Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche,
 ```
 marketmind/                 # Repo-Root
 ├── AGENTS.md               # Diese Datei
+├── CONTEXT.md              # Domänensprache & Modul-Begriffe
 ├── CHANGELOG.md
 ├── docker-compose.yml      # Production-Container (Port 5667)
 ├── docs/PRD.md             # Produktanforderungen
 └── marketmind/             # Nuxt-App (Arbeitsverzeichnis für npm)
-    ├── app/                # Pages, Components, Layouts, Utils
+    ├── app/                # Pages, Components, Composables, Layouts
+    ├── shared/             # Plattformübergreifende Pure Functions
     ├── server/             # Nitro API, Services, SQLite
     ├── test/               # Vitest + Playwright (e2e unter test/e2e/)
     ├── Dockerfile
@@ -44,18 +46,29 @@ Dev-DB: `marketmind/data/` (gitignored). Docker-DB: Volume `marketmind-data` unt
 
 ## Architektur
 
+### Schichten-Konvention
+
+| Schicht          | Ort                                                                                 | Aufgabe                                        |
+| ---------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------- |
+| **Routes**       | `server/api/`                                                                       | HTTP-Adapter (Validierung, Statuscodes)        |
+| **Use-Cases**    | `server/services/ai/run-agent.ts`, `research/run-research.ts`, `scraper/runtime.ts` | Geschäftslogik                                 |
+| **Repositories** | `server/services/*/repository.ts`                                                   | SQL + Row-Mapping pro Domäne                   |
+| **Shared**       | `shared/`                                                                           | Formatierung, Plattform-Erkennung, Preisparser |
+| **Composables**  | `app/composables/`                                                                  | Frontend-State & API-Aufrufe                   |
+
 ### Frontend (`marketmind/app/`)
 
 - **Pages:** file-based routing unter `app/pages/`
+- **Composables:** `useInventory`, `useWatchlist`, `useSettings`, `useListings`, `useAgents`
 - **Layout:** `app/layouts/default.vue` — Sidebar, Theme-Toggle, Versionsbadge
-- **Utils:** `format-currency.ts`, `format-percent.ts`, `detect-platform.ts`, `render-markdown.ts`
-- Keine Pinia-Stores — State über `useFetch`, `ref`, `reactive`
+- **Utils:** Re-Exports aus `shared/`; `render-markdown.ts` bleibt app-lokal
+- Keine Pinia-Stores — State über Composables, `useFetch`, `ref`, `reactive`
 
 ### Backend (`marketmind/server/`)
 
-- **API:** `server/api/**/*.ts` — Nitro file-based routes
-- **Services:** Geschäftslogik in `server/services/` (scraper, ai, research, inventory, …)
-- **DB:** `server/database/` — Schema, Seed, Pfad-Auflösung
+- **API:** `server/api/**/*.ts` — dünne HTTP-Adapter
+- **Services:** Use-Cases + Repositories unter `server/services/`
+- **DB:** `server/database/` — Schema, `settings.ts`, `lifecycle.ts`, `seed.ts`
 - **Plugin:** `server/plugins/database.ts` — Init + Seed beim Start
 
 ### KI-Konfiguration
@@ -121,8 +134,10 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 | Neue Seite         | `app/pages/<route>.vue`                      |
 | Scraper-Logik      | `server/services/scraper/`                   |
 | DB-Schema          | `server/database/schema.sql` + Seed anpassen |
-| Formatierung       | `app/utils/format-*.ts` wiederverwenden      |
-| Einstellungen-Keys | `server/database/seed.ts`, Settings-UI       |
+| Formatierung       | `shared/format-*.ts` wiederverwenden         |
+| Einstellungen-Keys | `server/database/settings.ts`, Settings-UI   |
+| KI-Aufruf          | `server/services/ai/run-agent.ts`            |
+| Preisrecherche     | `server/services/research/run-research.ts`   |
 
 ## Was vermeiden
 

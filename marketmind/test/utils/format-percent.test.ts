@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatPercent } from "../../app/utils/format-percent";
+import { formatPercent } from "shared/format-percent";
 
 describe("format-percent", () => {
   it("formats percent values in de-DE style", () => {

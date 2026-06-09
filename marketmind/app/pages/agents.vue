@@ -12,12 +12,20 @@ interface Agent {
   total_cost_usd?: number;
 }
 
-const { data: agents, refresh } = await useFetch<Agent[]>("/api/agents");
-const { data: prompts, refresh: refreshPrompts } = await useFetch<
-  Array<Record<string, unknown>>
->("/api/prompt-library");
-const { data: history } =
-  await useFetch<Array<Record<string, unknown>>>("/api/agent-history");
+const {
+  agents,
+  prompts,
+  history,
+  loading,
+  refresh,
+  refreshPrompts,
+  saveAgent: persistAgent,
+  generatePrompt: runGeneratePrompt,
+  savePromptToLibrary: persistPromptToLibrary,
+  formatTemperature,
+  formatUsdCost,
+  formatCallsLabel,
+} = await useAgents();
 
 const editingAgent = ref<Agent | null>(null);
 const agentModalOpen = computed({
@@ -28,79 +36,35 @@ const agentModalOpen = computed({
 });
 const promptDescription = ref("");
 const generatedPrompt = ref("");
-const loading = ref(false);
 const toast = useToast();
 
 async function saveAgent() {
   if (!editingAgent.value?.id) return;
-  await $fetch(`/api/agents/${editingAgent.value.id}`, {
-    method: "PUT",
-    body: editingAgent.value,
-  });
-  await refresh();
+  await persistAgent(editingAgent.value);
   toast.add({ title: "Agent gespeichert", color: "success" });
   editingAgent.value = null;
 }
 
 async function generatePrompt() {
   if (!promptDescription.value) return;
-  loading.value = true;
   try {
-    const result = await $fetch<{ prompt: string }>(
-      "/api/agents/generate-prompt",
-      {
-        method: "POST",
-        body: { description: promptDescription.value },
-      },
-    );
+    const result = await runGeneratePrompt(promptDescription.value);
     generatedPrompt.value = result.prompt;
   } catch {
     toast.add({ title: "Prompt-Generierung fehlgeschlagen", color: "error" });
-  } finally {
-    loading.value = false;
   }
 }
 
 async function savePromptToLibrary() {
   if (!generatedPrompt.value) return;
-  await $fetch("/api/prompt-library", {
-    method: "POST",
-    body: {
-      name: promptDescription.value.slice(0, 50),
-      prompt: generatedPrompt.value,
-      category: "Generiert",
-    },
-  });
-  await refreshPrompts();
+  await persistPromptToLibrary(
+    promptDescription.value.slice(0, 50),
+    generatedPrompt.value,
+  );
   toast.add({ title: "In Bibliothek gespeichert", color: "success" });
 }
 
-function formatTemperature(value: unknown): string {
-  const num = Number(value);
-  if (!Number.isFinite(num)) return "–";
-  return new Intl.NumberFormat("de-DE", {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
-  }).format(num);
-}
-
 const temperatureMarks = [0, 0.2, 0.4, 0.6, 0.8, 1];
-
-function formatUsdCost(value: unknown): string {
-  const num = Number(value);
-  if (!Number.isFinite(num)) return "–";
-  return `$${new Intl.NumberFormat("de-DE", {
-    minimumFractionDigits: 4,
-    maximumFractionDigits: 4,
-  }).format(num)}`;
-}
-
-function formatCallsLabel(value: unknown): string {
-  const num = Number(value);
-  if (!Number.isFinite(num) || num < 0) return "0 Aufrufe";
-  const formatted = new Intl.NumberFormat("de-DE").format(num);
-  return num === 1 ? `${formatted} Aufruf` : `${formatted} Aufrufe`;
-}
 </script>
 
 <template>

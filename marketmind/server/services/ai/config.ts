@@ -1,5 +1,5 @@
 import type Database from "better-sqlite3";
-import { getAllSettings } from "../../database/seed";
+import { getAllSettings } from "../../database/settings";
 
 export type AiProvider = "openrouter" | "local";
 

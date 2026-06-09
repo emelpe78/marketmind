@@ -4,11 +4,8 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { getDb, resetDb } from "../../server/database/db";
 import { initDatabase } from "../../server/database/db";
-import {
-  seedDatabase,
-  getSetting,
-  setSetting,
-} from "../../server/database/seed";
+import { seedDatabase } from "../../server/database/seed";
+import { getSetting, setSetting } from "../../server/database/settings";
 import {
   getDatabaseInfo,
   relocateDatabase,

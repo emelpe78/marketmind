@@ -6,7 +6,7 @@ import {
   isAiConfigured,
   normalizeAiBaseUrl,
 } from "../../server/services/ai/config";
-import { setSetting } from "../../server/database/seed";
+import { setSetting } from "../../server/database/settings";
 
 describe("ai config", () => {
   it("reads openrouter settings from database", () => {

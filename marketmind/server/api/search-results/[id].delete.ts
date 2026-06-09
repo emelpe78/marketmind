@@ -1,8 +1,8 @@
 import { getDb } from "../../database/db";
+import { deleteSearchResult } from "../../services/searches/repository";
 
 export default defineEventHandler((event) => {
   const id = getRouterParam(event, "id");
-  const db = getDb();
-  db.prepare("DELETE FROM search_results WHERE id = ?").run(Number(id));
+  deleteSearchResult(getDb(), Number(id));
   return { success: true };
 });

@@ -1,11 +1,5 @@
 import type Database from "better-sqlite3";
-import type { AiConnection } from "../ai/config";
-import { chatCompletion } from "../openrouter/client";
-import {
-  getAgentByType,
-  resolveAgentModel,
-  logAgentHistory,
-} from "../openrouter/agents";
+import { runAgent } from "../ai/run-agent";
 
 export type AnalysisPlatform = "ebay" | "kleinanzeigen";
 
@@ -29,11 +23,7 @@ export async function analyzeSearchByPlatform(
   db: Database.Database,
   searchId: number,
   search: { query: string; platform: string },
-  connection: AiConnection,
-  defaultModel: string,
 ): Promise<{ summaries: PlatformAnalysis[]; tokensUsed: number }> {
-  const agent = getAgentByType(db, "research");
-  const model = resolveAgentModel(agent, defaultModel);
   const stmt = db.prepare(
     `SELECT title, price, condition, platform
      FROM search_results
@@ -51,27 +41,15 @@ export async function analyzeSearchByPlatform(
 
     const label = PLATFORM_LABEL[platform];
     const userInput = `Analysiere Marktdaten für "${search.query}" ausschließlich von ${label}. Ignoriere andere Plattformen.\n${JSON.stringify(results, null, 2)}`;
-    const completion = await chatCompletion(
-      connection,
-      model,
-      [
-        { role: "system", content: agent.system_prompt },
-        { role: "user", content: userInput },
-      ],
-      agent.temperature,
-    );
 
-    logAgentHistory(
-      db,
-      agent.id,
+    const { content, tokensUsed: used } = await runAgent(db, {
+      agentType: "research",
       userInput,
-      completion.content,
-      completion.tokensUsed,
-      completion.costUsd,
-    );
+      mode: "required",
+    });
 
-    summaries.push({ platform, summary: completion.content });
-    tokensUsed += completion.tokensUsed;
+    summaries.push({ platform, summary: content });
+    tokensUsed += used;
   }
 
   return { summaries, tokensUsed };

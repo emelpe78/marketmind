@@ -1,8 +1,8 @@
 import { getDb } from "../../database/db";
+import { deleteWatchlistItem } from "../../services/watchlist/repository";
 
 export default defineEventHandler((event) => {
   const id = getRouterParam(event, "id");
-  const db = getDb();
-  db.prepare("DELETE FROM watchlist WHERE id = ?").run(Number(id));
+  deleteWatchlistItem(getDb(), Number(id));
   return { success: true };
 });

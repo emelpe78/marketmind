@@ -1,6 +1,4 @@
 import { getDb } from "../../database/db";
+import { findAllSearches } from "../../services/searches/repository";
 
-export default defineEventHandler((event) => {
-  const db = getDb();
-  return db.prepare("SELECT * FROM searches ORDER BY timestamp DESC").all();
-});
+export default defineEventHandler(() => findAllSearches(getDb()));

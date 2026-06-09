@@ -1,32 +1,13 @@
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
 
-interface ListingItem {
-  id: number;
-  query: string;
-  platform: string;
-  title: string;
-  description: string;
-  keywords: string | null;
-  price_suggestion: number | null;
-  created_at: string;
-}
-
-interface GeneratedListing {
-  platform: string;
-  title: string;
-  description: string;
-  priceSuggestion: number | null;
-  category: string | null;
-  keywords: string | null;
-}
+import type { GeneratedListing, ListingItem } from "~/composables/useListings";
 
 const query = ref("");
 const condition = ref("Gebraucht");
 const extras = ref("");
 const desiredPrice = ref<number | undefined>();
 const activeTab = ref("kleinanzeigen");
-const loading = ref(false);
 const saving = ref(false);
 const editingId = ref<number | null>(null);
 const generated = ref<GeneratedListing | null>(null);
@@ -39,8 +20,15 @@ const deleteModalOpen = computed({
 });
 const toast = useToast();
 
-const { data: listings, refresh: refreshListings } =
-  await useFetch<ListingItem[]>("/api/listings");
+const {
+  listings,
+  generating: loading,
+  refresh: refreshListings,
+  generateListing: runGenerateListing,
+  saveListing: persistListing,
+  updateListing: persistListingUpdate,
+  deleteListing: removeListing,
+} = await useListings();
 
 const conditionOptions = ["Neu", "Gebraucht", "Defekt"];
 
@@ -56,23 +44,17 @@ function resetEditor() {
 
 async function generateListing() {
   if (!query.value) return;
-  loading.value = true;
   try {
-    generated.value = await $fetch<GeneratedListing>("/api/listings/generate", {
-      method: "POST",
-      body: {
-        query: query.value,
-        platform: activeTab.value,
-        condition: condition.value,
-        extras: extras.value,
-        desiredPrice: desiredPrice.value,
-      },
+    generated.value = await runGenerateListing({
+      query: query.value,
+      platform: activeTab.value,
+      condition: condition.value,
+      extras: extras.value,
+      desiredPrice: desiredPrice.value,
     });
     editingId.value = null;
   } catch {
     toast.add({ title: "Generierung fehlgeschlagen", color: "error" });
-  } finally {
-    loading.value = false;
   }
 }
 
@@ -101,20 +83,13 @@ async function saveListing() {
   saving.value = true;
   try {
     if (editingId.value) {
-      await $fetch(`/api/listings/${editingId.value}`, {
-        method: "PUT",
-        body: payload,
-      });
+      await persistListingUpdate(editingId.value, payload);
       toast.add({ title: "Anzeige aktualisiert", color: "success" });
     } else {
-      const saved = await $fetch<ListingItem>("/api/listings", {
-        method: "POST",
-        body: payload,
-      });
+      const saved = await persistListing(payload);
       editingId.value = saved.id;
       toast.add({ title: "Anzeige gespeichert", color: "success" });
     }
-    await refreshListings();
   } catch (error: unknown) {
     const err = error as { data?: { message?: string } };
     toast.add({
@@ -147,12 +122,11 @@ function openDeleteModal(item: ListingItem) {
 async function confirmDelete() {
   if (!deleteItem.value) return;
   try {
-    await $fetch(`/api/listings/${deleteItem.value.id}`, { method: "DELETE" });
+    await removeListing(deleteItem.value.id);
     if (editingId.value === deleteItem.value.id) {
       resetEditor();
     }
     deleteItem.value = null;
-    await refreshListings();
     toast.add({ title: "Anzeige gelöscht", color: "success" });
   } catch {
     toast.add({ title: "Löschen fehlgeschlagen", color: "error" });

@@ -38,13 +38,14 @@ async function runSearch() {
     const response = await $fetch<{
       searchId: number;
       results: SearchResult[];
-    }>("/api/searches", {
+      stats: Record<string, unknown>;
+    }>("/api/research/run", {
       method: "POST",
       body: { query: query.value, platform: platform.value },
     });
     searchId.value = response.searchId;
     results.value = response.results;
-    stats.value = await $fetch(`/api/searches/${response.searchId}/stats`);
+    stats.value = response.stats;
     if (response.results.length === 0) {
       toast.add({
         title: "Keine Ergebnisse gefunden",
@@ -78,8 +79,11 @@ async function analyzeSearch() {
   try {
     const response = await $fetch<{
       summaries: PlatformSummary[];
-    }>(`/api/searches/${searchId.value}/analyze`, { method: "POST" });
-    summaries.value = response.summaries;
+    }>("/api/research/run", {
+      method: "POST",
+      body: { searchId: searchId.value, analyze: true },
+    });
+    summaries.value = response.summaries ?? [];
   } catch {
     toast.add({ title: "Analyse fehlgeschlagen", color: "error" });
   } finally {
@@ -91,23 +95,25 @@ async function saveResearch() {
   if (!searchId.value || !stats.value || results.value.length === 0) return;
   saving.value = true;
   try {
-    const saved = await $fetch<{ id: number }>("/api/saved-researches", {
-      method: "POST",
-      body: {
-        query: query.value.trim(),
-        platform: platform.value,
-        searchId: searchId.value,
-        stats: stats.value,
-        results: results.value,
-        analyses: summaries.value,
+    const saved = await $fetch<{ savedResearchId: number }>(
+      "/api/research/run",
+      {
+        method: "POST",
+        body: {
+          searchId: searchId.value,
+          save: true,
+          saveName: query.value.trim(),
+        },
       },
-    });
+    );
     toast.add({
       title: "Recherche gespeichert",
       description: "Im Dashboard unter „Gespeicherte Recherchen“ aufrufbar.",
       color: "success",
     });
-    await navigateTo(`/research/saved/${saved.id}`);
+    if (saved.savedResearchId) {
+      await navigateTo(`/research/saved/${saved.savedResearchId}`);
+    }
   } catch {
     toast.add({ title: "Speichern fehlgeschlagen", color: "error" });
   } finally {

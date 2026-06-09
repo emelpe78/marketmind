@@ -129,14 +129,19 @@ Dev-Daten liegen in `marketmind/data/` (nicht versioniert). Docker-Daten im Volu
 
 ```
 marketmind/           # Repository-Root
-├── docker-compose.yml
+├── AGENTS.md         # Anleitung für Mitwirkende & KI-Agenten
+├── CONTEXT.md        # Domänensprache & Modul-Begriffe
 ├── CHANGELOG.md
+├── docker-compose.yml
 ├── docs/PRD.md
 └── marketmind/       # Nuxt-App (npm-Befehle hier ausführen)
-    ├── app/          # Frontend
-    ├── server/       # API & Services
+    ├── app/          # Frontend (Pages, Composables, Components)
+    ├── shared/       # Formatierung, Plattform-Erkennung, Preisparser
+    ├── server/       # API-Routen, Use-Cases, Repositories, SQLite
     └── test/         # Unit- & E2E-Tests
 ```
+
+Die Architektur folgt einer klaren Schichtung: **Routes** (HTTP) → **Use-Cases** (z. B. `runAgent`, `runResearch`, `ScraperRuntime`) → **Repositories** (SQL pro Domäne) → **Shared** (Pure Functions). Details in [AGENTS.md](AGENTS.md) und [CONTEXT.md](CONTEXT.md).
 
 ## Entwicklung & Tests
 
@@ -149,7 +154,7 @@ npm run test:e2e     # Playwright (baut vorher)
 npx nuxi typecheck   # TypeScript-Prüfung
 ```
 
-Weitere Hinweise für Mitwirkende: [AGENTS.md](AGENTS.md)
+Weitere Hinweise für Mitwirkende: [AGENTS.md](AGENTS.md) · Domänenbegriffe: [CONTEXT.md](CONTEXT.md)
 
 ## Rechtlicher Hinweis zum Scraping
 
@@ -169,6 +174,6 @@ Nutze **moderate Abfragefrequenzen** (einstellbarer Delay), cache Ergebnisse und
 
 ## Lizenz & Status
 
-- **Version:** 0.1.0 — siehe [CHANGELOG.md](CHANGELOG.md)
+- **Version:** 0.1.1 — siehe [CHANGELOG.md](CHANGELOG.md)
 - **Lizenz:** Noch nicht veröffentlicht (geplant: Open Source)
 - **Issues:** [GitHub Issues](https://github.com/emelpe78/marketmind/issues)

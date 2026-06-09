@@ -1,5 +1,5 @@
 import { getDb } from "../../database/db";
-import { setSetting } from "../../database/seed";
+import { setSetting } from "../../database/settings";
 
 export default defineEventHandler(async (event) => {
   const key = getRouterParam(event, "key");

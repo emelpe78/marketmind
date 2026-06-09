@@ -1,9 +1,4 @@
 import { getDb } from "../../../database/db";
-import {
-  assertAiConfigured,
-  getAiConfig,
-  getAiConnection,
-} from "../../../services/ai/config";
 import { analyzeSearchByPlatform } from "../../../services/research/analyze-search";
 
 export default defineEventHandler(async (event) => {
@@ -12,8 +7,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: "ID fehlt" });
   }
   const db = getDb();
-  const ai = getAiConfig(db);
-  assertAiConfigured(ai);
   const search = db
     .prepare("SELECT * FROM searches WHERE id = ?")
     .get(Number(id)) as { query: string; platform: string } | undefined;
@@ -25,8 +18,6 @@ export default defineEventHandler(async (event) => {
     db,
     Number(id),
     search,
-    getAiConnection(ai),
-    ai.defaultModel,
   );
 
   if (!summaries.length) {

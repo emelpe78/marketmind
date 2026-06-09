@@ -1,4 +1,8 @@
-import { formatEuro } from "../../../app/utils/format-currency";
+export interface PriceHistogramBucket {
+  low: number;
+  high: number;
+  count: number;
+}
 
 export interface PriceStats {
   min: number;
@@ -6,7 +10,7 @@ export interface PriceStats {
   avg: number;
   median: number;
   count: number;
-  histogram: { range: string; count: number }[];
+  histogram: PriceHistogramBucket[];
   conditionBreakdown: Record<string, { count: number; avgPrice: number }>;
   platformComparison: Record<string, { count: number; avgPrice: number }>;
   demandIndicator: number;
@@ -52,17 +56,14 @@ export function analyzePrices(results: SearchResultRow[]): PriceStats {
   const avg = prices.reduce((a, b) => a + b, 0) / count;
 
   const bucketSize = Math.max(1, Math.ceil((max - min) / 5));
-  const histogram: { range: string; count: number }[] = [];
+  const histogram: PriceHistogramBucket[] = [];
   for (let i = 0; i < 5; i++) {
     const low = min + i * bucketSize;
     const high = i === 4 ? max : low + bucketSize;
     const bucketCount = prices.filter(
       (p) => p >= low && (i === 4 ? p <= high : p < high),
     ).length;
-    histogram.push({
-      range: `${formatEuro(low).replace(/ €$/, "")}–${formatEuro(high)}`,
-      count: bucketCount,
-    });
+    histogram.push({ low, high, count: bucketCount });
   }
 
   const conditionBreakdown: Record<

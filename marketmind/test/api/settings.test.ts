@@ -4,7 +4,7 @@ import {
   getAllSettings,
   getSetting,
   setSetting,
-} from "../../server/database/seed";
+} from "../../server/database/settings";
 import { getDb } from "../../server/database/db";
 
 describe("settings", () => {

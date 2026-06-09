@@ -1,16 +1,6 @@
 import { getDb } from "../../database/db";
-import {
-  assertAiConfigured,
-  getAiConfig,
-  getAiConnection,
-} from "../../services/ai/config";
-import { chatCompletion } from "../../services/openrouter/client";
-import {
-  getAgentByType,
-  resolveAgentModel,
-  logAgentHistory,
-} from "../../services/openrouter/agents";
-import { formatEuro } from "../../../app/utils/format-currency";
+import { runAgent } from "../../services/ai/run-agent";
+import { formatEuro } from "shared/format-currency";
 import { parseListingGeneration } from "../../services/listings/parse-generation";
 import { analyzePrices } from "../../services/stats/price-analysis";
 
@@ -33,10 +23,6 @@ export default defineEventHandler(async (event) => {
   }
 
   const db = getDb();
-  const ai = getAiConfig(db);
-  assertAiConfigured(ai);
-  const agent = getAgentByType(db, "listing");
-  const model = resolveAgentModel(agent, ai.defaultModel);
 
   let priceContext = "";
   if (body.searchId) {
@@ -56,26 +42,13 @@ export default defineEventHandler(async (event) => {
 
   const userInput = `${platformHint}\nProdukt: ${body.query}\nZustand: ${body.condition}\nZusatz: ${body.extras || "-"}\nWunschpreis: ${body.desiredPrice || "-"}${priceContext}`;
 
-  const completion = await chatCompletion(
-    getAiConnection(ai),
-    model,
-    [
-      { role: "system", content: agent.system_prompt },
-      { role: "user", content: userInput },
-    ],
-    agent.temperature,
-  );
-
-  logAgentHistory(
-    db,
-    agent.id,
+  const { content } = await runAgent(db, {
+    agentType: "listing",
     userInput,
-    completion.content,
-    completion.tokensUsed,
-    completion.costUsd,
-  );
+    mode: "required",
+  });
 
-  const parsed = parseListingGeneration(completion.content, {
+  const parsed = parseListingGeneration(content, {
     query: body.query,
     desiredPrice: body.desiredPrice ?? null,
   });

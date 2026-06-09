@@ -29,6 +29,24 @@ export function resolveDbPath(path: string): string {
   return resolve(process.cwd(), trimmed);
 }
 
+export function getActivePath(liveDbPath?: string | null): string {
+  if (process.env.MM_DATABASE_PATH) {
+    return resolveDbPath(process.env.MM_DATABASE_PATH);
+  }
+
+  if (liveDbPath) {
+    return resolveDbPath(liveDbPath);
+  }
+
+  const bootstrapPath = resolveDbPath(getRuntimeDefaultPath());
+  const configured = readConfiguredPathFromFile(bootstrapPath);
+  if (configured) {
+    return resolveDbPath(configured);
+  }
+
+  return bootstrapPath;
+}
+
 export function readConfiguredPathFromFile(dbPath: string): string | null {
   if (!existsSync(dbPath)) return null;
   try {

@@ -1,3 +1,5 @@
+import { parseGermanPrice } from "shared/parse-german-price";
+
 export interface ParsedListingGeneration {
   title: string;
   description: string;
@@ -9,15 +11,7 @@ export interface ParsedListingGeneration {
 export function parsePriceValue(value: unknown): number | null {
   if (value == null || value === "") return null;
   if (typeof value === "number" && Number.isFinite(value)) return value;
-  if (typeof value === "string") {
-    const match = value.match(
-      /(\d{1,3}(?:\.\d{3})*(?:,\d{1,2})?|\d+(?:,\d{1,2})?)/,
-    );
-    if (!match?.[1]) return null;
-    const normalized = match[1].replace(/\./g, "").replace(",", ".");
-    const num = Number(normalized);
-    return Number.isFinite(num) ? num : null;
-  }
+  if (typeof value === "string") return parseGermanPrice(value);
   return null;
 }
 

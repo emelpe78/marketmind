@@ -1,10 +1,5 @@
 import { getDb } from "../../database/db";
-import {
-  assertAiConfigured,
-  getAiConfig,
-  getAiConnection,
-} from "../../services/ai/config";
-import { generateSystemPrompt } from "../../services/openrouter/agents";
+import { runAgent } from "../../services/ai/run-agent";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<{ description: string }>(event);
@@ -13,13 +8,14 @@ export default defineEventHandler(async (event) => {
   }
 
   const db = getDb();
-  const ai = getAiConfig(db);
-  assertAiConfigured(ai);
+  const { content: prompt } = await runAgent(db, {
+    agentType: "strategy",
+    userInput: `Erstelle einen System-Prompt für folgendes Ziel:\n${body.description}`,
+    systemPrompt:
+      "Du erstellst präzise System-Prompts für KI-Agents. Antworte nur mit dem System-Prompt, ohne Erklärung.",
+    temperature: 0.7,
+    mode: "required",
+  });
 
-  const prompt = await generateSystemPrompt(
-    getAiConnection(ai),
-    ai.defaultModel,
-    body.description,
-  );
   return { prompt };
 });

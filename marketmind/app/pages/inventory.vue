@@ -1,21 +1,20 @@
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
 
-const { data: items, refresh } =
-  await useFetch<Array<Record<string, unknown>>>("/api/inventory");
-const { data: summary, refresh: refreshSummary } = await useFetch<
-  Record<string, unknown>
->("/api/inventory/summary");
-
-async function refreshInventory() {
-  await Promise.all([refresh(), refreshSummary()]);
-}
+const {
+  items,
+  summary,
+  refreshInventory,
+  todayIsoDate,
+  buildInventoryPayload,
+  createItem: createInventoryItem,
+  updateItem: updateInventoryItem,
+  deleteItem: deleteInventoryItem,
+  normalizePlatform,
+} = await useInventory();
 const toast = useToast();
 
-const platformOptions = [
-  { label: "Kleinanzeigen", value: "kleinanzeigen" },
-  { label: "eBay", value: "ebay" },
-];
+const platformOptions = INVENTORY_PLATFORM_OPTIONS;
 
 const platformLabels = Object.fromEntries(
   platformOptions.map((option) => [option.value, option.label]),
@@ -33,54 +32,11 @@ function formatDate(value: unknown): string {
   return date.toLocaleDateString("de-DE");
 }
 
-function getItemProfit(item: Record<string, unknown>): number | null {
-  if (item.profit != null && item.status === "verkauft") {
-    return Number(item.profit);
-  }
-  if (item.buy_price == null || item.sell_price == null) return null;
-  return Number(item.sell_price) - Number(item.buy_price);
-}
-
-function todayIsoDate(): string {
-  return new Date().toISOString().slice(0, 10);
-}
-
 type Platform = "kleinanzeigen" | "ebay";
 
-function normalizePlatform(value: unknown): Platform {
-  if (value === "ebay" || value === "kleinanzeigen") return value;
-  if (value && typeof value === "object" && "value" in value) {
-    const platform = (value as { value: unknown }).value;
-    if (platform === "ebay" || platform === "kleinanzeigen") return platform;
-  }
-  return "kleinanzeigen";
-}
-
-function buildInventoryPayload(
-  item: Record<string, unknown>,
-  overrides: {
-    status?: string;
-    sell_price?: number | null;
-    sell_platform?: Platform | null;
-    sell_date?: string | null;
-  } = {},
-) {
-  return {
-    title: item.title,
-    buy_price: item.buy_price ?? null,
-    buy_platform: normalizePlatform(item.buy_platform),
-    buy_date: item.buy_date ?? null,
-    sell_price: overrides.sell_price ?? item.sell_price ?? null,
-    sell_platform:
-      overrides.sell_platform !== undefined
-        ? overrides.sell_platform
-        : item.sell_platform
-          ? normalizePlatform(item.sell_platform)
-          : null,
-    sell_date: overrides.sell_date ?? item.sell_date ?? null,
-    status: overrides.status ?? item.status ?? "gekauft",
-    notes: item.notes ?? null,
-  };
+function getItemProfit(item: Record<string, unknown>): number | null {
+  if (item.profit != null) return Number(item.profit);
+  return null;
 }
 
 const newItem = ref({
@@ -115,7 +71,8 @@ const deleteModalOpen = computed({
 function openSellModal(item: Record<string, unknown>) {
   sellItem.value = item;
   sellForm.sell_price = undefined;
-  sellForm.sell_platform = normalizePlatform(item.buy_platform);
+  sellForm.sell_platform =
+    normalizePlatform(item.buy_platform) ?? "kleinanzeigen";
   sellForm.sell_date = todayIsoDate();
 }
 
@@ -125,12 +82,9 @@ function openDeleteModal(item: Record<string, unknown>) {
 
 async function addItem() {
   if (!newItem.value.title) return;
-  await $fetch("/api/inventory", {
-    method: "POST",
-    body: {
-      ...newItem.value,
-      buy_platform: normalizePlatform(newItem.value.buy_platform),
-    },
+  await createInventoryItem({
+    ...newItem.value,
+    buy_platform: normalizePlatform(newItem.value.buy_platform),
   });
   newItem.value = {
     title: "",
@@ -139,7 +93,6 @@ async function addItem() {
     buy_date: todayIsoDate(),
     status: "gekauft",
   };
-  await refreshInventory();
   toast.add({ title: "Artikel hinzugefügt", color: "success" });
 }
 
@@ -155,17 +108,16 @@ async function confirmSell() {
   }
 
   try {
-    await $fetch(`/api/inventory/${sellItem.value.id}`, {
-      method: "PUT",
-      body: buildInventoryPayload(sellItem.value, {
+    await updateInventoryItem(
+      Number(sellItem.value.id),
+      buildInventoryPayload(sellItem.value, {
         status: "verkauft",
         sell_price: sellForm.sell_price,
         sell_platform: normalizePlatform(sellForm.sell_platform),
         sell_date: sellForm.sell_date,
       }),
-    });
+    );
     sellItem.value = null;
-    await refreshInventory();
     toast.add({ title: "Als verkauft markiert", color: "success" });
   } catch {
     toast.add({
@@ -177,9 +129,8 @@ async function confirmSell() {
 
 async function confirmDelete() {
   if (!deleteItem.value?.id) return;
-  await $fetch(`/api/inventory/${deleteItem.value.id}`, { method: "DELETE" });
+  await deleteInventoryItem(Number(deleteItem.value.id));
   deleteItem.value = null;
-  await refreshInventory();
   toast.add({ title: "Artikel gelöscht", color: "success" });
 }
 </script>

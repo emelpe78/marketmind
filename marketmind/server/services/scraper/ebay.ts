@@ -1,4 +1,5 @@
 import { load } from "cheerio";
+import { parseGermanPrice } from "shared/parse-german-price";
 
 export interface EbayListing {
   title: string;
@@ -25,13 +26,7 @@ export function buildEbaySearchUrl(query: string, page = 1): string {
 }
 
 export function parseEbayPrice(text: string): number {
-  const match = text.match(/([\d.,]+)/);
-  const raw = match?.[1];
-  if (!raw) return 0;
-  const normalized = raw.includes(",")
-    ? raw.replace(/\./g, "").replace(",", ".")
-    : raw;
-  return parseFloat(normalized) || 0;
+  return parseGermanPrice(text) ?? 0;
 }
 
 export function normalizeCondition(text: string): string {

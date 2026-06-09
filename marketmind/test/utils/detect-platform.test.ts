@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { detectPlatformFromUrl } from "../../app/utils/detect-platform";
+import { detectPlatformFromUrl } from "shared/detect-platform";
 
 describe("detect-platform", () => {
   it("detects platform from listing urls", () => {

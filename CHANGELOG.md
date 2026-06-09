@@ -4,6 +4,45 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.1.1] — 2026-06-09
+
+Architektur-Refactoring: klare Schichten (Routes, Use-Cases, Repositories, Shared), einheitliche KI- und Scraping-Pipeline, Frontend-Composables.
+
+### Hinzugefügt
+
+- **CONTEXT.md** — Domänensprache und Modul-Begriffe für Architektur-Reviews
+- **`shared/`** — plattformübergreifende Pure Functions (Formatierung, Plattform-Erkennung, `parseGermanPrice`, Agent-Formatierung)
+- **SettingsStore** — `server/database/settings.ts` (Laufzeit-Konfiguration getrennt von `seed.ts`)
+- **DatabaseLifecycle** — `server/database/lifecycle.ts` für Relocate, Reset und Pfad-Info
+- **ScraperRuntime** — `server/services/scraper/runtime.ts` mit pro-Instanz-Throttle und gemeinsamer Session
+- **RunAgent** — `server/services/ai/run-agent.ts` als einheitlicher KI-Use-Case (`required` / `optional` / `skip`)
+- **ResearchRun** — `server/services/research/run-research.ts` und `POST /api/research/run`
+- **Domain-Repositories** — SQL + Row-Mapping für Inventar, Watchlist, Agents, Listings, Searches, Prompt-Library
+- **Dashboard-Summary** — `server/services/dashboard/summary.ts`
+- **Frontend-Composables** — `useInventory`, `useWatchlist`, `useSettings`, `useListings`, `useAgents`
+- Charakterisierungs- und Unit-Tests für `runAgent`, `runResearch`, `parseGermanPrice`, `ScraperRuntime`, API-Routen
+
+### Geändert
+
+- **AGENTS.md** — Schichten-Konvention (Routes / Use-Cases / Repositories / Shared / Composables)
+- API-Routen sind dünne HTTP-Adapter; Geschäftslogik in Services
+- Preisrecherche-Frontend nutzt `/api/research/run` statt mehrerer Client-Orchestrierungs-Calls
+- `generate-prompt` protokolliert KI-Aufrufe in `agent_history`
+- Preisstatistik-Histogramm liefert numerische Bucket-Grenzen (`low` / `high`) statt formatierter Strings
+- Inventar-UI nutzt Server-`profit` als Source of Truth
+- 74 Unit-Tests (Vitest), 26 Testdateien
+
+### Entfernt
+
+- Scraper-Proxy-Einstellungen aus `DEFAULT_SETTINGS` und `FetcherConfig` (nie implementiert)
+
+### Behoben
+
+- Duplizierte KI-Orchestrierung und divergierende `isAiConfigured` / `assertAiConfigured`-Logik über `runAgent` vereinheitlicht
+- Vier separate deutsche Preisparser durch `parseGermanPrice` konsolidiert
+- `scrapeWatchlistItem` nutzt `checkAlert()` statt inline-Bedingung
+- Server-Imports von `app/utils` auf `shared/` umgestellt (keine Cross-Layer-Kopplung mehr)
+
 ## [0.1.0] — 2026-06-09
 
 Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisrecherche, Flipping-Kalkulation und KI-gestützte Anzeigen auf eBay.de und Kleinanzeigen.de.
@@ -104,5 +143,6 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/emelpe78/marketmind/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/emelpe78/marketmind/releases/tag/v0.1.0

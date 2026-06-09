@@ -15,10 +15,10 @@ export interface FetcherConfig {
   delayMaxMs: number;
   userAgentRotation: boolean;
   cacheTtlHours: number;
-  proxyEnabled?: boolean;
-  proxyHost?: string;
-  proxyPort?: string;
-  proxyAuth?: string;
+}
+
+export interface FetchThrottle {
+  lastFetchAt: number;
 }
 
 export interface FetcherSession {
@@ -33,6 +33,7 @@ export interface FetcherDeps {
   uaIndex?: { current: number };
   session?: FetcherSession;
   skipWarmUp?: boolean;
+  throttle?: FetchThrottle;
 }
 
 export class ScraperFetchError extends Error {
@@ -46,8 +47,6 @@ export class ScraperFetchError extends Error {
     this.name = "ScraperFetchError";
   }
 }
-
-let lastFetchTime = 0;
 
 export function createFetcherSession(): FetcherSession {
   return { cookies: {}, warmedOrigins: new Set() };
@@ -233,7 +232,7 @@ function blockedMessage(
         ? "Kleinanzeigen.de"
         : "die Seite";
   if (status === 403 || status === 401) {
-    return `${name} blockiert automatische Anfragen (${status}). Proxy in den Einstellungen aktivieren oder später erneut versuchen.`;
+    return `${name} blockiert automatische Anfragen (${status}). Scraper-Delay erhöhen oder später erneut versuchen.`;
   }
   if (status === 429) {
     return `${name} rate-limitiert Anfragen (${status}). Scraper-Delay erhöhen und später erneut versuchen.`;
@@ -257,6 +256,7 @@ export async function fetchWithConfig(
   const randomFn = deps.randomFn ?? Math.random;
   const uaIndex = deps.uaIndex ?? { current: 0 };
   const session = deps.session ?? createFetcherSession();
+  const throttle = deps.throttle ?? { lastFetchAt: 0 };
   const platform = detectPlatform(url);
 
   const cached = getCachedHtml(db, url, config.cacheTtlHours);
@@ -264,7 +264,7 @@ export async function fetchWithConfig(
 
   const delayRange = config.delayMaxMs - config.delayMinMs;
   const delay = config.delayMinMs + randomFn() * delayRange;
-  const elapsed = Date.now() - lastFetchTime;
+  const elapsed = Date.now() - throttle.lastFetchAt;
   if (elapsed < delay) {
     await sleepFn(delay - elapsed);
   }
@@ -287,7 +287,7 @@ export async function fetchWithConfig(
     ),
     redirect: "follow",
   });
-  lastFetchTime = Date.now();
+  throttle.lastFetchAt = Date.now();
   mergeCookies(session, origin, response);
 
   if (!response.ok) {

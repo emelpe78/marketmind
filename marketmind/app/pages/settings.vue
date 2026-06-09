@@ -1,14 +1,12 @@
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
 
-const { data: settings, refresh } =
-  await useFetch<Record<string, string>>("/api/settings");
+const { settings, saving, refresh, saveSetting } = await useSettings();
 const { data: databaseInfo, refresh: refreshDatabase } = await useFetch<{
   path: string;
   exists: boolean;
 }>("/api/database");
 
-const saving = ref(false);
 const databasePathInput = ref("");
 const relocatingDatabase = ref(false);
 const resettingDatabase = ref(false);
@@ -47,15 +45,11 @@ watch(
 );
 
 async function updateSetting(key: string, value: string) {
-  saving.value = true;
   try {
-    await $fetch(`/api/settings/${key}`, { method: "PUT", body: { value } });
-    await refresh();
+    await saveSetting(key, value);
     toast.add({ title: "Gespeichert", description: key, color: "success" });
   } catch {
     toast.add({ title: "Fehler beim Speichern", color: "error" });
-  } finally {
-    saving.value = false;
   }
 }
 

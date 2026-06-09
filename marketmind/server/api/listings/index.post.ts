@@ -1,5 +1,5 @@
 import { getDb } from "../../database/db";
-import { parsePriceValue } from "../../services/listings/parse-generation";
+import { createListing } from "../../services/listings/repository";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<{
@@ -18,20 +18,12 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const db = getDb();
-  const result = db
-    .prepare(
-      "INSERT INTO listings (query, platform, title, description, keywords, price_suggestion) VALUES (?, ?, ?, ?, ?, ?)",
-    )
-    .run(
-      body.query?.trim() || body.title.trim(),
-      body.platform ?? "kleinanzeigen",
-      body.title.trim(),
-      body.description.trim(),
-      body.keywords ?? null,
-      parsePriceValue(body.price_suggestion),
-    );
-  return db
-    .prepare("SELECT * FROM listings WHERE id = ?")
-    .get(result.lastInsertRowid);
+  return createListing(getDb(), {
+    query: body.query?.trim() || body.title.trim(),
+    platform: body.platform ?? "kleinanzeigen",
+    title: body.title.trim(),
+    description: body.description.trim(),
+    keywords: body.keywords ?? null,
+    price_suggestion: body.price_suggestion,
+  });
 });

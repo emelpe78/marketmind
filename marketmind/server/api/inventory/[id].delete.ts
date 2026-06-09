@@ -1,8 +1,8 @@
 import { getDb } from "../../database/db";
+import { deleteInventory } from "../../services/inventory/repository";
 
 export default defineEventHandler((event) => {
   const id = getRouterParam(event, "id");
-  const db = getDb();
-  db.prepare("DELETE FROM inventory WHERE id = ?").run(Number(id));
+  deleteInventory(getDb(), Number(id));
   return { success: true };
 });

@@ -1,7 +1,7 @@
 import type Database from "better-sqlite3";
 import { load } from "cheerio";
-import { fetchWithConfig, type FetcherConfig } from "../scraper/fetcher";
-import { getAllSettings } from "../../database/seed";
+import { parseGermanPrice } from "shared/parse-german-price";
+import { createScraperRuntime } from "../scraper/runtime";
 
 export interface WatchlistRow {
   id: number;
@@ -20,16 +20,13 @@ export function scrapeListingPrice(html: string): number | null {
     .first()
     .text();
   if (ebayPrice) {
-    const match = ebayPrice.match(/[\d.,]+/);
-    if (match) return parseFloat(match[0].replace(".", "").replace(",", "."));
+    const price = parseGermanPrice(ebayPrice);
+    if (price !== null) return price;
   }
   const kaPrice = $(".boxedarticle--price, .aditem-main--middle--price")
     .first()
     .text();
-  if (kaPrice) {
-    const match = kaPrice.match(/[\d.,]+/);
-    if (match) return parseFloat(match[0].replace(".", "").replace(",", "."));
-  }
+  if (kaPrice) return parseGermanPrice(kaPrice);
   return null;
 }
 
@@ -40,15 +37,8 @@ export async function scrapeWatchlistItem(
 ): Promise<{ price: number | null; alertTriggered: boolean }> {
   if (!item.url) return { price: null, alertTriggered: false };
 
-  const settings = getAllSettings(db);
-  const config: FetcherConfig = {
-    delayMinMs: Number(settings["scraper-delay-min"]) * 1000,
-    delayMaxMs: Number(settings["scraper-delay-max"]) * 1000,
-    userAgentRotation: settings["scraper-user-agent-rotation"] === "true",
-    cacheTtlHours: Number(settings["scraper-cache-ttl-hours"]),
-  };
-
-  const html = await fetchWithConfig(db, item.url, config, { fetchFn });
+  const runtime = createScraperRuntime(db, { fetchFn });
+  const html = await runtime.fetchPage(item.url);
   const price = scrapeListingPrice(html);
 
   if (price !== null) {
@@ -60,11 +50,11 @@ export async function scrapeWatchlistItem(
     ).run(item.id, price);
   }
 
-  const alertTriggered =
-    price !== null &&
-    item.target_price !== null &&
-    price <= item.target_price &&
-    item.alert_active === 1;
+  const alertTriggered = checkAlert(
+    price,
+    item.target_price,
+    item.alert_active,
+  );
 
   return { price, alertTriggered };
 }

@@ -8,7 +8,7 @@ import {
   decodeSecret,
   encodeSecret,
 } from "../../server/services/settings/secrets";
-import { getSetting, setSetting } from "../../server/database/seed";
+import { getSetting, setSetting } from "../../server/database/settings";
 
 let tempDir: string | null = null;
 

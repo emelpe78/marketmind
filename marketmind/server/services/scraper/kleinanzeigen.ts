@@ -1,4 +1,5 @@
 import { load } from "cheerio";
+import { parseGermanPrice } from "shared/parse-german-price";
 
 export interface KleinanzeigenListing {
   title: string;
@@ -19,16 +20,7 @@ export function buildKleinanzeigenSearchUrl(query: string, page = 1): string {
 }
 
 export function parseKleinanzeigenPrice(text: string): number {
-  if (!text) return 0;
-  const normalized = text.replace(/\s+/g, " ").trim();
-  if (/^vb$/i.test(normalized)) return 0;
-  const match = normalized.match(/([\d.]+(?:,\d{1,2})?)\s*€/);
-  if (match?.[1]) {
-    return parseFloat(match[1].replace(/\./g, "").replace(",", ".")) || 0;
-  }
-  const fallback = normalized.match(/([\d.,]+)/);
-  if (!fallback?.[1]) return 0;
-  return parseFloat(fallback[1].replace(/\./g, "").replace(",", ".")) || 0;
+  return parseGermanPrice(text) ?? 0;
 }
 
 function extractPriceText($el: ReturnType<ReturnType<typeof load>>): string {

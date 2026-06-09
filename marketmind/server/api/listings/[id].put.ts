@@ -1,5 +1,8 @@
 import { getDb } from "../../database/db";
-import { parsePriceValue } from "../../services/listings/parse-generation";
+import {
+  findListingById,
+  updateListing,
+} from "../../services/listings/repository";
 
 export default defineEventHandler(async (event) => {
   const id = Number(getRouterParam(event, "id"));
@@ -24,23 +27,16 @@ export default defineEventHandler(async (event) => {
   }
 
   const db = getDb();
-  const existing = db
-    .prepare("SELECT id FROM listings WHERE id = ?")
-    .get(id) as { id: number } | undefined;
-  if (!existing) {
+  if (!findListingById(db, id)) {
     throw createError({ statusCode: 404, message: "Anzeige nicht gefunden" });
   }
 
-  db.prepare(
-    "UPDATE listings SET query=?, platform=?, title=?, description=?, keywords=?, price_suggestion=? WHERE id=?",
-  ).run(
-    body.query?.trim() || body.title.trim(),
-    body.platform ?? "kleinanzeigen",
-    body.title.trim(),
-    body.description.trim(),
-    body.keywords ?? null,
-    parsePriceValue(body.price_suggestion),
-    id,
-  );
-  return db.prepare("SELECT * FROM listings WHERE id = ?").get(id);
+  return updateListing(db, id, {
+    query: body.query?.trim() || body.title.trim(),
+    platform: body.platform ?? "kleinanzeigen",
+    title: body.title.trim(),
+    description: body.description.trim(),
+    keywords: body.keywords ?? null,
+    price_suggestion: body.price_suggestion,
+  });
 });

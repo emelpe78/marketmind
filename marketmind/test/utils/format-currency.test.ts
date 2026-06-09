@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatEuro, formatEuroDelta } from "../../app/utils/format-currency";
+import { formatEuro, formatEuroDelta } from "shared/format-currency";
 
 describe("format-currency", () => {
   it("formats euro values in de-DE style", () => {

@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { createTestDb } from "../helpers/test-db";
 import { getDb } from "../../server/database/db";
 import {
@@ -6,7 +6,11 @@ import {
   getInventorySummary,
   normalizePlatform,
 } from "../../server/services/inventory/index";
-import { checkAlert } from "../../server/services/watchlist/scraper";
+import {
+  checkAlert,
+  scrapeListingPrice,
+  scrapeWatchlistItem,
+} from "../../server/services/watchlist/scraper";
 
 describe("inventory", () => {
   it("auto-calculates profit when sold", () => {
@@ -69,5 +73,60 @@ describe("watchlist alerts", () => {
     expect(checkAlert(100, 100, 1)).toBe(true);
     expect(checkAlert(120, 100, 1)).toBe(false);
     expect(checkAlert(80, 100, 0)).toBe(false);
+  });
+});
+
+describe("watchlist scraper", () => {
+  it("parses eBay price from listing HTML", () => {
+    const html = `<div class="x-price-primary">125,00 €</div>`;
+    expect(scrapeListingPrice(html)).toBe(125);
+  });
+
+  it("parses Kleinanzeigen price from listing HTML", () => {
+    const html = `<div class="boxedarticle--price">300 € VB</div>`;
+    expect(scrapeListingPrice(html)).toBe(300);
+  });
+
+  it("scrapes watchlist item and triggers alert when price below target", async () => {
+    createTestDb();
+    const db = getDb();
+    const insert = db
+      .prepare(
+        `INSERT INTO watchlist (title, url, platform, target_price, alert_active, status)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+      )
+      .run("Test GPU", "https://ebay.de/item/123", "ebay", 150, 1, "aktiv");
+    const item = db
+      .prepare("SELECT * FROM watchlist WHERE id = ?")
+      .get(insert.lastInsertRowid) as {
+      id: number;
+      title: string;
+      url: string;
+      platform: string;
+      target_price: number;
+      current_price: number | null;
+      alert_active: number;
+      status: string;
+    };
+
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      text: async () => `<div class="x-price-primary">120,00 €</div>`,
+      headers: { getSetCookie: () => [] },
+    });
+
+    const result = await scrapeWatchlistItem(
+      db,
+      item,
+      mockFetch as typeof fetch,
+    );
+
+    expect(result.price).toBe(120);
+    expect(result.alertTriggered).toBe(true);
+
+    const updated = db
+      .prepare("SELECT current_price FROM watchlist WHERE id = ?")
+      .get(item.id) as { current_price: number };
+    expect(updated.current_price).toBe(120);
   });
 });

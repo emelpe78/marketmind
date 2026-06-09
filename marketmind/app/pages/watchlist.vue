@@ -1,24 +1,20 @@
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
 
-const { data: items, refresh } =
-  await useFetch<Array<Record<string, unknown>>>("/api/watchlist");
-const loading = ref(false);
+const {
+  items,
+  loading,
+  refresh,
+  getPlatformLabel,
+  createItem: createWatchlistItem,
+  updateItem: updateWatchlistItem,
+  deleteItem: deleteWatchlistItem,
+  scrapeItem: runScrapeItem,
+  scrapeAll: runScrapeAll,
+} = await useWatchlist();
 const toast = useToast();
 
-const platformLabels: Record<string, string> = {
-  kleinanzeigen: "Kleinanzeigen",
-  ebay: "eBay",
-};
-
-function getPlatformLabel(item: Record<string, unknown>): string | null {
-  const platform =
-    detectPlatformFromUrl(String(item.url ?? "")) ??
-    (item.platform === "ebay" || item.platform === "kleinanzeigen"
-      ? item.platform
-      : null);
-  return platform ? (platformLabels[platform] ?? null) : null;
-}
+const platformLabels = WATCHLIST_PLATFORM_LABELS;
 
 const newItem = ref({
   title: "",
@@ -74,19 +70,15 @@ async function saveEdit() {
   const url = editForm.url.trim() || null;
 
   try {
-    await $fetch(`/api/watchlist/${editItem.value.id}`, {
-      method: "PUT",
-      body: {
-        title: editForm.title.trim(),
-        url,
-        target_price: editForm.target_price ?? null,
-        current_price: editItem.value.current_price ?? null,
-        alert_active: editItem.value.alert_active ?? 1,
-        status: editItem.value.status ?? "aktiv",
-      },
+    await updateWatchlistItem(Number(editItem.value.id), {
+      title: editForm.title.trim(),
+      url,
+      target_price: editForm.target_price ?? null,
+      current_price: editItem.value.current_price ?? null,
+      alert_active: editItem.value.alert_active ?? 1,
+      status: editItem.value.status ?? "aktiv",
     });
     editItem.value = null;
-    await refresh();
     toast.add({ title: "Eintrag aktualisiert", color: "success" });
   } catch {
     toast.add({
@@ -98,42 +90,26 @@ async function saveEdit() {
 
 async function addItem() {
   if (!newItem.value.title) return;
-  await $fetch("/api/watchlist", {
-    method: "POST",
-    body: {
-      title: newItem.value.title,
-      url: newItem.value.url.trim() || null,
-      target_price: newItem.value.target_price,
-    },
+  await createWatchlistItem({
+    title: newItem.value.title,
+    url: newItem.value.url.trim() || null,
+    target_price: newItem.value.target_price,
   });
   newItem.value = {
     title: "",
     url: "",
     target_price: undefined,
   };
-  await refresh();
   toast.add({ title: "Artikel hinzugefügt", color: "success" });
 }
 
 async function scrapeItem(id: number) {
-  loading.value = true;
-  try {
-    await $fetch(`/api/watchlist/${id}/scrape`, { method: "POST" });
-    await refresh();
-  } finally {
-    loading.value = false;
-  }
+  await runScrapeItem(id);
 }
 
 async function scrapeAll() {
-  loading.value = true;
-  try {
-    await $fetch("/api/watchlist/scrape-all", { method: "POST" });
-    await refresh();
-    toast.add({ title: "Alle aktualisiert", color: "success" });
-  } finally {
-    loading.value = false;
-  }
+  await runScrapeAll();
+  toast.add({ title: "Alle aktualisiert", color: "success" });
 }
 
 function openDeleteModal(item: Record<string, unknown>) {
@@ -144,9 +120,8 @@ async function confirmDelete() {
   if (!deleteItem.value?.id) return;
 
   try {
-    await $fetch(`/api/watchlist/${deleteItem.value.id}`, { method: "DELETE" });
+    await deleteWatchlistItem(Number(deleteItem.value.id));
     deleteItem.value = null;
-    await refresh();
     toast.add({ title: "Eintrag gelöscht", color: "success" });
   } catch {
     toast.add({ title: "Löschen fehlgeschlagen", color: "error" });
