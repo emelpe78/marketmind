@@ -1,6 +1,6 @@
 # MarketMind — Agent Guide
 
-Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.2**.
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.3**.
 
 ## Repository-Layout
 
@@ -61,7 +61,7 @@ Dev-DB: `MM_DATABASE_DEV` in `marketmind/.env` (Standard `data/marketmind.db`, g
 - **Composables:** `useResearch` (Workflow-State), `useSavedResearches`, `useFlipping`, `useSavedFlipAnalyses`, `useDashboard`, `useInventory`, `useWatchlist`, `useSettings`, `useListings` (Workflow-State), `useAgents`, `useDatabaseAdmin`
 - **Research-UI:** `/research` (Recherche), `/research/saved` (Gespeicherte Recherchen), `/research/saved/[id]` (Detail); Submenu in `default.vue` (`shared/research-nav.ts`)
 - **Listings-UI:** `/listings` (Generator), `/listings/saved` (gespeicherte Anzeigen, Bearbeiten per Modal, Inventar über `InventoryCreateModal`); Submenu in `default.vue` (`shared/listings-nav.ts`)
-- **Inventar-UI:** `/inventory` — Kartenliste, Anlegen per `InventoryCreateModal`, Verkauf/Löschen per Modal; Plattformen Kleinanzeigen, eBay, Sonstige (`INVENTORY_PLATFORM_SELECT_OPTIONS`, `normalizeInventoryPlatform()`)
+- **Inventar-UI:** `/inventory` — Kartenliste, Anlegen per `InventoryCreateModal`, Verkauf/Löschen per Modal; verkaufte Artikel bearbeitbar per Bearbeiten-Modal (Titel, Einkauf, Verkauf, Notizen); Plattformen Kleinanzeigen, eBay, Sonstige (`INVENTORY_PLATFORM_SELECT_OPTIONS`, `normalizeInventoryPlatform()`)
 - **Flipping-UI:** `/flipping` (Kalkulator), `/flipping/analyses` (Liste), `/flipping/analyses/[id]` (Detail); Submenu in `default.vue` (`shared/flipping-nav.ts`)
 - **Agents-UI:** `/agents/feature-agents` (Konfiguration), `/agents/prompt-generator` (Bibliothek + Generator), `/agents/history` (KI-Verlauf); Submenu in `default.vue`
 - **Dashboard:** `app/components/DashboardOverview.vue` — KPI-Karten in vier Abschnitten (Recherche & Tools, Inventar, Agents, KI & Nutzung); `DashboardKpiCard` mit optionaler Navigation; Daten über `useDashboard` / `GET /api/dashboard`

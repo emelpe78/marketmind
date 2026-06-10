@@ -4,6 +4,18 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.3.3] — 2026-06-10
+
+Verkaufte Inventar-Artikel lassen sich nachträglich bearbeiten.
+
+### Hinzugefügt
+
+- **Inventar bearbeiten** — Button „Bearbeiten“ für verkaufte Artikel auf `/inventory`; Modal mit Titel, Einkauf, Verkauf und Notizen (`app/pages/inventory.vue`)
+
+### Geändert
+
+- **E2E Inventar** — `test/e2e/inventory.spec.ts` prüft Bearbeitung nach Verkauf; stabilere zeilenbasierte Selektoren
+
 ## [0.3.2] — 2026-06-10
 
 Docker: lokale KI (Ollama, LM Studio) auf dem Host ist aus dem Container erreichbar.
@@ -450,7 +462,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.3.2...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.3.3...HEAD
+[0.3.3]: https://github.com/emelpe78/marketmind/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/emelpe78/marketmind/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/emelpe78/marketmind/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/emelpe78/marketmind/compare/v0.2.2...v0.3.0

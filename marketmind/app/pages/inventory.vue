@@ -57,6 +57,24 @@ const sellForm = reactive({
   sell_date: todayIsoDate(),
 });
 
+const editItem = ref<InventoryItem | null>(null);
+const editModalOpen = computed({
+  get: () => editItem.value !== null,
+  set: (open: boolean) => {
+    if (!open) editItem.value = null;
+  },
+});
+const editForm = reactive({
+  title: "",
+  buy_price: undefined as number | undefined,
+  buy_platform: "kleinanzeigen" as Platform,
+  buy_date: "",
+  sell_price: undefined as number | undefined,
+  sell_platform: "kleinanzeigen" as Platform,
+  sell_date: "",
+  notes: "",
+});
+
 const deleteItem = ref<InventoryItem | null>(null);
 const deleteModalOpen = computed({
   get: () => deleteItem.value !== null,
@@ -78,8 +96,63 @@ function openSellModal(item: InventoryItem) {
   sellForm.sell_date = todayIsoDate();
 }
 
+function openEditModal(item: InventoryItem) {
+  editItem.value = item;
+  editForm.title = item.title;
+  editForm.buy_price = item.buy_price ?? undefined;
+  editForm.buy_platform =
+    normalizeInventoryPlatform(item.buy_platform) ?? "kleinanzeigen";
+  editForm.buy_date = item.buy_date ?? "";
+  editForm.sell_price = item.sell_price ?? undefined;
+  editForm.sell_platform =
+    normalizeInventoryPlatform(item.sell_platform) ?? "kleinanzeigen";
+  editForm.sell_date = item.sell_date ?? todayIsoDate();
+  editForm.notes = item.notes ?? "";
+}
+
 function openDeleteModal(item: InventoryItem) {
   deleteItem.value = item;
+}
+
+async function confirmEdit() {
+  if (!editItem.value?.id) return;
+  if (!editForm.title.trim()) {
+    toast.add({
+      title: "Titel fehlt",
+      description: "Bitte einen Titel eingeben.",
+      color: "warning",
+    });
+    return;
+  }
+  if (editForm.sell_price == null || editForm.sell_price < 0) {
+    toast.add({
+      title: "Verkaufspreis fehlt",
+      description: "Bitte einen gültigen Verkaufspreis eingeben.",
+      color: "warning",
+    });
+    return;
+  }
+
+  try {
+    await updateInventoryItem(Number(editItem.value.id), {
+      title: editForm.title.trim(),
+      buy_price: editForm.buy_price ?? null,
+      buy_platform: normalizeInventoryPlatform(editForm.buy_platform),
+      buy_date: editForm.buy_date || null,
+      sell_price: editForm.sell_price,
+      sell_platform: normalizeInventoryPlatform(editForm.sell_platform),
+      sell_date: editForm.sell_date || null,
+      status: "verkauft",
+      notes: editForm.notes.trim() || null,
+    });
+    editItem.value = null;
+    toast.add({ title: "Artikel aktualisiert", color: "success" });
+  } catch {
+    toast.add({
+      title: "Änderungen konnten nicht gespeichert werden",
+      color: "error",
+    });
+  }
 }
 
 async function confirmSell() {
@@ -251,6 +324,16 @@ async function confirmDelete() {
               Verkauft
             </UButton>
             <UButton
+              v-if="item.status === 'verkauft'"
+              size="sm"
+              variant="outline"
+              icon="i-lucide-pencil"
+              data-testid="edit-inventory"
+              @click="openEditModal(item)"
+            >
+              Bearbeiten
+            </UButton>
+            <UButton
               size="sm"
               color="error"
               variant="ghost"
@@ -331,6 +414,90 @@ async function confirmDelete() {
             </UButton>
             <UButton data-testid="confirm-sell" @click="confirmSell">
               Als verkauft speichern
+            </UButton>
+          </div>
+        </div>
+      </template>
+    </UModal>
+
+    <UModal
+      v-model:open="editModalOpen"
+      :title="editItem ? `Bearbeiten: ${editItem.title}` : 'Artikel bearbeiten'"
+    >
+      <template v-if="editItem" #body>
+        <div class="space-y-4 p-4">
+          <UFormField label="Titel" required>
+            <UInput
+              v-model="editForm.title"
+              data-testid="edit-inventory-title"
+              autofocus
+            />
+          </UFormField>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <UFormField label="Einkaufspreis (€)">
+              <UInput
+                v-model.number="editForm.buy_price"
+                data-testid="edit-inventory-buy-price"
+                type="number"
+                min="0"
+                step="0.01"
+              />
+            </UFormField>
+            <UFormField label="Einkaufsdatum">
+              <UInput
+                v-model="editForm.buy_date"
+                data-testid="edit-inventory-buy-date"
+                type="date"
+              />
+            </UFormField>
+            <UFormField label="Einkaufsplattform">
+              <USelect
+                v-model="editForm.buy_platform"
+                :items="platformOptions"
+                value-key="value"
+                data-testid="edit-inventory-buy-platform"
+                class="w-full"
+              />
+            </UFormField>
+            <UFormField label="Verkaufspreis (€)" required>
+              <UInput
+                v-model.number="editForm.sell_price"
+                data-testid="edit-inventory-sell-price"
+                type="number"
+                min="0"
+                step="0.01"
+              />
+            </UFormField>
+            <UFormField label="Verkaufsdatum">
+              <UInput
+                v-model="editForm.sell_date"
+                data-testid="edit-inventory-sell-date"
+                type="date"
+              />
+            </UFormField>
+            <UFormField label="Verkaufsplattform" class="sm:col-span-2">
+              <USelect
+                v-model="editForm.sell_platform"
+                :items="platformOptions"
+                value-key="value"
+                data-testid="edit-inventory-sell-platform"
+                class="w-full"
+              />
+            </UFormField>
+          </div>
+          <UFormField label="Notizen">
+            <UTextarea
+              v-model="editForm.notes"
+              data-testid="edit-inventory-notes"
+              :rows="4"
+            />
+          </UFormField>
+          <div class="flex justify-end gap-2">
+            <UButton variant="outline" @click="editItem = null">
+              Abbrechen
+            </UButton>
+            <UButton data-testid="confirm-edit-inventory" @click="confirmEdit">
+              Speichern
             </UButton>
           </div>
         </div>
