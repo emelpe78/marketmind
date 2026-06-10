@@ -1,15 +1,11 @@
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
 
+import type { InventoryCreatePrefill } from "~/components/InventoryCreateModal.vue";
 import type { ListingItem } from "~/composables/useListings";
-import {
-  INVENTORY_PLATFORM_OPTIONS,
-  useInventory,
-} from "~/composables/useInventory";
+import { useInventory } from "~/composables/useInventory";
 import { formatDateTime } from "shared/format-datetime";
 import { platformLabelFor, PLATFORM_LABELS } from "shared/platform-labels";
-
-type InventoryPlatform = "kleinanzeigen" | "ebay" | "sonstige";
 
 const deleteItem = ref<ListingItem | null>(null);
 const deleteModalOpen = computed({
@@ -36,23 +32,9 @@ const editForm = reactive({
   keywords: "",
 });
 const saving = ref(false);
-const inventorySource = ref<ListingItem | null>(null);
-const inventoryModalOpen = computed({
-  get: () => inventorySource.value !== null,
-  set: (open: boolean) => {
-    if (!open) inventorySource.value = null;
-  },
-});
-const inventoryForm = reactive({
-  title: "",
-  buy_price: undefined as number | undefined,
-  buy_platform: "kleinanzeigen" as InventoryPlatform,
-  buy_date: "",
-  sell_price: undefined as number | undefined,
-  sell_platform: "kleinanzeigen" as InventoryPlatform,
-  notes: "",
-});
-const addingToInventory = ref(false);
+const inventoryModalOpen = ref(false);
+const inventoryPrefill = ref<InventoryCreatePrefill>({});
+const inventoryTitleSuffix = ref<string | undefined>();
 const toast = useToast();
 
 const {
@@ -61,11 +43,7 @@ const {
   deleteListing: removeListing,
 } = await useListings();
 
-const {
-  createItem: createInventoryItem,
-  todayIsoDate,
-  normalizeInventoryPlatform,
-} = await useInventory();
+const { todayIsoDate, normalizeInventoryPlatform } = await useInventory();
 
 const platformOptions = [
   { label: "Kleinanzeigen", value: "kleinanzeigen" },
@@ -88,51 +66,16 @@ function buildListingNotes(item: ListingItem): string {
 }
 
 function openInventoryModal(item: ListingItem) {
-  inventorySource.value = item;
-  inventoryForm.title = item.title;
-  inventoryForm.buy_price = undefined;
-  inventoryForm.buy_platform = "kleinanzeigen";
-  inventoryForm.buy_date = todayIsoDate();
-  inventoryForm.sell_price = item.price_suggestion ?? undefined;
-  inventoryForm.sell_platform =
-    normalizeInventoryPlatform(item.platform) ?? "kleinanzeigen";
-  inventoryForm.notes = buildListingNotes(item);
-}
-
-async function confirmAddToInventory() {
-  if (!inventorySource.value) return;
-  if (!inventoryForm.title.trim()) {
-    toast.add({
-      title: "Titel fehlt",
-      description: "Bitte einen Titel eingeben.",
-      color: "warning",
-    });
-    return;
-  }
-
-  addingToInventory.value = true;
-  try {
-    await createInventoryItem({
-      title: inventoryForm.title.trim(),
-      buy_price: inventoryForm.buy_price ?? null,
-      buy_platform: normalizeInventoryPlatform(inventoryForm.buy_platform),
-      buy_date: inventoryForm.buy_date || null,
-      sell_price: inventoryForm.sell_price ?? null,
-      sell_platform: normalizeInventoryPlatform(inventoryForm.sell_platform),
-      sell_date: null,
-      status: "gekauft",
-      notes: inventoryForm.notes.trim() || null,
-    });
-    inventorySource.value = null;
-    toast.add({ title: "Artikel ins Inventar aufgenommen", color: "success" });
-  } catch {
-    toast.add({
-      title: "Inventar-Eintrag konnte nicht angelegt werden",
-      color: "error",
-    });
-  } finally {
-    addingToInventory.value = false;
-  }
+  inventoryTitleSuffix.value = item.title;
+  inventoryPrefill.value = {
+    title: item.title,
+    buy_date: todayIsoDate(),
+    sell_price: item.price_suggestion ?? undefined,
+    sell_platform:
+      normalizeInventoryPlatform(item.platform) ?? "kleinanzeigen",
+    notes: buildListingNotes(item),
+  };
+  inventoryModalOpen.value = true;
 }
 
 function openEditModal(item: ListingItem) {
@@ -233,7 +176,7 @@ async function confirmDelete() {
             <p class="text-sm text-muted mt-1 line-clamp-2">
               {{ item.description }}
             </p>
-            <p class="text-xs text-muted mt-1">
+            <p class="text-xs text-muted mt-3">
               <span v-if="item.price_suggestion != null">
                 {{ formatEuro(item.price_suggestion) }} ·
               </span>
@@ -278,91 +221,11 @@ async function confirmDelete() {
       </div>
     </UCard>
 
-    <UModal
+    <InventoryCreateModal
       v-model:open="inventoryModalOpen"
-      :title="
-        inventorySource
-          ? `Ins Inventar aufnehmen: ${inventorySource.title}`
-          : 'Ins Inventar aufnehmen'
-      "
-    >
-      <template v-if="inventorySource" #body>
-        <div class="space-y-4 p-4">
-          <UFormField label="Titel" required>
-            <UInput
-              v-model="inventoryForm.title"
-              data-testid="inventory-from-listing-title"
-              autofocus
-            />
-          </UFormField>
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <UFormField label="Einkaufspreis (€)">
-              <UInput
-                v-model.number="inventoryForm.buy_price"
-                data-testid="inventory-from-listing-buy-price"
-                type="number"
-                min="0"
-                step="0.01"
-              />
-            </UFormField>
-            <UFormField label="Einkaufsdatum">
-              <UInput
-                v-model="inventoryForm.buy_date"
-                data-testid="inventory-from-listing-buy-date"
-                type="date"
-              />
-            </UFormField>
-            <UFormField label="Einkaufsplattform">
-              <USelect
-                v-model="inventoryForm.buy_platform"
-                :items="INVENTORY_PLATFORM_OPTIONS"
-                value-key="value"
-                data-testid="inventory-from-listing-buy-platform"
-                class="w-full"
-              />
-            </UFormField>
-            <UFormField label="Ziel-Verkaufspreis (€)">
-              <UInput
-                v-model.number="inventoryForm.sell_price"
-                data-testid="inventory-from-listing-sell-price"
-                type="number"
-                min="0"
-                step="0.01"
-              />
-            </UFormField>
-            <UFormField label="Verkaufsplattform" class="sm:col-span-2">
-              <USelect
-                v-model="inventoryForm.sell_platform"
-                :items="INVENTORY_PLATFORM_OPTIONS"
-                value-key="value"
-                data-testid="inventory-from-listing-sell-platform"
-                class="w-full"
-              />
-            </UFormField>
-          </div>
-          <UFormField label="Notizen">
-            <UTextarea
-              v-model="inventoryForm.notes"
-              data-testid="inventory-from-listing-notes"
-              :rows="6"
-            />
-          </UFormField>
-          <div class="flex justify-end gap-2">
-            <UButton variant="outline" @click="inventorySource = null">
-              Abbrechen
-            </UButton>
-            <UButton
-              data-testid="confirm-add-listing-to-inventory"
-              icon="i-lucide-package-plus"
-              :loading="addingToInventory"
-              @click="confirmAddToInventory"
-            >
-              Ins Inventar aufnehmen
-            </UButton>
-          </div>
-        </div>
-      </template>
-    </UModal>
+      :prefill="inventoryPrefill"
+      :title-suffix="inventoryTitleSuffix"
+    />
 
     <UModal
       v-model:open="editModalOpen"

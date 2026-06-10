@@ -1,15 +1,15 @@
 <script setup lang="ts">
+import type { InventoryCreatePrefill } from "~/components/InventoryCreateModal.vue";
 import { formatPlatformLabel } from "shared/platform-labels";
+import { formatDateTime } from "shared/format-datetime";
 
 definePageMeta({ layout: "default" });
 
 const {
   items,
   summary,
-  refreshInventory,
   todayIsoDate,
   buildInventoryPayload,
-  createItem: createInventoryItem,
   updateItem: updateInventoryItem,
   deleteItem: deleteInventoryItem,
   normalizeInventoryPlatform,
@@ -36,13 +36,8 @@ function getItemProfit(item: Record<string, unknown>): number | null {
   return null;
 }
 
-const newItem = ref({
-  title: "",
-  buy_price: undefined as number | undefined,
-  buy_platform: "kleinanzeigen" as Platform,
-  buy_date: todayIsoDate(),
-  status: "gekauft",
-});
+const createModalOpen = ref(false);
+const createPrefill = ref<InventoryCreatePrefill>({});
 
 const sellItem = ref<Record<string, unknown> | null>(null);
 const sellModalOpen = computed({
@@ -65,6 +60,11 @@ const deleteModalOpen = computed({
   },
 });
 
+function openCreateModal() {
+  createPrefill.value = {};
+  createModalOpen.value = true;
+}
+
 function openSellModal(item: Record<string, unknown>) {
   sellItem.value = item;
   sellForm.sell_price = undefined;
@@ -75,22 +75,6 @@ function openSellModal(item: Record<string, unknown>) {
 
 function openDeleteModal(item: Record<string, unknown>) {
   deleteItem.value = item;
-}
-
-async function addItem() {
-  if (!newItem.value.title) return;
-  await createInventoryItem({
-    ...newItem.value,
-    buy_platform: normalizeInventoryPlatform(newItem.value.buy_platform),
-  });
-  newItem.value = {
-    title: "",
-    buy_price: undefined,
-    buy_platform: "kleinanzeigen",
-    buy_date: todayIsoDate(),
-    status: "gekauft",
-  };
-  toast.add({ title: "Artikel hinzugefügt", color: "success" });
 }
 
 async function confirmSell() {
@@ -134,9 +118,18 @@ async function confirmDelete() {
 
 <template>
   <div class="space-y-6">
-    <div>
-      <h2 class="text-2xl font-bold text-highlighted">Inventar</h2>
-      <p class="text-muted mt-1">Gekaufte und verkaufte Artikel verwalten</p>
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <div>
+        <h2 class="text-2xl font-bold text-highlighted">Inventar</h2>
+        <p class="text-muted mt-1">Gekaufte und verkaufte Artikel verwalten</p>
+      </div>
+      <UButton
+        icon="i-lucide-package-plus"
+        data-testid="add-inventory"
+        @click="openCreateModal"
+      >
+        Artikel hinzufügen
+      </UButton>
     </div>
 
     <div v-if="summary" class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -166,159 +159,112 @@ async function confirmDelete() {
       </UCard>
     </div>
 
-    <UCard>
-      <div class="flex flex-col gap-4 lg:flex-row lg:items-end">
-        <UFormField label="Titel" class="min-w-0 flex-1">
-          <UInput v-model="newItem.title" data-testid="inventory-title" />
-        </UFormField>
-        <UFormField label="Einkaufspreis (€)" class="min-w-0 flex-1">
-          <UInput v-model.number="newItem.buy_price" type="number" />
-        </UFormField>
-        <UFormField label="Einkaufsdatum" class="min-w-0 flex-1">
-          <UInput
-            v-model="newItem.buy_date"
-            data-testid="inventory-buy-date"
-            type="date"
-          />
-        </UFormField>
-        <UFormField label="Einkaufsplattform" class="min-w-0 flex-1">
-          <USelect
-            v-model="newItem.buy_platform"
-            :items="platformOptions"
-            value-key="value"
-            class="w-full"
-          />
-        </UFormField>
-        <UButton data-testid="add-inventory" class="shrink-0" @click="addItem">
-          Hinzufügen
+    <UCard v-if="items?.length" data-testid="inventory-list">
+      <div class="space-y-3">
+        <div
+          v-for="item in items"
+          :key="String(item.id)"
+          class="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-muted p-4"
+        >
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <h4 class="font-semibold">{{ item.title }}</h4>
+              <UBadge
+                variant="subtle"
+                :color="item.status === 'verkauft' ? 'success' : 'neutral'"
+              >
+                {{ item.status === "verkauft" ? "Verkauft" : "Gekauft" }}
+              </UBadge>
+              <UBadge v-if="item.buy_platform" variant="subtle" color="neutral">
+                Einkauf: {{ formatPlatform(item.buy_platform) }}
+              </UBadge>
+              <UBadge
+                v-if="item.sell_platform"
+                variant="subtle"
+                color="neutral"
+              >
+                Verkauf: {{ formatPlatform(item.sell_platform) }}
+              </UBadge>
+            </div>
+            <p v-if="item.notes" class="text-sm text-muted mt-1 line-clamp-2">
+              {{ item.notes }}
+            </p>
+            <p class="text-xs text-muted mt-3">
+              <template v-if="item.buy_price != null">
+                Einkauf {{ formatEuro(item.buy_price) }}
+                <span v-if="item.buy_date">
+                  · {{ formatDate(item.buy_date) }}
+                </span>
+              </template>
+              <template
+                v-if="item.status === 'verkauft' && item.sell_price != null"
+              >
+                <span v-if="item.buy_price != null"> · </span>
+                Verkauf {{ formatEuro(item.sell_price) }}
+                <span
+                  v-if="getItemProfit(item) != null"
+                  class="font-medium"
+                  :class="{
+                    'text-success': (getItemProfit(item) ?? 0) > 0,
+                    'text-error': (getItemProfit(item) ?? 0) < 0,
+                    'text-muted': getItemProfit(item) === 0,
+                  }"
+                >
+                  ({{ formatEuroDelta(getItemProfit(item)!) }})
+                </span>
+                <span v-if="item.sell_date">
+                  · {{ formatDate(item.sell_date) }}
+                </span>
+              </template>
+              <template v-else-if="item.sell_price != null">
+                <span v-if="item.buy_price != null"> · </span>
+                Ziel {{ formatEuro(item.sell_price) }}
+              </template>
+              <span v-if="item.created_at">
+                · {{ formatDateTime(item.created_at) }}
+              </span>
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <UButton
+              v-if="item.status !== 'verkauft'"
+              size="sm"
+              variant="outline"
+              data-testid="mark-sold"
+              @click="openSellModal(item)"
+            >
+              Verkauft
+            </UButton>
+            <UButton
+              size="sm"
+              color="error"
+              variant="ghost"
+              icon="i-lucide-trash"
+              data-testid="delete-inventory"
+              @click="openDeleteModal(item)"
+            />
+          </div>
+        </div>
+      </div>
+    </UCard>
+
+    <UCard v-else data-testid="inventory-empty">
+      <div class="py-8 text-center space-y-3">
+        <p class="text-muted">Noch keine Artikel im Inventar.</p>
+        <UButton
+          icon="i-lucide-package-plus"
+          data-testid="add-inventory-empty"
+          @click="openCreateModal"
+        >
+          Artikel hinzufügen
         </UButton>
       </div>
     </UCard>
 
-    <UTable
-      v-if="items?.length"
-      class="min-w-0"
-      :data="items"
-      :columns="[
-        {
-          accessorKey: 'title',
-          header: 'Titel',
-          meta: {
-            class: { th: 'min-w-0 w-[18%]', td: 'min-w-0 w-[18%]' },
-          },
-        },
-        {
-          accessorKey: 'buy_price',
-          header: 'Einkauf (€)',
-          meta: { class: { th: 'w-[9%]', td: 'w-[9%]' } },
-        },
-        {
-          accessorKey: 'buy_date',
-          header: 'Einkaufsdatum',
-          meta: { class: { th: 'w-[10%]', td: 'w-[10%]' } },
-        },
-        {
-          accessorKey: 'buy_platform',
-          header: 'Einkaufsplattform',
-          meta: { class: { th: 'w-[10%]', td: 'w-[10%]' } },
-        },
-        {
-          accessorKey: 'sell_price',
-          header: 'Verkauf (€)',
-          meta: { class: { th: 'w-[12%]', td: 'w-[12%]' } },
-        },
-        {
-          accessorKey: 'sell_platform',
-          header: 'Verkaufsplattform',
-          meta: { class: { th: 'w-[10%]', td: 'w-[10%]' } },
-        },
-        {
-          accessorKey: 'sell_date',
-          header: 'Verkaufsdatum',
-          meta: { class: { th: 'w-[10%]', td: 'w-[10%]' } },
-        },
-        {
-          accessorKey: 'status',
-          header: 'Status',
-          meta: { class: { th: 'w-[8%]', td: 'w-[8%]' } },
-        },
-        {
-          id: 'actions',
-          header: 'Aktionen',
-          meta: { class: { th: 'w-[13%]', td: 'w-[13%]' } },
-        },
-      ]"
-    >
-      <template #title-cell="{ row }">
-        <span
-          class="block min-w-0 whitespace-normal wrap-anywhere leading-snug"
-        >
-          {{ row.original.title }}
-        </span>
-      </template>
-      <template #buy_date-cell="{ row }">
-        {{ formatDate(row.original.buy_date) }}
-      </template>
-      <template #buy_price-cell="{ row }">
-        <span class="tabular-nums">
-          {{
-            row.original.buy_price != null
-              ? formatEuro(row.original.buy_price)
-              : "–"
-          }}
-        </span>
-      </template>
-      <template #buy_platform-cell="{ row }">
-        {{ formatPlatform(row.original.buy_platform) }}
-      </template>
-      <template #sell_price-cell="{ row }">
-        <span
-          v-if="row.original.sell_price != null"
-          class="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5 tabular-nums"
-        >
-          <span>{{ formatEuro(row.original.sell_price) }}</span>
-          <span
-            v-if="getItemProfit(row.original) != null"
-            class="text-sm font-medium"
-            :class="{
-              'text-success': (getItemProfit(row.original) ?? 0) > 0,
-              'text-error': (getItemProfit(row.original) ?? 0) < 0,
-              'text-muted': getItemProfit(row.original) === 0,
-            }"
-          >
-            {{ formatEuroDelta(getItemProfit(row.original)!) }}
-          </span>
-        </span>
-        <span v-else>–</span>
-      </template>
-      <template #sell_platform-cell="{ row }">
-        {{ formatPlatform(row.original.sell_platform) }}
-      </template>
-      <template #sell_date-cell="{ row }">
-        {{ formatDate(row.original.sell_date) }}
-      </template>
-      <template #actions-cell="{ row }">
-        <div class="flex gap-1">
-          <UButton
-            v-if="row.original.status !== 'verkauft'"
-            size="xs"
-            variant="outline"
-            data-testid="mark-sold"
-            @click="openSellModal(row.original)"
-          >
-            Verkauft
-          </UButton>
-          <UButton
-            size="xs"
-            color="error"
-            variant="ghost"
-            icon="i-lucide-trash"
-            data-testid="delete-inventory"
-            @click="openDeleteModal(row.original)"
-          />
-        </div>
-      </template>
-    </UTable>
+    <InventoryCreateModal
+      v-model:open="createModalOpen"
+      :prefill="createPrefill"
+    />
 
     <UModal
       v-model:open="sellModalOpen"

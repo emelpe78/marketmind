@@ -4,6 +4,20 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.2.0] — 2026-06-10
+
+Einheitliches Inventar-Anlegen per Modal und Kartenlisten in Inventar sowie gespeicherten Anzeigen.
+
+### Hinzugefügt
+
+- **`InventoryCreateModal`** — globales Modal zum Anlegen von Inventar-Items (Titel, Einkauf, Ziel-Verkauf, Plattformen, Notizen); optional mit `prefill` und `titleSuffix`
+
+### Geändert
+
+- **Inventar-UI** — Inline-Formular durch Button „Artikel hinzufügen“ und `InventoryCreateModal` ersetzt; Artikelliste als Kartenlayout wie bei gespeicherten Anzeigen (Badges, Notizen-Vorschau, Metadaten)
+- **Gespeicherte Anzeigen** — „Ins Inventar aufnehmen“ nutzt dasselbe Modal statt eigener Implementierung
+- **Listen-Abstände** — mehr Abstand (`mt-3`) zwischen Beschreibung/Notizen und Metadatenzeile in Inventar und gespeicherten Anzeigen
+
 ## [0.1.7] — 2026-06-10
 
 Dashboard mit gruppierten KPI-Karten und Agent-Übersicht; Datenbankpfad ausschließlich über `.env`; Docker-Speicherort per Host-Bind-Mount statt benanntem Volume.
@@ -324,7 +338,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.1.7...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/emelpe78/marketmind/compare/v0.1.7...v0.2.0
 [0.1.7]: https://github.com/emelpe78/marketmind/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/emelpe78/marketmind/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/emelpe78/marketmind/compare/v0.1.4...v0.1.5
