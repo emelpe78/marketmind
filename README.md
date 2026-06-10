@@ -55,6 +55,8 @@ Die SQLite-Datei liegt im Container unter `/app/data/marketmind.db` (`MM_DATABAS
 
 Die App ist erreichbar unter **http://127.0.0.1:5667**.
 
+**Lokale KI unter Docker:** Wenn du in den Einstellungen einen lokalen KI-Server (Ollama, LM Studio) auf `127.0.0.1` einträgst, leitet MarketMind die Anfrage im Container automatisch an den Host weiter (`host.docker.internal`). Der KI-Server muss von außen erreichbar sein (z. B. LM Studio: Netzwerk-Server aktivieren). Abweichender Host optional über `MM_LOCAL_AI_HOST` in `marketmind/.env`.
+
 Container stoppen:
 
 ```bash
@@ -95,6 +97,7 @@ Kopiere `marketmind/.env.example` nach `marketmind/.env`:
 | -------------------- | ------------------------- | ------------------------------------------ |
 | `MM_DATABASE_DEV`    | `data/marketmind.db`      | SQLite-Pfad für Dev (relativ oder absolut) |
 | `MM_DATABASE_DOCKER` | `/app/data/marketmind.db` | SQLite-Pfad im Docker-Container            |
+| `MM_LOCAL_AI_HOST`   | `host.docker.internal`    | Optional: Hostname für lokale KI in Docker |
 
 Unter Docker setzt `docker-compose.yml` zusätzlich `MM_RUNTIME=docker`, `PORT` und `HOST`. Den **Host-Datenordner** steuerst du im Repo-Root über `.env` (`MARKETMIND_DATA_DIR` — siehe `.env.example`).
 
@@ -187,6 +190,6 @@ Nutze **moderate Abfragefrequenzen** (einstellbarer Delay), cache Ergebnisse und
 
 ## Lizenz & Status
 
-- **Version:** 0.3.1 — siehe [CHANGELOG.md](CHANGELOG.md)
+- **Version:** 0.3.2 — siehe [CHANGELOG.md](CHANGELOG.md)
 - **Lizenz:** Noch nicht veröffentlicht (geplant: Open Source)
 - **Issues:** [GitHub Issues](https://github.com/emelpe78/marketmind/issues)

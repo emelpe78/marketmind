@@ -1,6 +1,6 @@
 # MarketMind — Agent Guide
 
-Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.1**.
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.2**.
 
 ## Repository-Layout
 
@@ -86,6 +86,7 @@ Dev-DB: `MM_DATABASE_DEV` in `marketmind/.env` (Standard `data/marketmind.db`, g
 
 - Nur über **Einstellungen** (SQLite `settings`), nicht über `.env`
 - Provider: `openrouter` | `local` — Routing in `server/services/ai/config.ts`
+- Docker + lokale KI: `resolveLocalAiBaseUrl()` schreibt `localhost`/`127.0.0.1` auf `host.docker.internal`; optional `MM_LOCAL_AI_HOST` in `marketmind/.env`; `docker-compose.yml` mit `extra_hosts`
 - API-Keys verschlüsselt (AES-256-GCM, `.settings-key` neben DB)
 - `isAiConfigured()` steuert z. B. Dashboard-Hinweis; Flipping-Analyse und Preisrecherche-KI erfordern konfigurierte KI
 
@@ -168,7 +169,8 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 | Inventar-Prefill        | `shared/inventory-prefill.ts` — Listing/Flip/Watchlist-Prefill; Workflow-Routen `shared/workflow-handoff.ts`                                      |
 | Cross-Feature-Workflows | `shared/workflow-handoff.ts`, `WorkflowHandoffBanner.vue` — Query-Prefill + Buttons zwischen Recherche, Flipping, Watchlist, Inventar, Anzeigen   |
 | Agent-Prompt-Docs       | `docs/listing_agent.md`, `docs/flipping_agent.md`                                                                                                 |
-| Docker-Datenordner      | Repo-Root `.env` (`MARKETMIND_DATA_DIR`), `docker-compose.yml`                                                                                    |
+| Docker-Datenordner      | Repo-Root `.env` (`MARKETMIND_DATA_DIR`), `docker-compose.yml` (`extra_hosts` für lokale KI)                                                      |
+| Lokale KI in Docker     | `server/services/ai/config.ts` (`resolveLocalAiBaseUrl`), `MM_LOCAL_AI_HOST` in `marketmind/.env`                                                 |
 | SQL-Backup/Restore      | `server/database/sql-transfer.ts`, `GET /api/database/backup`, `POST /api/database/restore`, `useDatabaseAdmin`, Einstellungen → Datenbank        |
 
 ## Was vermeiden

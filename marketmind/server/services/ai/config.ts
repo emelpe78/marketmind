@@ -1,4 +1,5 @@
 import type Database from "better-sqlite3";
+import { isDockerRuntime } from "../../database/paths";
 import { getAllSettings } from "../../database/settings";
 import { AiNotConfiguredError } from "../errors";
 
@@ -22,6 +23,33 @@ export function normalizeAiBaseUrl(url: string): string {
   return trimmed.endsWith("/v1") ? trimmed : `${trimmed}/v1`;
 }
 
+const LOCALHOST_HOSTNAMES = new Set(["127.0.0.1", "localhost", "::1", "[::1]"]);
+
+/** Im Docker-Container localhost → Host (LM Studio, Ollama auf dem Rechner). */
+export function resolveLocalAiHostForRuntime(hostname: string): string {
+  const override = process.env.MM_LOCAL_AI_HOST?.trim();
+  if (override) return override;
+  if (LOCALHOST_HOSTNAMES.has(hostname)) {
+    return "host.docker.internal";
+  }
+  return hostname;
+}
+
+export function resolveLocalAiBaseUrl(url: string): string {
+  const normalized = normalizeAiBaseUrl(url);
+  if (!isDockerRuntime()) return normalized;
+
+  try {
+    const parsed = new URL(normalized);
+    const resolvedHost = resolveLocalAiHostForRuntime(parsed.hostname);
+    if (resolvedHost === parsed.hostname) return normalized;
+    parsed.hostname = resolvedHost;
+    return `${parsed.origin}${parsed.pathname}`.replace(/\/$/, "");
+  } catch {
+    return normalized;
+  }
+}
+
 export function getAiConfig(db: Database.Database): AiConfig {
   const settings = getAllSettings(db);
   const provider: AiProvider =
@@ -31,7 +59,7 @@ export function getAiConfig(db: Database.Database): AiConfig {
     return {
       provider: "local",
       apiKey: settings["local-ai-api-key"] || "",
-      baseUrl: normalizeAiBaseUrl(
+      baseUrl: resolveLocalAiBaseUrl(
         settings["local-ai-api-url"] || "http://127.0.0.1:11434/v1",
       ),
       defaultModel: settings["local-ai-model"] || "",

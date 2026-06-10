@@ -4,6 +4,20 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.3.2] — 2026-06-10
+
+Docker: lokale KI (Ollama, LM Studio) auf dem Host ist aus dem Container erreichbar.
+
+### Geändert
+
+- **`resolveLocalAiBaseUrl()`** — bei `MM_RUNTIME=docker` werden `127.0.0.1`, `localhost` und `::1` in der lokalen KI-URL auf `host.docker.internal` umgeschrieben (`server/services/ai/config.ts`)
+- **`docker-compose.yml`** — `extra_hosts: host.docker.internal:host-gateway` für Host-Zugriff aus dem Container (auch Linux)
+- **`.env.example`** — optional `MM_LOCAL_AI_HOST` für abweichenden KI-Host unter Docker
+
+### Behoben
+
+- **Lokale KI in Docker** — Flipping-Analyse, Preisrecherche und andere KI-Aufrufe schlagen nicht mehr mit `ECONNREFUSED 127.0.0.1` fehl, wenn der KI-Server auf dem Host läuft
+
 ## [0.3.1] — 2026-06-10
 
 Datenbank-Administration: SQL-Backup/Restore in den Einstellungen und robustere Docker-Pfadbehandlung.
@@ -436,7 +450,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.3.2...HEAD
+[0.3.2]: https://github.com/emelpe78/marketmind/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/emelpe78/marketmind/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/emelpe78/marketmind/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/emelpe78/marketmind/compare/v0.2.1...v0.2.2
