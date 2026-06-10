@@ -1,16 +1,16 @@
 # Graph Report - marketmind  (2026-06-10)
 
 ## Corpus Check
-- 245 files · ~47,313 words
+- 251 files · ~49,356 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1801 nodes · 3023 edges · 199 communities (163 shown, 36 thin omitted)
+- 1864 nodes · 3153 edges · 204 communities (168 shown, 36 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 55 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a15e13e7`
+- Built from commit: `08063a1c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -148,49 +148,54 @@
 - [[_COMMUNITY_Community 189|Community 189]]
 - [[_COMMUNITY_Community 190|Community 190]]
 - [[_COMMUNITY_Community 191|Community 191]]
+- [[_COMMUNITY_Community 192|Community 192]]
 - [[_COMMUNITY_Community 193|Community 193]]
+- [[_COMMUNITY_Community 194|Community 194]]
 - [[_COMMUNITY_Community 196|Community 196]]
 - [[_COMMUNITY_Community 197|Community 197]]
 - [[_COMMUNITY_Community 199|Community 199]]
 - [[_COMMUNITY_Community 200|Community 200]]
+- [[_COMMUNITY_Community 201|Community 201]]
+- [[_COMMUNITY_Community 202|Community 202]]
+- [[_COMMUNITY_Community 205|Community 205]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `getDb()` - 82 edges
-2. `[0.1.1] — 2026-06-09` - 55 edges
-3. `[0.1.0] — 2026-06-09` - 46 edges
-4. `[0.1.3] — 2026-06-09` - 40 edges
-5. `[0.1.2] — 2026-06-09` - 40 edges
-6. `[0.1.4] — 2026-06-09` - 26 edges
-7. `[0.1.5] — 2026-06-09` - 25 edges
+1. `getDb()` - 87 edges
+2. `[0.1.1] — 2026-06-09` - 59 edges
+3. `[0.1.0] — 2026-06-09` - 49 edges
+4. `[0.1.3] — 2026-06-09` - 44 edges
+5. `[0.1.2] — 2026-06-09` - 43 edges
+6. `[0.1.4] — 2026-06-09` - 29 edges
+7. `[0.1.5] — 2026-06-09` - 28 edges
 8. `createTestDb()` - 23 edges
-9. `defineApiHandler()` - 22 edges
-10. `runAgent()` - 22 edges
+9. `Hinzugefügt` - 23 edges
+10. `defineApiHandler()` - 22 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `fetchWithConfig()` --calls--> `sleepFn`  [INFERRED]
   marketmind/server/services/scraper/fetcher.ts → marketmind/test/services/scraper-runtime.test.ts
-- `scrapeListingPrice()` --calls--> `parseGermanPrice()`  [INFERRED]
-  marketmind/server/services/scraper/price-extract.ts → marketmind/shared/parse-german-price.ts
-- `parseKleinanzeigenListingDetail()` --calls--> `parseGermanPrice()`  [INFERRED]
-  marketmind/server/services/scraper/listing-detail.ts → marketmind/shared/parse-german-price.ts
+- `parseEbayPrice()` --calls--> `parseGermanPrice()`  [INFERRED]
+  marketmind/server/services/scraper/ebay.ts → marketmind/shared/parse-german-price.ts
 - `generateListing()` --calls--> `formatEuro()`  [INFERRED]
   marketmind/server/services/listings/generate-listing.ts → marketmind/shared/format-currency.ts
 - `buildListingUserPrompt()` --calls--> `formatEuro()`  [INFERRED]
   marketmind/server/services/listings/prompts.ts → marketmind/shared/format-currency.ts
+- `parsePriceValue()` --calls--> `parseGermanPrice()`  [INFERRED]
+  marketmind/server/services/listings/parse-generation.ts → marketmind/shared/parse-german-price.ts
 
-## Communities (199 total, 36 thin omitted)
+## Communities (204 total, 36 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.07
-Nodes (33): copiedDb, db, dbPath, freshDb, info, result, row, rows (+25 more)
+Cohesion: 0.06
+Nodes (36): getAiConfig(), normalizeAiBaseUrl(), copiedDb, db, dbPath, freshDb, info, result (+28 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.05
-Nodes (37): getAiConfig(), normalizeAiBaseUrl(), isPromoTitle(), normalizeCondition(), parseEbayPrice(), parseListingFromElement(), db, format (+29 more)
+Cohesion: 0.06
+Nodes (34): isPromoTitle(), normalizeCondition(), parseEbayPrice(), parseListingFromElement(), db, format, prompts, text (+26 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.19
-Nodes (16): countAgentHistory(), listAgentsWithStats(), countRows(), getDashboardSummary(), countSavedFlipAnalyses(), countOpenInventory(), countListings(), countPrompts() (+8 more)
+Cohesion: 0.16
+Nodes (18): countAgentHistory(), listAgentsWithStats(), countRows(), getDashboardSummary(), countSavedFlipAnalyses(), getInventorySummary(), countOpenInventory(), db (+10 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.60
@@ -241,8 +246,8 @@ Cohesion: 0.15
 Nodes (12): agent, ai, body, completion, db, model, parsed, platformHint (+4 more)
 
 ### Community 15 - "Community 15"
-Cohesion: 0.15
-Nodes (15): AiConfig, AiProvider, getAiConfig(), isAiConfigured(), normalizeAiBaseUrl(), config, db, db (+7 more)
+Cohesion: 0.16
+Nodes (15): AiConfig, AiConnection, AiProvider, assertAiConfigured(), getAiConfig(), getAiConnection(), isAiConfigured(), normalizeAiBaseUrl() (+7 more)
 
 ### Community 16 - "Community 16"
 Cohesion: 0.24
@@ -261,8 +266,8 @@ Cohesion: 0.39
 Nodes (5): createSavedResearch(), getSavedResearch(), parseJson(), rowToSavedResearch(), updateSavedResearch()
 
 ### Community 21 - "Community 21"
-Cohesion: 0.17
-Nodes (11): agent, agents, db, history, listing, listingStats, mockFetch, research (+3 more)
+Cohesion: 0.22
+Nodes (17): blockedMessage(), buildRequestHeaders(), cookieHeaderForOrigin(), detectPlatform(), extractSetCookies(), FetcherSession, FetchFn, FetchThrottle (+9 more)
 
 ### Community 22 - "Community 22"
 Cohesion: 0.40
@@ -270,15 +275,15 @@ Nodes (4): agent, db, id, saved
 
 ### Community 23 - "Community 23"
 Cohesion: 0.14
-Nodes (54): [0.1.0] — 2026-06-09, Agent-Manager, Anzeigen-Generator, Behoben, Behoben, Behoben, Behoben, Behoben (+46 more)
+Nodes (57): [0.1.0] — 2026-06-09, Agent-Manager, Anzeigen-Generator, Behoben, Behoben, Behoben, Behoben, Behoben (+49 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.23
-Nodes (12): cleanText(), extractSearchQueryFromTitle(), firstNonEmpty(), parseEbayListingDetail(), parseKleinanzeigenListingDetail(), parseListingDetailHtml(), sanitizeMarketSearchQuery(), scrapeListingPrice() (+4 more)
+Cohesion: 0.19
+Nodes (14): parseKleinanzeigenPrice(), cleanText(), extractSearchQueryFromTitle(), firstNonEmpty(), parseEbayListingDetail(), parseKleinanzeigenListingDetail(), parseListingDetailHtml(), sanitizeMarketSearchQuery() (+6 more)
 
 ### Community 25 - "Community 25"
-Cohesion: 0.18
-Nodes (12): agents, db, setupDb(), db, result, row, resetDb(), columns (+4 more)
+Cohesion: 0.50
+Nodes (3): db, result, row
 
 ### Community 26 - "Community 26"
 Cohesion: 0.40
@@ -337,40 +342,40 @@ Cohesion: 0.25
 Nodes (13): keys, AGENTS_FETCH_KEYS, FETCH_KEYS, FetchKey, refreshAfterAgentCall(), refreshAgentHistoryData(), refreshAgentsData(), refreshDashboardData() (+5 more)
 
 ### Community 51 - "Community 51"
-Cohesion: 0.20
-Nodes (9): body, db, domainError, AgentCreateBody, agentCreateBodySchema, AgentUpdateBody, agentUpdateBodySchema, GeneratePromptBody (+1 more)
+Cohesion: 0.14
+Nodes (11): db, result, search, searchId, body, db, domainError, analysisSchema (+3 more)
 
 ### Community 61 - "Community 61"
 Cohesion: 0.06
 Nodes (55): DetectedPlatform, INVENTORY_PLATFORMS, InventoryPlatform, normalizeInventoryPlatform(), normalizePlatform(), readPlatformValue(), AnalyzeFlipResult, FlipListingInfo (+47 more)
 
 ### Community 76 - "Community 76"
-Cohesion: 0.24
-Nodes (9): AgentLike, agentNameById(), AgentSelectOption, buildAssignableAgentOptions(), findAssignedPromptForAgent(), PromptAgentAssignmentLike, agents, options (+1 more)
+Cohesion: 0.15
+Nodes (14): isMetaAgent(), META_AGENT_TYPES, MetaAgentType, AgentPromptSource, resolveAgentPromptText(), AgentLike, agentNameById(), AgentSelectOption (+6 more)
 
 ### Community 77 - "Community 77"
 Cohesion: 0.08
 Nodes (25): code:bash (git clone https://github.com/emelpe78/marketmind.git), code:bash (git clone https://github.com/emelpe78/marketmind.git), code:bash (docker compose down), code:bash (cd marketmind/marketmind), code:bash (PORT=5666 node .output/server/index.mjs), code:block6 (marketmind/           # Repository-Root), code:bash (cd marketmind/marketmind), Datenbank (+17 more)
 
 ### Community 78 - "Community 78"
-Cohesion: 0.05
-Nodes (58): buildEbaySearchUrl(), EbayListing, isPromoTitle(), normalizeCondition(), parseEbayHtml(), parseEbayPrice(), parseListingFromElement(), blockedMessage() (+50 more)
+Cohesion: 0.08
+Nodes (27): buildEbaySearchUrl(), EbayListing, isPromoTitle(), normalizeCondition(), parseEbayHtml(), parseEbayPrice(), parseListingFromElement(), USER_AGENTS (+19 more)
 
 ### Community 79 - "Community 79"
-Cohesion: 0.16
-Nodes (13): getSavedFlipAnalysis(), generateListing(), GenerateListingInput, resolveListingMarketStats(), body, db, domainError, ListingInput (+5 more)
+Cohesion: 0.14
+Nodes (11): db, history, mockChatCompletion, result, body, db, domainError, ListingInput (+3 more)
 
 ### Community 80 - "Community 80"
 Cohesion: 0.09
 Nodes (22): API & Daten, Architektur, Backend (`marketmind/server/`), code:block1 (marketmind/                 # Repo-Root), code:bash (cd marketmind), Frontend (`marketmind/app/`), Git, Häufige Aufgaben (+14 more)
 
 ### Community 81 - "Community 81"
-Cohesion: 0.26
-Nodes (14): copySqliteFiles(), deleteSqliteFiles(), getDatabaseInfo(), relocateDatabase(), resetDatabase(), SQLITE_SIDECARS, getActivePath(), getEnvDatabasePath() (+6 more)
+Cohesion: 0.32
+Nodes (11): ensureDatabasePath(), getActivePath(), getEnvDatabasePath(), getRuntimeDefaultPath(), isDockerRuntime(), mapDockerDatabasePath(), readConfiguredPathFromFile(), resolveDbPath() (+3 more)
 
 ### Community 82 - "Community 82"
-Cohesion: 0.14
-Nodes (18): id, body, existing, id, merged, calculateProfit(), query, getInventorySummary() (+10 more)
+Cohesion: 0.22
+Nodes (8): db, insert, item, mockFetch, profit, summary, updated, normalizePlatform()
 
 ### Community 83 - "Community 83"
 Cohesion: 0.13
@@ -385,32 +390,32 @@ Cohesion: 0.19
 Nodes (13): id, extractDescription(), extractJsonObject(), ParsedListingGeneration, parseListingGeneration(), parsePriceValue(), createListing(), deleteListing() (+5 more)
 
 ### Community 86 - "Community 86"
-Cohesion: 0.23
-Nodes (13): AnalyzeFlipInput, loadSearchResults(), loadStats(), mapSearchResults(), ResearchRunInput, ResearchRunResultRow, ResearchRunSummary, runResearch() (+5 more)
+Cohesion: 0.12
+Nodes (22): loadSearchResults(), loadStats(), mapSearchResults(), ResearchRunInput, ResearchRunResultRow, ResearchRunSummary, runResearch(), MarketContext (+14 more)
 
 ### Community 87 - "Community 87"
-Cohesion: 0.17
-Nodes (11): copiedDb, db, dbPath, dockerPath, freshDb, info, result, row (+3 more)
+Cohesion: 0.12
+Nodes (14): copiedDb, db, dbPath, dockerPath, freshDb, hostPath, info, result (+6 more)
 
 ### Community 88 - "Community 88"
-Cohesion: 0.18
-Nodes (16): generateAgentPrompt(), resolveActiveAgentPrompt(), getAgentByType(), logAgentHistory(), resolveAgentModel(), assertAiConfigured(), getAiConnection(), runAgent() (+8 more)
+Cohesion: 0.24
+Nodes (11): generateAgentPrompt(), resolveActiveAgentPrompt(), getAgentByType(), runAgent(), RunAgentInput, RunAgentMode, RunAgentResult, SKIPPED (+3 more)
 
 ### Community 89 - "Community 89"
 Cohesion: 0.06
-Nodes (31): [0.1.3] — 2026-06-09, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben (+23 more)
+Nodes (34): [0.1.3] — 2026-06-09, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben (+26 more)
 
 ### Community 90 - "Community 90"
 Cohesion: 0.04
-Nodes (50): [0.1.1] — 2026-06-09, [0.2.1] — 2026-06-10, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben (+42 more)
+Nodes (48): [0.1.1] — 2026-06-09, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben (+40 more)
 
 ### Community 91 - "Community 91"
 Cohesion: 0.15
 Nodes (21): applyMarkdownFormatting(), escapeHtml(), extractMarkdownTitle(), formatInlineMarkdown(), isTableSeparatorRow(), MarkdownDisplay, MarkdownSection, MarkdownSectionsDisplay (+13 more)
 
 ### Community 92 - "Community 92"
-Cohesion: 0.29
-Nodes (8): db, dbPath, result, getTableNames(), initDatabase(), resolveSchemaPath(), expectAllTables(), getHealthStatus()
+Cohesion: 0.16
+Nodes (17): agents, db, setupDb(), db, dbPath, result, getTableNames(), initDatabase() (+9 more)
 
 ### Community 94 - "Community 94"
 Cohesion: 0.33
@@ -429,20 +434,20 @@ Cohesion: 0.13
 Nodes (20): agent, created, db, deleted, first, prompts, research, second (+12 more)
 
 ### Community 98 - "Community 98"
-Cohesion: 0.25
-Nodes (7): db, insert, item, mockFetch, profit, summary, updated
+Cohesion: 0.18
+Nodes (13): AnalyzeFlipInput, createFetcherSession(), FetcherConfig, FetcherDeps, invalidateCachedHtml(), buildFetcherConfig(), createScraperRuntime(), ScraperRuntime (+5 more)
 
 ### Community 100 - "Community 100"
-Cohesion: 0.14
-Nodes (14): [0.1.6] — 2026-06-09, Behoben, Geändert, Geändert, Geändert, Geändert, Geändert, Geändert (+6 more)
+Cohesion: 0.12
+Nodes (16): [0.1.6] — 2026-06-09, Behoben, Geändert, Geändert, Geändert, Geändert, Geändert, Geändert (+8 more)
 
 ### Community 101 - "Community 101"
 Cohesion: 0.17
 Nodes (14): AnalysisPlatform, analyzeSearchByPlatform(), PLATFORM_LABEL, PlatformAnalysis, platformsForSearch(), buildResearchUserPrompt(), PLATFORM_LABEL, findPricedResultsForPlatform() (+6 more)
 
 ### Community 103 - "Community 103"
-Cohesion: 0.13
-Nodes (15): AiConnection, db, history, mockChatCompletion, result, mockFetch, authHeaders(), chatCompletion() (+7 more)
+Cohesion: 0.12
+Nodes (17): db, event, history, mockChatCompletion, result, mockFetch, authHeaders(), chatCompletion() (+9 more)
 
 ### Community 104 - "Community 104"
 Cohesion: 0.22
@@ -453,8 +458,8 @@ Cohesion: 0.12
 Nodes (11): ScraperFetchError, db, ebayHtml, fixturesDir, kaHtml, kaSearchHtml, listingHtml, mockChatCompletion (+3 more)
 
 ### Community 106 - "Community 106"
-Cohesion: 0.13
-Nodes (18): id, id, existing, id, AgentInput, AgentRow, AgentWithStats, createAgent() (+10 more)
+Cohesion: 0.06
+Nodes (36): id, existing, id, AgentInput, AgentRow, AgentWithStats, createAgent(), deleteAgent() (+28 more)
 
 ### Community 107 - "Community 107"
 Cohesion: 0.29
@@ -485,8 +490,8 @@ Cohesion: 0.67
 Nodes (3): engines, node, npm
 
 ### Community 141 - "Community 141"
-Cohesion: 0.18
-Nodes (15): [0.1.7] — 2026-06-09, [0.1.7] — 2026-06-10, [0.2.0] — 2026-06-10, [0.2.2] — 2026-06-10, Changelog, Entfernt, Entfernt, Geändert (+7 more)
+Cohesion: 0.12
+Nodes (22): [0.1.7] — 2026-06-09, [0.1.7] — 2026-06-10, [0.2.0] — 2026-06-10, [0.2.2] — 2026-06-10, [0.3.0] — 2026-06-10, Changelog, Entfernt, Entfernt (+14 more)
 
 ### Community 157 - "Community 157"
 Cohesion: 0.40
@@ -497,20 +502,20 @@ Cohesion: 0.40
 Nodes (3): FlipAnalysisResult, FlipListingInfo, FlipMarketSample
 
 ### Community 160 - "Community 160"
-Cohesion: 0.07
-Nodes (30): [0.1.2] — 2026-06-09, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben (+22 more)
+Cohesion: 0.06
+Nodes (33): [0.1.2] — 2026-06-09, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben (+25 more)
 
 ### Community 161 - "Community 161"
-Cohesion: 0.11
-Nodes (19): [0.1.4] — 2026-06-09, Entfernt, Entfernt, Entfernt, Entfernt, Entfernt, Geändert, Geändert (+11 more)
+Cohesion: 0.09
+Nodes (22): [0.1.4] — 2026-06-09, Entfernt, Entfernt, Entfernt, Entfernt, Entfernt, Entfernt, Geändert (+14 more)
 
 ### Community 162 - "Community 162"
-Cohesion: 0.29
-Nodes (6): body, ListingCreateBody, listingCreateBodySchema, ListingGenerateBody, listingGenerateBodySchema, ListingUpdateBody
+Cohesion: 0.16
+Nodes (15): FlipMarketSample, CreateSavedFlipAnalysisInput, EMPTY_STATS, listSavedFlipAnalyses(), listSavedFlipAnalysisItems(), parseJson(), rowToSavedFlipAnalysis(), SavedFlipAnalysis (+7 more)
 
 ### Community 164 - "Community 164"
-Cohesion: 0.18
-Nodes (10): MarketContext, createSearch(), insertSearchResults(), persistScrapeSearch(), PricedSearchResultRow, updateSearchResultsCount(), analyzePrices(), median() (+2 more)
+Cohesion: 0.36
+Nodes (6): getSavedFlipAnalysis(), generateListing(), GenerateListingInput, resolveListingMarketStats(), buildListingUserPrompt(), prompt
 
 ### Community 165 - "Community 165"
 Cohesion: 0.39
@@ -522,91 +527,111 @@ Nodes (13): analyzeFlip(), AnalyzeFlipResult, buildFlipAgentPrompt(), EMPTY_MARK
 
 ### Community 168 - "Community 168"
 Cohesion: 0.11
-Nodes (19): db, db, created, detail, list, db, __dirname, getDb() (+11 more)
+Nodes (16): db, id, db, created, detail, list, __dirname, getDb() (+8 more)
 
 ### Community 169 - "Community 169"
-Cohesion: 0.10
-Nodes (18): updateSavedFlipAnalysis(), body, db, id, updated, body, db, id (+10 more)
+Cohesion: 0.12
+Nodes (15): updateSavedFlipAnalysis(), db, id, item, body, db, id, updated (+7 more)
 
 ### Community 171 - "Community 171"
 Cohesion: 0.33
 Nodes (5): calculateFlip(), FlipInput, FlippingScore, FlipResult, result
 
 ### Community 175 - "Community 175"
-Cohesion: 0.11
-Nodes (19): [0.1.5] — 2026-06-09, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben (+11 more)
+Cohesion: 0.09
+Nodes (22): [0.1.5] — 2026-06-09, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben, Behoben (+14 more)
 
 ### Community 176 - "Community 176"
-Cohesion: 0.14
-Nodes (15): body, body, db, id, id, listingUpdateBodySchema, PromptLibraryBody, promptLibraryBodySchema (+7 more)
+Cohesion: 0.15
+Nodes (14): body, db, id, id, listingUpdateBodySchema, PromptLibraryBody, promptLibraryBodySchema, WatchlistCreateBody (+6 more)
 
 ### Community 178 - "Community 178"
-Cohesion: 0.08
-Nodes (17): db, result, search, searchId, body, db, domainError, analysisSchema (+9 more)
+Cohesion: 0.10
+Nodes (22): dbPath, sql, titles, date, db, sql, backupDatabaseAsSql(), restoreDatabaseFromSql() (+14 more)
 
 ### Community 184 - "Community 184"
-Cohesion: 0.39
-Nodes (5): isMetaAgent(), META_AGENT_TYPES, MetaAgentType, AgentPromptSource, resolveAgentPromptText()
+Cohesion: 0.13
+Nodes (9): body, db, domainError, AiNotConfiguredError, ListingScrapeError, mapDomainError(), MissingQueryError, NoAnalysisDataError (+1 more)
 
 ### Community 185 - "Community 185"
-Cohesion: 0.05
-Nodes (47): created, db, updated, FlipMarketSample, createSavedFlipAnalysis(), createSavedFlipAnalysisFromResult(), CreateSavedFlipAnalysisInput, deleteSavedFlipAnalysis() (+39 more)
+Cohesion: 0.22
+Nodes (9): parseJsonColumn(), listSavedResearches(), listSavedResearchItems(), parseJson(), rowToSavedResearch(), SavedResearchAnalysis, SavedResearchResult, SavedResearchRow (+1 more)
 
 ### Community 188 - "Community 188"
 Cohesion: 0.12
 Nodes (15): body, calculation, db, domainError, body, db, flipListingSchema, flipMarketSampleSchema (+7 more)
 
 ### Community 189 - "Community 189"
-Cohesion: 0.29
-Nodes (6): InventoryCreateBody, inventoryCreateBodySchema, InventoryUpdateBody, inventoryUpdateBodySchema, nullableNumber, nullableString
+Cohesion: 0.12
+Nodes (22): id, body, existing, id, merged, calculateProfit(), query, InventoryItem (+14 more)
 
 ### Community 190 - "Community 190"
-Cohesion: 0.40
-Nodes (4): agent, db, history, mockChatCompletion
+Cohesion: 0.29
+Nodes (6): body, ListingCreateBody, listingCreateBodySchema, ListingGenerateBody, listingGenerateBodySchema, ListingUpdateBody
 
 ### Community 191 - "Community 191"
 Cohesion: 0.29
 Nodes (6): SettingUpdateBody, settingUpdateBodySchema, body, db, key, parseRouteParam()
 
+### Community 192 - "Community 192"
+Cohesion: 0.18
+Nodes (10): createSavedFlipAnalysis(), createSavedFlipAnalysisFromResult(), deleteSavedFlipAnalysis(), db, deleted, id, created, db (+2 more)
+
 ### Community 193 - "Community 193"
-Cohesion: 0.17
-Nodes (9): db, id, insert, mockFetch, result, db, id, item (+1 more)
+Cohesion: 0.29
+Nodes (5): db, id, insert, mockFetch, result
+
+### Community 194 - "Community 194"
+Cohesion: 0.25
+Nodes (7): body, db, priceStatsSchema, savedResearchAnalysisSchema, SavedResearchCreateBody, savedResearchCreateBodySchema, savedResearchResultSchema
 
 ### Community 196 - "Community 196"
 Cohesion: 0.29
 Nodes (5): GeneratedListing, ListingCreatePayload, ListingFormState, ListingGenerateInput, ListingItem
 
 ### Community 197 - "Community 197"
-Cohesion: 0.33
-Nodes (5): db, event, history, mockChatCompletion, result
+Cohesion: 0.50
+Nodes (3): db, settings, getSetting()
 
 ### Community 199 - "Community 199"
 Cohesion: 0.22
 Nodes (8): db, insert, mockChatCompletion, savedFlipAnalysisId, savedResearchId, search, searchId, userMessage
 
 ### Community 200 - "Community 200"
-Cohesion: 0.50
-Nodes (3): body, DatabaseResetBody, databaseResetBodySchema
+Cohesion: 0.21
+Nodes (11): copySqliteFiles(), deleteSqliteFiles(), getDatabaseInfo(), relocateDatabase(), resetDatabase(), SQLITE_SIDECARS, isDatabasePathLocked(), body (+3 more)
+
+### Community 201 - "Community 201"
+Cohesion: 0.43
+Nodes (5): db, AGENT_RENAMES, hasColumn(), renameDefaultAgents(), runMigrations()
+
+### Community 202 - "Community 202"
+Cohesion: 0.33
+Nodes (6): [0.2.1] — 2026-06-10, Entfernt, Entfernt, Geändert, Hinzugefügt, Hinzugefügt
+
+### Community 205 - "Community 205"
+Cohesion: 0.14
+Nodes (13): created, db, updated, createSavedResearch(), deleteSavedResearch(), getSavedResearch(), updateSavedResearch(), db (+5 more)
 
 ## Knowledge Gaps
-- **866 isolated node(s):** `name`, `version`, `description`, `author`, `license` (+861 more)
+- **908 isolated node(s):** `name`, `version`, `description`, `author`, `license` (+903 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **36 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `getDb()` connect `Community 168` to `Community 2`, `Community 15`, `Community 21`, `Community 25`, `Community 162`, `Community 169`, `Community 42`, `Community 176`, `Community 178`, `Community 51`, `Community 185`, `Community 188`, `Community 190`, `Community 191`, `Community 193`, `Community 197`, `Community 199`, `Community 78`, `Community 79`, `Community 81`, `Community 82`, `Community 83`, `Community 84`, `Community 85`, `Community 87`, `Community 88`, `Community 92`, `Community 97`, `Community 98`, `Community 101`, `Community 103`, `Community 105`, `Community 106`?**
-  _High betweenness centrality (0.059) - this node is a cross-community bridge._
-- **Why does `analyzeFlip()` connect `Community 166` to `Community 163`, `Community 105`, `Community 171`, `Community 78`, `Community 83`, `Community 88`, `Community 24`, `Community 188`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+- **Why does `getDb()` connect `Community 168` to `Community 2`, `Community 15`, `Community 25`, `Community 162`, `Community 169`, `Community 42`, `Community 176`, `Community 178`, `Community 51`, `Community 184`, `Community 185`, `Community 188`, `Community 189`, `Community 190`, `Community 191`, `Community 192`, `Community 193`, `Community 194`, `Community 197`, `Community 199`, `Community 200`, `Community 201`, `Community 205`, `Community 78`, `Community 79`, `Community 82`, `Community 83`, `Community 84`, `Community 85`, `Community 87`, `Community 88`, `Community 92`, `Community 97`, `Community 98`, `Community 101`, `Community 103`, `Community 105`, `Community 106`?**
+  _High betweenness centrality (0.052) - this node is a cross-community bridge._
+- **Why does `analyzeFlip()` connect `Community 166` to `Community 98`, `Community 163`, `Community 105`, `Community 171`, `Community 83`, `Community 88`, `Community 24`, `Community 188`?**
+  _High betweenness centrality (0.024) - this node is a cross-community bridge._
 - **Why does `detectPlatformFromUrl()` connect `Community 83` to `Community 61`, `Community 166`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+  _High betweenness centrality (0.017) - this node is a cross-community bridge._
 - **What connects `name`, `version`, `description` to the rest of the system?**
-  _866 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _908 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.06794871794871794 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.056429232192414434 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.05137844611528822 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.060408163265306125 - nodes in this community are weakly interconnected._
 - **Should `Community 4` be split into smaller, more focused modules?**
   _Cohesion score 0.045454545454545456 - nodes in this community are weakly interconnected._

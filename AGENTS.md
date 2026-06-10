@@ -1,6 +1,6 @@
 # MarketMind — Agent Guide
 
-Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.0**.
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.1**.
 
 ## Repository-Layout
 
@@ -78,7 +78,7 @@ Dev-DB: `MM_DATABASE_DEV` in `marketmind/.env` (Standard `data/marketmind.db`, g
 - **API:** `server/api/**/*.ts` — dünne HTTP-Adapter; Mutations-Routen über `defineApiHandler` + Zod (`server/api/schemas/`)
 - **Prompt-Auflösung:** `resolveActiveAgentPrompt()` — Bibliotheks-Prompt vor `agents.system_prompt` (`server/services/agents/prompt-resolve.ts`)
 - **Services:** Use-Cases + Repositories unter `server/services/`
-- **DB:** `server/database/` — Schema, `settings.ts`, `lifecycle.ts`, `paths.ts` (`MM_DATABASE_DEV` / `MM_DATABASE_DOCKER`), `seed.ts`
+- **DB:** `server/database/` — Schema, `settings.ts`, `lifecycle.ts`, `paths.ts` (`MM_DATABASE_DEV` / `MM_DATABASE_DOCKER`, Docker-Host-Pfad-Mapping), `sql-transfer.ts` (SQL-Export/Import), `seed.ts`
 - **Plugin:** `server/plugins/database.ts` — Init, Seed, Migrationen, Agent-Prompt-Sync beim Start
 - **Prompt-Bibliothek:** `server/services/prompt-library/` — Repository, Zuweisung (`assign.ts`), Sync aus `agents` (`agent-sync.ts`)
 
@@ -118,7 +118,7 @@ Vor Architekturfragen: `graphify-out/GRAPH_REPORT.md` und `graphify-out/wiki/ind
 ### API & Daten
 
 - Validierung mit Zod wo sinnvoll
-- SQLite-Pfad nur über `marketmind/.env` (`MM_DATABASE_DEV`, `MM_DATABASE_DOCKER`); Docker-Host-Ordner `MARKETMIND_DATA_DIR`; Reset behält Pfad, löscht Daten
+- SQLite-Pfad nur über `marketmind/.env` (`MM_DATABASE_DEV`, `MM_DATABASE_DOCKER`); Docker-Host-Ordner `MARKETMIND_DATA_DIR`; fehlende DB-Datei wird beim Start angelegt; Reset/Backup/Restore in Einstellungen → Datenbank
 - Agent-Aufrufe in `agent_history` loggen (Tokens, Kosten)
 - `ScraperFetchError` in Research- und Flipping-Routes als 502 mit lesbarer Meldung mappen
 
@@ -169,6 +169,7 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 | Cross-Feature-Workflows | `shared/workflow-handoff.ts`, `WorkflowHandoffBanner.vue` — Query-Prefill + Buttons zwischen Recherche, Flipping, Watchlist, Inventar, Anzeigen   |
 | Agent-Prompt-Docs       | `docs/listing_agent.md`, `docs/flipping_agent.md`                                                                                                 |
 | Docker-Datenordner      | Repo-Root `.env` (`MARKETMIND_DATA_DIR`), `docker-compose.yml`                                                                                    |
+| SQL-Backup/Restore      | `server/database/sql-transfer.ts`, `GET /api/database/backup`, `POST /api/database/restore`, `useDatabaseAdmin`, Einstellungen → Datenbank        |
 
 ## Was vermeiden
 

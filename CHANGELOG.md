@@ -4,6 +4,23 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.3.1] — 2026-06-10
+
+Datenbank-Administration: SQL-Backup/Restore in den Einstellungen und robustere Docker-Pfadbehandlung.
+
+### Hinzugefügt
+
+- **SQL-Backup** — `GET /api/database/backup` exportiert Schema und Daten als `.sql`-Datei (`server/database/sql-transfer.ts`)
+- **SQL-Restore** — `POST /api/database/restore` importiert ein SQL-Backup per Multipart-Upload; bei Fehler wird eine frische DB wiederhergestellt
+- **Einstellungen → Datenbank** — Buttons „Als SQL sichern“ und „SQL importieren“ (mit Bestätigungsmodal)
+- **`useDatabaseAdmin`** — `downloadSqlBackup()`, `restoreDatabaseFromSql()`
+- **Tests** — `test/database/sql-transfer.test.ts`, `test/database/paths.test.ts`, `test/api/database-backup-restore.test.ts`
+
+### Geändert
+
+- **`DatabasePaths`** — Host-Pfade in `MM_DATABASE_DOCKER` werden im Container auf `/app/data` gemappt; `ensureDatabasePath()` legt fehlende DB-Dateien beim Start an
+- **`.env.example`** — Hinweise zu `MARKETMIND_DATA_DIR` und Host-Pfaden (z. B. Nextcloud) für Docker
+
 ## [0.3.0] — 2026-06-10
 
 Feature-übergreifende Workflows: mit einem Klick von Recherche, Flipping, Watchlist und Inventar in den nächsten Reseller-Schritt wechseln — ohne Copy-Paste.
@@ -419,7 +436,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/emelpe78/marketmind/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/emelpe78/marketmind/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/emelpe78/marketmind/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/emelpe78/marketmind/compare/v0.2.0...v0.2.1

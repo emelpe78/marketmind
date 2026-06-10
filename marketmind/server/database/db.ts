@@ -3,7 +3,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mkdirSync } from "node:fs";
-import { getActivePath } from "./paths";
+import { ensureDatabasePath, getActivePath } from "./paths";
 import { runMigrations } from "./migrations";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -62,7 +62,9 @@ export function getTableNames(db: Database.Database): string[] {
 }
 
 export function initDatabase(dbPath?: string): Database.Database {
-  const db = getDb(dbPath);
+  const path = dbPath ?? getDbPath();
+  ensureDatabasePath(path);
+  const db = getDb(path);
   const schema = readFileSync(resolveSchemaPath(), "utf-8");
   db.exec(schema);
   runMigrations(db);

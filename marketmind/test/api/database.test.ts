@@ -52,15 +52,13 @@ describe("database admin", () => {
   });
 
   it("uses MM_DATABASE_DOCKER when MM_RUNTIME is docker", () => {
-    const dockerPath = join(tempDir!, "docker.db");
+    const hostPath = join(tempDir!, "docker.db");
     process.env.MM_RUNTIME = "docker";
-    process.env.MM_DATABASE_DOCKER = dockerPath;
-    resetDb();
-    initDatabase(dockerPath);
+    process.env.MM_DATABASE_DOCKER = hostPath;
 
     expect(isDockerRuntime()).toBe(true);
-    expect(getEnvDatabasePath()).toBe(dockerPath);
-    expect(getDatabaseInfo().path).toBe(dockerPath);
+    expect(getEnvDatabasePath()).toBe(hostPath);
+    expect(getDatabaseInfo().path).toBe("/app/data/docker.db");
   });
 
   it("resets the database at the current path", () => {

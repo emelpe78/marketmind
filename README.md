@@ -80,7 +80,7 @@ PORT=5666 node .output/server/index.mjs
 
 1. **App im Browser öffnen** (5666 für Dev, 5667 für Docker).
 2. Auf dem Dashboard siehst du KPI-Karten und ggf. einen Hinweis, wenn noch kein KI-Provider konfiguriert ist.
-3. Gehe zu **Einstellungen** und richte API sowie optional Scraper und Datenbank ein.
+3. Gehe zu **Einstellungen** und richte API sowie optional Scraper und Datenbank ein (inkl. SQL-Backup und -Import).
 4. Starte eine **Preisrecherche** unter `/research`, um Scraper und KI zu testen.
 
 ## Konfiguration
@@ -131,7 +131,9 @@ Unter **Einstellungen → Scraper**:
 
 ### Datenbank
 
-Der **Pfad** wird nur über `marketmind/.env` gesetzt (`MM_DATABASE_DEV` bzw. `MM_DATABASE_DOCKER`). In der App unter **Einstellungen → Datenbank** kannst du die Datenbank nur noch **zurücksetzen** (löscht alle Daten, behält den Pfad; Standard-Agents und -Einstellungen werden neu angelegt).
+Der **Pfad** wird nur über `marketmind/.env` gesetzt (`MM_DATABASE_DEV` bzw. `MM_DATABASE_DOCKER`). Fehlt die Datei am konfigurierten Ort, legt MarketMind sie beim Start an. In der App unter **Einstellungen → Datenbank** kannst du die Datenbank als **SQL sichern**, ein SQL-Backup **importieren** (ersetzt alle Daten — vorher Backup empfohlen) oder **zurücksetzen** (löscht alle Daten, behält den Pfad; Standard-Agents und -Einstellungen werden neu angelegt).
+
+Unter Docker kann `MM_DATABASE_DOCKER` auch einen Host-Pfad (z. B. Nextcloud-Ordner) angeben; im Container wird er auf `/app/data` gemappt. Dazu `MARKETMIND_DATA_DIR` in der Repo-Root `.env` auf dasselbe Host-Verzeichnis setzen.
 
 Dev-Daten liegen standardmäßig in `marketmind/data/` (nicht versioniert). Docker-Daten im Host-Ordner `MARKETMIND_DATA_DIR`, Datei `marketmind.db` plus `.settings-key` daneben.
 
@@ -185,6 +187,6 @@ Nutze **moderate Abfragefrequenzen** (einstellbarer Delay), cache Ergebnisse und
 
 ## Lizenz & Status
 
-- **Version:** 0.3.0 — siehe [CHANGELOG.md](CHANGELOG.md)
+- **Version:** 0.3.1 — siehe [CHANGELOG.md](CHANGELOG.md)
 - **Lizenz:** Noch nicht veröffentlicht (geplant: Open Source)
 - **Issues:** [GitHub Issues](https://github.com/emelpe78/marketmind/issues)

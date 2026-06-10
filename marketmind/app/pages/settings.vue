@@ -4,10 +4,20 @@ definePageMeta({ layout: "default" });
 import { refreshAllFetchData } from "~/utils/refresh-fetch-data";
 
 const { settings, saving, saveSetting } = await useSettings();
-const { databaseInfo, resetDatabase } = await useDatabaseAdmin();
+const {
+  databaseInfo,
+  resetDatabase,
+  downloadSqlBackup,
+  restoreDatabaseFromSql,
+} = await useDatabaseAdmin();
 
 const resettingDatabase = ref(false);
 const resetModalOpen = ref(false);
+const backingUpDatabase = ref(false);
+const restoringDatabase = ref(false);
+const restoreModalOpen = ref(false);
+const restoreFile = ref<File | null>(null);
+const restoreFileInput = ref<HTMLInputElement | null>(null);
 const toast = useToast();
 
 const aiProviderTab = ref("openrouter");
@@ -39,6 +49,70 @@ async function updateSetting(key: string, value: string) {
     toast.add({ title: "Gespeichert", description: key, color: "success" });
   } catch {
     toast.add({ title: "Fehler beim Speichern", color: "error" });
+  }
+}
+
+async function confirmBackupDatabase() {
+  backingUpDatabase.value = true;
+  try {
+    const filename = await downloadSqlBackup();
+    toast.add({
+      title: "Backup erstellt",
+      description: filename,
+      color: "success",
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    toast.add({
+      title: err.message || "Backup fehlgeschlagen",
+      color: "error",
+    });
+  } finally {
+    backingUpDatabase.value = false;
+  }
+}
+
+function openRestoreDialog() {
+  restoreFile.value = null;
+  restoreModalOpen.value = true;
+}
+
+function onRestoreFileSelected(event: Event) {
+  const input = event.target as HTMLInputElement;
+  restoreFile.value = input.files?.[0] ?? null;
+}
+
+async function confirmRestoreDatabase() {
+  if (!restoreFile.value) {
+    toast.add({
+      title: "Keine Datei ausgewählt",
+      color: "error",
+    });
+    return;
+  }
+
+  restoringDatabase.value = true;
+  try {
+    const result = await restoreDatabaseFromSql(restoreFile.value);
+    restoreModalOpen.value = false;
+    restoreFile.value = null;
+    if (restoreFileInput.value) {
+      restoreFileInput.value.value = "";
+    }
+    await refreshAllFetchData();
+    toast.add({
+      title: "Datenbank importiert",
+      description: result.path,
+      color: "success",
+    });
+  } catch (error: unknown) {
+    const err = error as { data?: { message?: string } };
+    toast.add({
+      title: err?.data?.message || "Import fehlgeschlagen",
+      color: "error",
+    });
+  } finally {
+    restoringDatabase.value = false;
   }
 }
 
@@ -257,15 +331,78 @@ async function confirmResetDatabase() {
       <template #header>
         <h3 class="font-semibold">Datenbank</h3>
       </template>
-      <UButton
-        color="error"
-        variant="outline"
-        data-testid="open-reset-database"
-        @click="resetModalOpen = true"
-      >
-        Datenbank zurücksetzen
-      </UButton>
+      <div class="flex flex-wrap gap-2">
+        <UButton
+          color="neutral"
+          variant="outline"
+          data-testid="backup-database"
+          :loading="backingUpDatabase"
+          @click="confirmBackupDatabase"
+        >
+          Als SQL sichern
+        </UButton>
+        <UButton
+          color="neutral"
+          variant="outline"
+          data-testid="open-restore-database"
+          @click="openRestoreDialog"
+        >
+          SQL importieren
+        </UButton>
+        <UButton
+          color="error"
+          variant="outline"
+          data-testid="open-reset-database"
+          @click="resetModalOpen = true"
+        >
+          Datenbank zurücksetzen
+        </UButton>
+      </div>
     </UCard>
+
+    <UModal v-model:open="restoreModalOpen" title="SQL-Backup importieren?">
+      <template #body>
+        <div class="space-y-4 p-4">
+          <p class="text-sm text-muted">
+            Die aktuelle Datenbank wird vollständig ersetzt. Vorher ein Backup
+            sichern, falls du die Daten behalten willst.
+          </p>
+          <p class="text-sm">
+            Zieldatei:
+            <span
+              class="font-mono break-all"
+              data-testid="restore-database-path"
+            >
+              {{ databaseInfo?.path }}
+            </span>
+          </p>
+          <UFormField label="SQL-Datei">
+            <input
+              ref="restoreFileInput"
+              type="file"
+              accept=".sql,text/plain,application/sql"
+              class="block w-full text-sm text-muted file:mr-3 file:rounded-md file:border-0 file:bg-elevated file:px-3 file:py-2 file:text-sm file:font-medium file:text-default"
+              data-testid="restore-database-file"
+              @change="onRestoreFileSelected"
+            />
+          </UFormField>
+          <div class="flex justify-end gap-2">
+            <UButton variant="outline" @click="restoreModalOpen = false">
+              Abbrechen
+            </UButton>
+            <UButton
+              color="warning"
+              data-testid="confirm-restore-database"
+              :loading="restoringDatabase"
+              :disabled="!restoreFile"
+              @click="confirmRestoreDatabase"
+            >
+              Importieren
+            </UButton>
+          </div>
+        </div>
+      </template>
+    </UModal>
 
     <UModal v-model:open="resetModalOpen" title="Datenbank zurücksetzen?">
       <template #body>
