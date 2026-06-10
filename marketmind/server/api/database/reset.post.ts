@@ -1,14 +1,8 @@
+import { defineApiHandler } from "../../utils/api-handler";
 import { resetDatabase } from "../../database/lifecycle";
+import { databaseResetBodySchema } from "../schemas/database";
 
-export default defineEventHandler(async (event) => {
-  const body = await readBody<{ confirm?: boolean }>(event);
-  if (!body?.confirm) {
-    throw createError({
-      statusCode: 400,
-      message: "Bestätigung erforderlich",
-    });
-  }
-
+export default defineApiHandler(databaseResetBodySchema, async (_db, _body) => {
   try {
     return resetDatabase();
   } catch (error) {

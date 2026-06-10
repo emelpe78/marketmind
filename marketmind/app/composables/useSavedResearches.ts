@@ -1,18 +1,11 @@
+import type { SavedResearchListItem } from "shared/research-types";
 import { FETCH_KEYS } from "~/utils/fetch-keys";
 import {
   refreshDashboardData,
   refreshFetchData,
 } from "~/utils/refresh-fetch-data";
 
-export interface SavedResearchListItem {
-  id: number;
-  title: string;
-  query: string;
-  platform: string;
-  results: unknown[];
-  createdAt: string;
-  updatedAt: string;
-}
+export type { SavedResearchListItem } from "shared/research-types";
 
 export async function useSavedResearches() {
   const { data: savedResearches, pending } = await useFetch<

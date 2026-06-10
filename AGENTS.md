@@ -1,6 +1,6 @@
 # MarketMind — Agent Guide
 
-Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.2.1**.
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.2.2**.
 
 ## Repository-Layout
 
@@ -47,18 +47,18 @@ Dev-DB: `MM_DATABASE_DEV` in `marketmind/.env` (Standard `data/marketmind.db`, g
 
 ### Schichten-Konvention
 
-| Schicht          | Ort                                                                                                             | Aufgabe                                       |
-| ---------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| **Routes**       | `server/api/`                                                                                                   | HTTP-Adapter über `defineApiHandler` + Zod    |
-| **Use-Cases**    | `server/services/ai/run-agent.ts`, `research/run-research.ts`, `flipping/analyze-flip.ts`, `scraper/runtime.ts` | Geschäftslogik                                |
-| **Repositories** | `server/services/*/repository.ts`                                                                               | SQL + Row-Mapping pro Domäne (inkl. `count*`) |
-| **Shared**       | `shared/`                                                                                                       | Typen, Formatierung, Plattform-Erkennung      |
-| **Composables**  | `app/composables/`                                                                                              | Frontend-State & API-Aufrufe                  |
+| Schicht          | Ort                                                                                                             | Aufgabe                                                     |
+| ---------------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **Routes**       | `server/api/`                                                                                                   | HTTP-Adapter über `defineApiHandler` + Zod                  |
+| **Use-Cases**    | `server/services/ai/run-agent.ts`, `research/run-research.ts`, `flipping/analyze-flip.ts`, `scraper/runtime.ts` | Geschäftslogik                                              |
+| **Repositories** | `server/services/*/repository.ts`                                                                               | SQL + Row-Mapping pro Domäne (inkl. `count*`)               |
+| **Shared**       | `shared/`                                                                                                       | Typen, Formatierung, Plattform-Erkennung                    |
+| **Composables**  | `app/composables/`                                                                                              | Workflow-State & API-Aufrufe (`useResearch`, `useListings`) |
 
 ### Frontend (`marketmind/app/`)
 
 - **Pages:** file-based routing unter `app/pages/`
-- **Composables:** `useResearch`, `useSavedResearches`, `useFlipping`, `useSavedFlipAnalyses`, `useDashboard`, `useInventory`, `useWatchlist`, `useSettings`, `useListings`, `useAgents`, `useDatabaseAdmin`
+- **Composables:** `useResearch` (Workflow-State), `useSavedResearches`, `useFlipping`, `useSavedFlipAnalyses`, `useDashboard`, `useInventory`, `useWatchlist`, `useSettings`, `useListings` (Workflow-State), `useAgents`, `useDatabaseAdmin`
 - **Research-UI:** `/research` (Recherche), `/research/saved` (Gespeicherte Recherchen), `/research/saved/[id]` (Detail); Submenu in `default.vue` (`shared/research-nav.ts`)
 - **Listings-UI:** `/listings` (Generator), `/listings/saved` (gespeicherte Anzeigen, Bearbeiten per Modal, Inventar über `InventoryCreateModal`); Submenu in `default.vue` (`shared/listings-nav.ts`)
 - **Inventar-UI:** `/inventory` — Kartenliste, Anlegen per `InventoryCreateModal`, Verkauf/Löschen per Modal; Plattformen Kleinanzeigen, eBay, Sonstige (`INVENTORY_PLATFORM_SELECT_OPTIONS`, `normalizeInventoryPlatform()`)
@@ -139,34 +139,34 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 
 ## Häufige Aufgaben
 
-| Aufgabe                 | Ort                                                                                             |
-| ----------------------- | ----------------------------------------------------------------------------------------------- |
-| Neue API-Route          | `server/api/<name>.<method>.ts`                                                                 |
-| Neue Seite              | `app/pages/<route>.vue`                                                                         |
-| Scraper-Logik           | `server/services/scraper/`                                                                      |
-| DB-Schema               | `server/database/schema.sql` + Seed anpassen                                                    |
-| Formatierung            | `shared/format-*.ts` wiederverwenden                                                            |
-| Einstellungen-Keys      | `server/database/settings.ts`, Settings-UI                                                      |
-| KI-Aufruf               | `server/services/ai/run-agent.ts`                                                               |
-| Preisrecherche          | `server/services/research/run-research.ts`, `app/pages/research/`                               |
-| Gespeicherte Recherchen | `useSavedResearches`, `app/pages/research/saved/`, `server/api/saved-researches/`               |
-| Research-Navigation     | `shared/research-nav.ts`, `app/layouts/default.vue`                                             |
-| Flipping-Analyse        | `server/services/flipping/analyze-flip.ts`, `server/api/flipping/analyze.post.ts`               |
-| Flipping speichern      | `saveFlipAnalysisFromUrl`, `server/api/saved-flip-analyses/from-url.post.ts`                    |
-| Anzeigen speichern      | `server/services/listings/repository.ts`, `server/api/listings/`                                |
-| Listings-Navigation     | `shared/listings-nav.ts`, `app/pages/listings/`                                                 |
-| Inventar                | `server/services/inventory/`, `app/pages/inventory.vue`, `useInventory`, `InventoryCreateModal` |
-| Prompt-Bibliothek       | `server/services/prompt-library/`, `server/api/prompt-library/`                                 |
-| Agent-Seed/Namen        | `server/database/seed.ts`, `server/database/migrations.ts`                                      |
-| Default-Agents          | Research, Listing, Flipping (`analytics`), Prompt (`strategy`, Meta-Agent)                      |
-| Dashboard               | `server/services/dashboard/summary.ts`, `app/components/DashboardOverview.vue`, `useDashboard`  |
-| Fetch-Keys              | `app/utils/fetch-keys.ts` — `useFetch`-Keys für geteilten Cache                                 |
-| UI nach Speichern       | `app/utils/refresh-fetch-data.ts` — Domain-Bundles (`refreshResearchData`, …)                   |
-| API-Handler + Zod       | `server/utils/api-handler.ts`, `server/api/schemas/`                                            |
-| Shared API-Typen        | `shared/research-types.ts`, `shared/flipping-types.ts`, `shared/inventory-types.ts`             |
-| Inventar-Prefill        | `shared/inventory-prefill.ts` — `buildInventoryPrefillFromListing()`                            |
-| Agent-Prompt-Docs       | `docs/listing_agent.md`, `docs/flipping_agent.md`                                               |
-| Docker-Datenordner      | Repo-Root `.env` (`MARKETMIND_DATA_DIR`), `docker-compose.yml`                                  |
+| Aufgabe                 | Ort                                                                                                                                               |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Neue API-Route          | `server/api/<name>.<method>.ts`                                                                                                                   |
+| Neue Seite              | `app/pages/<route>.vue`                                                                                                                           |
+| Scraper-Logik           | `server/services/scraper/`                                                                                                                        |
+| DB-Schema               | `server/database/schema.sql` + Seed anpassen                                                                                                      |
+| Formatierung            | `shared/format-*.ts` wiederverwenden                                                                                                              |
+| Einstellungen-Keys      | `server/database/settings.ts`, Settings-UI                                                                                                        |
+| KI-Aufruf               | `server/services/ai/run-agent.ts`                                                                                                                 |
+| Preisrecherche          | `server/services/research/run-research.ts`, `app/pages/research/`                                                                                 |
+| Gespeicherte Recherchen | `useSavedResearches`, `app/pages/research/saved/`, `server/api/saved-researches/`                                                                 |
+| Research-Navigation     | `shared/research-nav.ts`, `app/layouts/default.vue`                                                                                               |
+| Flipping-Analyse        | `server/services/flipping/analyze-flip.ts`, `server/api/flipping/analyze.post.ts`                                                                 |
+| Flipping speichern      | `createSavedFlipAnalysisFromResult`, `useSavedFlipAnalyses.saveFromResult`, `POST /api/saved-flip-analyses`                                       |
+| Anzeigen speichern      | `server/services/listings/repository.ts`, `server/api/listings/`                                                                                  |
+| Listings-Navigation     | `shared/listings-nav.ts`, `app/pages/listings/`                                                                                                   |
+| Inventar                | `server/services/inventory/`, `app/pages/inventory.vue`, `useInventory`, `InventoryCreateModal`                                                   |
+| Prompt-Bibliothek       | `server/services/prompt-library/`, `server/api/prompt-library/`                                                                                   |
+| Agent-Seed/Namen        | `server/database/seed.ts`, `server/database/migrations.ts`                                                                                        |
+| Default-Agents          | Research, Listing, Flipping (`analytics`), Prompt (`strategy`, Meta-Agent)                                                                        |
+| Dashboard               | `server/services/dashboard/summary.ts`, `app/components/DashboardOverview.vue`, `useDashboard`                                                    |
+| Fetch-Keys              | `app/utils/fetch-keys.ts` — `useFetch`-Keys für geteilten Cache                                                                                   |
+| UI nach Speichern       | `app/utils/refresh-fetch-data.ts` — Domain-Bundles (`refreshResearchData`, …)                                                                     |
+| API-Handler + Zod       | `server/utils/api-handler.ts`, `server/api/schemas/`                                                                                              |
+| Shared API-Typen        | `shared/research-types.ts`, `shared/flipping-types.ts`, `shared/inventory-types.ts`, `shared/listings-types.ts`, `shared/listing-detail-types.ts` |
+| Inventar-Prefill        | `shared/inventory-prefill.ts` — `buildInventoryPrefillFromListing()`                                                                              |
+| Agent-Prompt-Docs       | `docs/listing_agent.md`, `docs/flipping_agent.md`                                                                                                 |
+| Docker-Datenordner      | Repo-Root `.env` (`MARKETMIND_DATA_DIR`), `docker-compose.yml`                                                                                    |
 
 ## Was vermeiden
 

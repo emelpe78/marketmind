@@ -4,6 +4,37 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.2.2] — 2026-06-10
+
+Architektur-Deepening: tiefere Domänen-Module, einheitliche HTTP-Seams, Workflow-Composables und Flipping-Speichern ohne Doppel-Scrape.
+
+### Hinzugefügt
+
+- **`JsonRow`** — `parseJsonColumn()` für gespeicherte JSON-Snapshots (`server/services/persistence/json-row.ts`)
+- **`EMPTY_PRICE_STATS`** — zentrale leere Preisstatistik in `shared/price-stats.ts`
+- **`ApiSchemas/common`** — gemeinsames `priceStatsSchema`, `titleUpdateBodySchema`
+- **`MarketContext`** — `scrapeMarketContext()` für Marktvergleich mit optionaler Persistence (`server/services/scraper/market-context.ts`)
+- **`ListingDetailTypes`** — `ListingDetail` in `shared/listing-detail-types.ts`; `FlipListingInfo` ist Alias
+- **`shared/listings-types.ts`** — Listing-Typen und `toListingCreatePayload()`
+- **`SavedResearchListItem`** — schlanke Listen-API für gespeicherte Recherchen
+- **Workflow-Composables** — `useResearch` und `useListings` tragen UI-State und Workflow-Logik
+- **`createSavedFlipAnalysisFromResult()`** — Speichern aus Analyse-Ergebnis ohne Re-Scrape
+- **`findPricedResultsForPlatform()`** — einheitlicher Zugriff auf `search_results` im searches-Repository
+- **`listSavedFlipAnalysisItems()` / `listSavedResearchItems()`** — schlanke GET-Listen
+
+### Geändert
+
+- **Flipping speichern** — `useSavedFlipAnalyses.saveFromResult()` → `POST /api/saved-flip-analyses` mit vollem Analyse-Payload (kein Doppel-Scrape)
+- **Flipping-Marktvergleich** — keine Orphan-Einträge in `searches` (in-memory Stats via `scrapeMarketContext({ persist: false })`)
+- **Watchlist-Scraper** — nutzt `parseListingDetailHtml` statt isolierter Preis-Extraktion
+- **HTTP-Mutations-Routen** — `defineApiHandler` + Zod für Listings-Generate, Watchlist, Agents, Prompt-Library, Settings, Database-Reset u. a.
+- **Research-API** — totes `analyses`-Request-Feld entfernt
+- **`analyze-search`** — kein direktes SQL; `PlatformAnalysis` = `ResearchRunSummary`
+
+### Entfernt
+
+- **`POST /api/saved-flip-analyses/from-url`** — ersetzt durch Speichern aus Analyse-Ergebnis (Breaking)
+
 ## [0.2.1] — 2026-06-10
 
 Architektur-Refactor: klarere Schichten, serverseitige Speicher-Flows für KI-Daten, einheitliche API-Validierung und geteilte Typen.
@@ -368,7 +399,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/emelpe78/marketmind/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/emelpe78/marketmind/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/emelpe78/marketmind/compare/v0.1.7...v0.2.0
 [0.1.7]: https://github.com/emelpe78/marketmind/compare/v0.1.6...v0.1.7

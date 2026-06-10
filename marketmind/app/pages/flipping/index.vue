@@ -7,7 +7,7 @@ definePageMeta({ layout: "default" });
 const url = ref("");
 const result = ref<FlipAnalysisResult | null>(null);
 const { loading, analyze } = useFlipping();
-const { saveFromUrl } = useSavedFlipAnalyses();
+const { saveFromResult } = useSavedFlipAnalyses();
 const saving = ref(false);
 const toast = useToast();
 
@@ -40,7 +40,7 @@ async function saveCurrentAnalysis() {
   if (!result.value) return;
   saving.value = true;
   try {
-    const saved = await saveFromUrl(result.value.listing.url);
+    const saved = await saveFromResult(result.value);
     toast.add({
       title: "Analyse gespeichert",
       description: "Unter „Flipping-Analysen“ aufrufbar.",

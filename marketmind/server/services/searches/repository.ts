@@ -113,6 +113,30 @@ export function getSearchStats(db: Database.Database, searchId: number) {
   return analyzePrices(results);
 }
 
+export interface PricedSearchResultRow {
+  title: string;
+  price: number;
+  condition: string | null;
+  platform: string;
+}
+
+export function findPricedResultsForPlatform(
+  db: Database.Database,
+  searchId: number,
+  platform: "ebay" | "kleinanzeigen",
+  limit = 20,
+): PricedSearchResultRow[] {
+  return db
+    .prepare(
+      `SELECT title, price, condition, platform
+       FROM search_results
+       WHERE search_id = ? AND platform = ? AND price > 0
+       ORDER BY price ASC
+       LIMIT ?`,
+    )
+    .all(searchId, platform, limit) as PricedSearchResultRow[];
+}
+
 export function findSearchResults(
   db: Database.Database,
   searchId?: number | null,

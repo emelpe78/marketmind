@@ -1,16 +1,7 @@
-import type { DetectedPlatform } from "./detect-platform";
+import type { ListingDetail } from "./listing-detail-types";
 import type { PriceStats } from "./price-stats";
 
-export interface FlipListingInfo {
-  platform: DetectedPlatform | string;
-  url: string;
-  title: string;
-  price: number | null;
-  condition: string | null;
-  location: string | null;
-  category?: string | null;
-  description?: string | null;
-}
+export type FlipListingInfo = ListingDetail;
 
 export interface FlipMarketSample {
   title: string;

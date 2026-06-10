@@ -1,13 +1,12 @@
 import type Database from "better-sqlite3";
+import type { ResearchRunSummary } from "shared/research-types";
 import { runAgent } from "../ai/run-agent";
+import { findPricedResultsForPlatform } from "../searches/repository";
 import { buildResearchUserPrompt } from "./prompts";
 
 export type AnalysisPlatform = "ebay" | "kleinanzeigen";
 
-export interface PlatformAnalysis {
-  platform: AnalysisPlatform;
-  summary: string;
-}
+export type PlatformAnalysis = ResearchRunSummary;
 
 export function platformsForSearch(platform: string): AnalysisPlatform[] {
   if (platform === "both") return ["ebay", "kleinanzeigen"];
@@ -20,19 +19,11 @@ export async function analyzeSearchByPlatform(
   searchId: number,
   search: { query: string; platform: string },
 ): Promise<{ summaries: PlatformAnalysis[]; tokensUsed: number }> {
-  const stmt = db.prepare(
-    `SELECT title, price, condition, platform
-     FROM search_results
-     WHERE search_id = ? AND platform = ? AND price > 0
-     ORDER BY price ASC
-     LIMIT 20`,
-  );
-
   const summaries: PlatformAnalysis[] = [];
   let tokensUsed = 0;
 
   for (const platform of platformsForSearch(search.platform)) {
-    const results = stmt.all(searchId, platform);
+    const results = findPricedResultsForPlatform(db, searchId, platform);
     if (!results.length) continue;
 
     const userInput = buildResearchUserPrompt(search.query, platform, results);

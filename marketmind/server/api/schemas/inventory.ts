@@ -16,3 +16,18 @@ export const inventoryCreateBodySchema = z.object({
 });
 
 export type InventoryCreateBody = z.infer<typeof inventoryCreateBodySchema>;
+
+export const inventoryUpdateBodySchema = z.object({
+  title: z.string().optional(),
+  buy_price: nullableNumber,
+  buy_platform: nullableString,
+  buy_date: nullableString,
+  sell_price: nullableNumber,
+  sell_platform: nullableString,
+  sell_date: nullableString,
+  status: z.string().optional(),
+  notes: nullableString,
+  profit: nullableNumber,
+});
+
+export type InventoryUpdateBody = z.infer<typeof inventoryUpdateBodySchema>;

@@ -1,8 +1,11 @@
-import { getDb } from "../../database/db";
+import { defineApiHandler, parseRouteId } from "../../utils/api-handler";
 import { updatePrompt } from "../../services/prompt-library/repository";
+import { promptLibraryBodySchema } from "../schemas/prompt-library";
 
-export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, "id");
-  const body = await readBody(event);
-  return updatePrompt(getDb(), Number(id), body);
-});
+export default defineApiHandler(
+  promptLibraryBodySchema,
+  async (db, body, event) => {
+    const id = parseRouteId(event);
+    return updatePrompt(db, id, body);
+  },
+);

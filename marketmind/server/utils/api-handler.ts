@@ -1,4 +1,20 @@
 import type { H3Event } from "h3";
+
+export function parseRouteId(event: H3Event, param = "id"): number {
+  const id = Number(getRouterParam(event, param));
+  if (!Number.isFinite(id)) {
+    throw createError({ statusCode: 400, message: "ID fehlt" });
+  }
+  return id;
+}
+
+export function parseRouteParam(event: H3Event, param: string): string {
+  const value = getRouterParam(event, param);
+  if (!value) {
+    throw createError({ statusCode: 400, message: `${param} fehlt` });
+  }
+  return value;
+}
 import type Database from "better-sqlite3";
 import type { ZodType } from "zod";
 import { getDb } from "../database/db";

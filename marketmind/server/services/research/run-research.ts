@@ -36,7 +36,6 @@ export interface ResearchRunInput {
   analyze?: boolean;
   save?: boolean;
   saveName?: string;
-  analyses?: ResearchRunSummary[];
   scraperDeps?: FetcherDeps;
 }
 

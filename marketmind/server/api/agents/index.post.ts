@@ -1,7 +1,7 @@
-import { getDb } from "../../database/db";
+import { defineApiHandler } from "../../utils/api-handler";
 import { createAgent } from "../../services/agents/repository";
+import { agentCreateBodySchema } from "../schemas/agents";
 
-export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  return createAgent(getDb(), body);
+export default defineApiHandler(agentCreateBodySchema, async (db, body) => {
+  return createAgent(db, body);
 });

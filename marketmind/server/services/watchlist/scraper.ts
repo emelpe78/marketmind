@@ -1,10 +1,9 @@
 import type Database from "better-sqlite3";
-import { scrapeListingPrice } from "../scraper/price-extract";
+import { detectPlatformFromUrl } from "shared/detect-platform";
+import { parseListingDetailHtml } from "../scraper/listing-detail";
 import { createScraperRuntime } from "../scraper/runtime";
 import { checkAlert } from "./alerts";
 import type { WatchlistItem } from "./repository";
-
-export { scrapeListingPrice } from "../scraper/price-extract";
 
 export async function scrapeWatchlistItem(
   db: Database.Database,
@@ -13,9 +12,13 @@ export async function scrapeWatchlistItem(
 ): Promise<{ price: number | null; alertTriggered: boolean }> {
   if (!item.url) return { price: null, alertTriggered: false };
 
+  const platform = detectPlatformFromUrl(item.url);
+  if (!platform) return { price: null, alertTriggered: false };
+
   const runtime = createScraperRuntime(db, { fetchFn });
   const html = await runtime.fetchPage(item.url);
-  const price = scrapeListingPrice(html);
+  const listing = parseListingDetailHtml(html, item.url, platform);
+  const price = listing?.price ?? null;
 
   if (price !== null) {
     db.prepare(

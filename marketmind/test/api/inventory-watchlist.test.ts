@@ -7,10 +7,8 @@ import {
   getInventorySummary,
 } from "../../server/services/inventory/index";
 import { checkAlert } from "../../server/services/watchlist/alerts";
-import {
-  scrapeListingPrice,
-  scrapeWatchlistItem,
-} from "../../server/services/watchlist/scraper";
+import { scrapeListingPrice } from "../../server/services/scraper/price-extract";
+import { scrapeWatchlistItem } from "../../server/services/watchlist/scraper";
 
 describe("inventory", () => {
   it("auto-calculates profit when sold", () => {
@@ -111,7 +109,8 @@ describe("watchlist scraper", () => {
 
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      text: async () => `<div class="x-price-primary">120,00 €</div>`,
+      text: async () =>
+        `<html><head><meta property="og:title" content="Test GPU" /></head><body><div class="x-price-primary">120,00 €</div></body></html>`,
       headers: { getSetCookie: () => [] },
     });
 

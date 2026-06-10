@@ -1,4 +1,7 @@
-import type { SavedFlipAnalysisDetail } from "shared/flipping-types";
+import type {
+  AnalyzeFlipResult,
+  SavedFlipAnalysisDetail,
+} from "shared/flipping-types";
 import { FETCH_KEYS } from "~/utils/fetch-keys";
 import { refreshFlippingData } from "~/utils/refresh-fetch-data";
 
@@ -19,15 +22,24 @@ export function useSavedFlipAnalyses() {
     },
   );
 
-  async function saveFromUrl(
-    url: string,
+  async function saveFromResult(
+    result: AnalyzeFlipResult,
     title?: string,
   ): Promise<SavedFlipAnalysisDetail> {
     const saved = await $fetch<SavedFlipAnalysisDetail>(
-      "/api/saved-flip-analyses/from-url",
+      "/api/saved-flip-analyses",
       {
         method: "POST",
-        body: { url, title },
+        body: {
+          title,
+          listingUrl: result.listing.url,
+          listingPlatform: String(result.listing.platform),
+          query: result.query,
+          analysis: result.analysis,
+          listing: result.listing,
+          marketStats: result.marketStats,
+          marketSamples: result.marketSamples,
+        },
       },
     );
     await refreshFlippingData();
@@ -55,7 +67,7 @@ export function useSavedFlipAnalyses() {
     analyses,
     pending,
     refresh,
-    saveFromUrl,
+    saveFromResult,
     updateAnalysis,
     deleteAnalysis,
   };

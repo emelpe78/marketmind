@@ -1,7 +1,7 @@
-import { getDb } from "../../database/db";
+import { defineApiHandler } from "../../utils/api-handler";
 import { createWatchlistItem } from "../../services/watchlist/repository";
+import { watchlistCreateBodySchema } from "../schemas/watchlist";
 
-export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  return createWatchlistItem(getDb(), body);
+export default defineApiHandler(watchlistCreateBodySchema, async (db, body) => {
+  return createWatchlistItem(db, body);
 });

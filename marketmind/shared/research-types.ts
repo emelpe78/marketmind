@@ -20,3 +20,13 @@ export interface ResearchRunResult {
   summaries?: ResearchRunSummary[];
   savedResearchId?: number;
 }
+
+export interface SavedResearchListItem {
+  id: number;
+  title: string;
+  query: string;
+  platform: string;
+  resultsCount: number;
+  createdAt: string;
+  updatedAt: string;
+}

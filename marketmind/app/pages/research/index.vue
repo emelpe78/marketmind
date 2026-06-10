@@ -4,40 +4,36 @@ import {
   PLATFORM_LABELS,
   RESEARCH_PLATFORM_OPTIONS,
 } from "shared/platform-labels";
-import type { PriceStats } from "shared/price-stats";
-import type { ResearchRunSummary } from "shared/research-types";
-import type { SearchResult } from "~/composables/useResearch";
 
 definePageMeta({ layout: "default" });
 
 const {
-  runSearch: fetchResearch,
-  analyzeSearch: requestAnalyze,
-  saveResearch: requestSave,
+  query,
+  platform,
+  loading,
+  analyzing,
+  saving,
+  searchId,
+  stats,
+  summaries,
+  results,
+  hasAnalysis,
+  canSave,
+  runSearch: executeSearch,
+  analyze: executeAnalyze,
+  save: executeSave,
 } = useResearch();
 
-const query = ref("");
-const platform = ref<"ebay" | "kleinanzeigen" | "both">("both");
-const loading = ref(false);
-const analyzing = ref(false);
-const saving = ref(false);
-const searchId = ref<number | null>(null);
-const stats = ref<PriceStats | null>(null);
-const summaries = ref<ResearchRunSummary[]>([]);
-const results = ref<SearchResult[]>([]);
 const sorting = ref<{ id: string; desc: boolean }[]>([]);
 const toast = useToast();
 
+const platformLabels = PLATFORM_LABELS;
+const platformOptions = [...RESEARCH_PLATFORM_OPTIONS];
+
 async function runSearch() {
-  if (!query.value.trim()) return;
-  loading.value = true;
-  summaries.value = [];
-  sorting.value = [];
   try {
-    const response = await fetchResearch(query.value, platform.value);
-    searchId.value = response.searchId;
-    results.value = response.results;
-    stats.value = response.stats;
+    const response = await executeSearch();
+    if (!response) return;
     if (response.results.length === 0) {
       toast.add({
         title: "Keine Ergebnisse gefunden",
@@ -60,29 +56,21 @@ async function runSearch() {
     const message =
       err?.data?.message || err?.statusMessage || "Suche fehlgeschlagen";
     toast.add({ title: message, color: "error" });
-  } finally {
-    loading.value = false;
   }
 }
 
 async function analyzeSearch() {
-  if (!searchId.value) return;
-  analyzing.value = true;
   try {
-    const response = await requestAnalyze(searchId.value);
-    summaries.value = response.summaries ?? [];
+    await executeAnalyze();
   } catch {
     toast.add({ title: "Analyse fehlgeschlagen", color: "error" });
-  } finally {
-    analyzing.value = false;
   }
 }
 
 async function saveResearch() {
-  if (!searchId.value || !stats.value || results.value.length === 0) return;
-  saving.value = true;
   try {
-    const saved = await requestSave(searchId.value, query.value.trim());
+    const saved = await executeSave();
+    if (!saved) return;
     toast.add({
       title: "Recherche gespeichert",
       description: "Unter Preisrecherche → Gespeicherte Recherchen aufrufbar.",
@@ -93,16 +81,8 @@ async function saveResearch() {
     }
   } catch {
     toast.add({ title: "Speichern fehlgeschlagen", color: "error" });
-  } finally {
-    saving.value = false;
   }
 }
-
-const platformLabels = PLATFORM_LABELS;
-
-const hasAnalysis = computed(() => summaries.value.length > 0);
-
-const platformOptions = [...RESEARCH_PLATFORM_OPTIONS];
 </script>
 
 <template>
@@ -196,7 +176,7 @@ const platformOptions = [...RESEARCH_PLATFORM_OPTIONS];
       <UButton
         icon="i-lucide-bookmark"
         :loading="saving"
-        :disabled="!hasAnalysis"
+        :disabled="!canSave"
         data-testid="save-research"
         @click="saveResearch"
       >

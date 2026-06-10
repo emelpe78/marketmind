@@ -1,6 +1,13 @@
 import type Database from "better-sqlite3";
-import type { FlipListingInfo, FlipMarketSample } from "shared/flipping-types";
-import type { PriceStats } from "shared/price-stats";
+import type { DetectedPlatform } from "shared/detect-platform";
+import type {
+  AnalyzeFlipResult,
+  FlipListingInfo,
+  FlipMarketSample,
+  SavedFlipAnalysisListItem,
+} from "shared/flipping-types";
+import { EMPTY_PRICE_STATS, type PriceStats } from "shared/price-stats";
+import { parseJsonColumn } from "../persistence/json-row";
 
 export type SavedFlipListing = FlipListingInfo;
 
@@ -32,27 +39,6 @@ interface SavedFlipAnalysisRow {
   updated_at: string;
 }
 
-const EMPTY_STATS: PriceStats = {
-  min: 0,
-  max: 0,
-  avg: 0,
-  median: 0,
-  count: 0,
-  histogram: [],
-  conditionBreakdown: {},
-  platformComparison: {},
-  demandIndicator: 0,
-};
-
-function parseJson<T>(value: string | null, fallback: T): T {
-  if (!value) return fallback;
-  try {
-    return JSON.parse(value) as T;
-  } catch {
-    return fallback;
-  }
-}
-
 function rowToSavedFlipAnalysis(row: SavedFlipAnalysisRow): SavedFlipAnalysis {
   return {
     id: row.id,
@@ -61,16 +47,24 @@ function rowToSavedFlipAnalysis(row: SavedFlipAnalysisRow): SavedFlipAnalysis {
     listingPlatform: row.listing_platform,
     query: row.query,
     analysis: row.analysis,
-    listing: parseJson<SavedFlipListing>(row.listing_json, {
-      platform: row.listing_platform,
+    listing: parseJsonColumn<SavedFlipListing>(row.listing_json, {
+      platform: row.listing_platform as DetectedPlatform,
       url: row.listing_url,
       title: row.title,
       price: null,
       condition: null,
       location: null,
+      description: null,
+      category: null,
     }),
-    marketStats: parseJson<PriceStats>(row.market_stats_json, EMPTY_STATS),
-    marketSamples: parseJson<FlipMarketSample[]>(row.market_samples_json, []),
+    marketStats: parseJsonColumn<PriceStats>(
+      row.market_stats_json,
+      EMPTY_PRICE_STATS,
+    ),
+    marketSamples: parseJsonColumn<FlipMarketSample[]>(
+      row.market_samples_json,
+      [],
+    ),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -83,6 +77,25 @@ export function countSavedFlipAnalyses(db: Database.Database): number {
   return row.count;
 }
 
+export function toSavedFlipAnalysisListItem(
+  analysis: SavedFlipAnalysis,
+): SavedFlipAnalysisListItem {
+  return {
+    id: analysis.id,
+    title: analysis.title,
+    listingUrl: analysis.listingUrl,
+    listingPlatform: analysis.listingPlatform,
+    query: analysis.query,
+    listing: {
+      title: analysis.listing.title,
+      price: analysis.listing.price,
+      platform: String(analysis.listing.platform),
+    },
+    createdAt: analysis.createdAt,
+    updatedAt: analysis.updatedAt,
+  };
+}
+
 export function listSavedFlipAnalyses(
   db: Database.Database,
 ): SavedFlipAnalysis[] {
@@ -90,6 +103,12 @@ export function listSavedFlipAnalyses(
     .prepare("SELECT * FROM saved_flip_analyses ORDER BY updated_at DESC")
     .all() as SavedFlipAnalysisRow[];
   return rows.map(rowToSavedFlipAnalysis);
+}
+
+export function listSavedFlipAnalysisItems(
+  db: Database.Database,
+): SavedFlipAnalysisListItem[] {
+  return listSavedFlipAnalyses(db).map(toSavedFlipAnalysisListItem);
 }
 
 export function getSavedFlipAnalysis(
@@ -113,16 +132,15 @@ export interface CreateSavedFlipAnalysisInput {
   marketSamples: FlipMarketSample[];
 }
 
-export async function saveFlipAnalysisFromUrl(
+export function createSavedFlipAnalysisFromResult(
   db: Database.Database,
-  input: { url: string; title?: string },
-): Promise<SavedFlipAnalysis> {
-  const { analyzeFlip } = await import("./analyze-flip");
-  const result = await analyzeFlip(db, { url: input.url });
+  result: AnalyzeFlipResult,
+  title?: string,
+): SavedFlipAnalysis {
   return createSavedFlipAnalysis(db, {
-    title: input.title,
+    title,
     listingUrl: result.listing.url,
-    listingPlatform: result.listing.platform,
+    listingPlatform: String(result.listing.platform),
     query: result.query,
     analysis: result.analysis,
     listing: result.listing,

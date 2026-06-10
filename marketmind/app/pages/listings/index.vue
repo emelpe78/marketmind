@@ -1,89 +1,55 @@
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
 
-import type { GeneratedListing } from "~/composables/useListings";
-
-const query = ref("");
-const condition = ref("Gebraucht");
-const extras = ref("");
-const desiredPrice = ref<number | undefined>();
-const activeTab = ref("kleinanzeigen");
-const saving = ref(false);
-const editingId = ref<number | null>(null);
-const generated = ref<GeneratedListing | null>(null);
-const toast = useToast();
-
 const {
+  query,
+  condition,
+  extras,
+  desiredPrice,
+  activeTab,
+  saving,
+  editingId,
+  generated,
   generating: loading,
-  generateListing: runGenerateListing,
-  saveListing: persistListing,
-  updateListing: persistListingUpdate,
-} = await useListings();
+  generate: executeGenerate,
+  resetEditor,
+  save: executeSave,
+} = useListings();
 
+const toast = useToast();
 const conditionOptions = ["Neu", "Gebraucht", "Defekt"];
 
-function resetEditor() {
-  editingId.value = null;
-  generated.value = null;
-}
-
 async function generateListing() {
-  if (!query.value) return;
   try {
-    generated.value = await runGenerateListing({
-      query: query.value,
-      platform: activeTab.value,
-      condition: condition.value,
-      extras: extras.value,
-      desiredPrice: desiredPrice.value,
-    });
-    editingId.value = null;
+    await executeGenerate();
   } catch {
     toast.add({ title: "Generierung fehlgeschlagen", color: "error" });
   }
 }
 
-function buildSavePayload() {
-  if (!generated.value) return null;
-  return {
-    query: query.value.trim() || generated.value.title,
-    platform: activeTab.value,
-    title: String(generated.value.title).trim(),
-    description: String(generated.value.description).trim(),
-    keywords: generated.value.keywords,
-    category: generated.value.category,
-    price_suggestion: generated.value.priceSuggestion,
-  };
-}
-
 async function saveListing() {
-  const payload = buildSavePayload();
-  if (!payload?.title || !payload.description) {
-    toast.add({
-      title: "Titel und Beschreibung erforderlich",
-      color: "warning",
-    });
-    return;
-  }
-
-  saving.value = true;
   try {
-    if (editingId.value) {
-      await persistListingUpdate(editingId.value, payload);
-      toast.add({ title: "Anzeige aktualisiert", color: "success" });
-    } else {
-      const saved = await persistListing(payload);
-      editingId.value = saved.id;
-      toast.add({ title: "Anzeige gespeichert", color: "success" });
+    const result = await executeSave();
+    if (!result) {
+      toast.add({
+        title: "Titel und Beschreibung erforderlich",
+        color: "warning",
+      });
+      return;
     }
+    toast.add({
+      title:
+        result.mode === "update"
+          ? "Anzeige aktualisiert"
+          : "Anzeige gespeichert",
+      color: "success",
+    });
   } catch (error: unknown) {
     const err = error as { data?: { message?: string } };
     toast.add({
       title: err?.data?.message || "Speichern fehlgeschlagen",
       color: "error",
     });
-  } finally {
-    saving.value = false;
   }
 }
 

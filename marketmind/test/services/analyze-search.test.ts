@@ -68,8 +68,10 @@ describe("analyze-search", () => {
     expect(mockChatCompletion).toHaveBeenCalledTimes(2);
 
     const firstCall = mockChatCompletion.mock.calls[0];
-    expect(firstCall?.[2]?.[1]?.content).toContain("RTX 3060");
-    expect(firstCall?.[2]?.[1]?.content).toContain("eBay.de");
+    const firstUserMessage = firstCall?.[2]?.[1]?.content as string;
+    expect(firstUserMessage).toContain("RTX 3060");
+    expect(firstUserMessage).toContain("eBay.de");
+    expect(firstUserMessage).toContain("250");
 
     const history = db.prepare("SELECT * FROM agent_history").all();
     expect(history).toHaveLength(2);

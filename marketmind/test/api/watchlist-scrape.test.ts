@@ -6,6 +6,7 @@ import scrapeAll from "../../server/api/watchlist/scrape-all.post";
 import { createEvent } from "h3";
 
 async function callScrapeItem(id: number) {
+  vi.stubGlobal("readBody", async () => ({}));
   vi.stubGlobal("getRouterParam", () => String(id));
   const event = createEvent({
     method: "POST",
@@ -28,7 +29,8 @@ describe("watchlist scrape API", () => {
 
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      text: async () => `<div class="x-price-primary">150,00 €</div>`,
+      text: async () =>
+        `<html><head><meta property="og:title" content="GPU" /></head><body><div class="x-price-primary">150,00 €</div></body></html>`,
       headers: { getSetCookie: () => [] },
     });
     vi.stubGlobal("fetch", mockFetch);
@@ -52,7 +54,8 @@ describe("watchlist scrape API", () => {
 
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      text: async () => `<div class="x-price-primary">90,00 €</div>`,
+      text: async () =>
+        `<html><head><meta property="og:title" content="Item A" /></head><body><div class="x-price-primary">90,00 €</div></body></html>`,
       headers: { getSetCookie: () => [] },
     });
     vi.stubGlobal("fetch", mockFetch);

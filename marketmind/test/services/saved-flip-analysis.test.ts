@@ -3,6 +3,7 @@ import { createTestDb } from "../helpers/test-db";
 import { getDb } from "../../server/database/db";
 import {
   createSavedFlipAnalysis,
+  createSavedFlipAnalysisFromResult,
   deleteSavedFlipAnalysis,
   getSavedFlipAnalysis,
   listSavedFlipAnalyses,
@@ -60,5 +61,40 @@ describe("saved flip analyses", () => {
 
     expect(deleteSavedFlipAnalysis(db, created.id)).toBe(true);
     expect(getSavedFlipAnalysis(db, created.id)).toBeNull();
+  });
+
+  it("creates saved flip analysis from analyze result without re-scraping", () => {
+    createTestDb();
+    const db = getDb();
+
+    const saved = createSavedFlipAnalysisFromResult(db, {
+      analysis: "### Fazit\nKaufen",
+      query: "RTX 3060",
+      listing: {
+        platform: "kleinanzeigen",
+        url: "https://www.kleinanzeigen.de/s-anzeige/test/2",
+        title: "RTX 3060",
+        price: 150,
+        condition: "Gut",
+        location: "Hamburg",
+      },
+      marketStats: {
+        min: 100,
+        max: 200,
+        avg: 150,
+        median: 150,
+        count: 3,
+        histogram: [],
+        conditionBreakdown: {},
+        platformComparison: {},
+        demandIndicator: 1,
+      },
+      marketSamples: [],
+    });
+
+    expect(saved.listingUrl).toBe(
+      "https://www.kleinanzeigen.de/s-anzeige/test/2",
+    );
+    expect(saved.analysis).toContain("Fazit");
   });
 });

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { priceStatsSchema } from "./common";
 
 export const flippingAnalyzeBodySchema = z.object({
   url: z.string().min(1, "Anzeigen-URL fehlt"),
@@ -7,14 +8,14 @@ export const flippingAnalyzeBodySchema = z.object({
 export type FlippingAnalyzeBody = z.infer<typeof flippingAnalyzeBodySchema>;
 
 const flipListingSchema = z.object({
-  platform: z.string(),
+  platform: z.enum(["ebay", "kleinanzeigen"]),
   url: z.string(),
   title: z.string(),
   price: z.number().nullable(),
   condition: z.string().nullable(),
   location: z.string().nullable(),
-  category: z.string().nullable().optional(),
-  description: z.string().nullable().optional(),
+  category: z.string().nullable(),
+  description: z.string().nullable(),
 });
 
 const flipMarketSampleSchema = z.object({
@@ -22,30 +23,6 @@ const flipMarketSampleSchema = z.object({
   price: z.number(),
   platform: z.string(),
   condition: z.string().nullable(),
-});
-
-const priceStatsSchema = z.object({
-  min: z.number(),
-  max: z.number(),
-  avg: z.number(),
-  median: z.number(),
-  count: z.number(),
-  histogram: z.array(
-    z.object({
-      low: z.number(),
-      high: z.number(),
-      count: z.number(),
-    }),
-  ),
-  conditionBreakdown: z.record(
-    z.string(),
-    z.object({ count: z.number(), avgPrice: z.number() }),
-  ),
-  platformComparison: z.record(
-    z.string(),
-    z.object({ count: z.number(), avgPrice: z.number() }),
-  ),
-  demandIndicator: z.number(),
 });
 
 export const savedFlipAnalysisBodySchema = z.object({
@@ -60,10 +37,3 @@ export const savedFlipAnalysisBodySchema = z.object({
 });
 
 export type SavedFlipAnalysisBody = z.infer<typeof savedFlipAnalysisBodySchema>;
-
-export const savedFlipFromUrlBodySchema = z.object({
-  url: z.string().min(1, "Anzeigen-URL fehlt"),
-  title: z.string().optional(),
-});
-
-export type SavedFlipFromUrlBody = z.infer<typeof savedFlipFromUrlBodySchema>;

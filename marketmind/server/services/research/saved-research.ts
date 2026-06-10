@@ -1,5 +1,10 @@
 import type Database from "better-sqlite3";
-import type { PriceStats } from "../stats/price-analysis";
+import type {
+  ResearchRunSummary,
+  SavedResearchListItem,
+} from "shared/research-types";
+import { EMPTY_PRICE_STATS, type PriceStats } from "shared/price-stats";
+import { parseJsonColumn } from "../persistence/json-row";
 
 export interface SavedResearchResult {
   title: string;
@@ -9,10 +14,7 @@ export interface SavedResearchResult {
   condition?: string | null;
 }
 
-export interface SavedResearchAnalysis {
-  platform: "ebay" | "kleinanzeigen";
-  summary: string;
-}
+export type SavedResearchAnalysis = ResearchRunSummary;
 
 export function countSavedResearches(db: Database.Database): number {
   const row = db
@@ -47,15 +49,6 @@ interface SavedResearchRow {
   updated_at: string;
 }
 
-function parseJson<T>(value: string | null, fallback: T): T {
-  if (!value) return fallback;
-  try {
-    return JSON.parse(value) as T;
-  } catch {
-    return fallback;
-  }
-}
-
 function rowToSavedResearch(row: SavedResearchRow): SavedResearch {
   return {
     id: row.id,
@@ -63,21 +56,25 @@ function rowToSavedResearch(row: SavedResearchRow): SavedResearch {
     query: row.query,
     platform: row.platform,
     searchId: row.search_id,
-    stats: parseJson<PriceStats>(row.stats_json, {
-      min: 0,
-      max: 0,
-      avg: 0,
-      median: 0,
-      count: 0,
-      histogram: [],
-      conditionBreakdown: {},
-      platformComparison: {},
-      demandIndicator: 0,
-    }),
-    results: parseJson<SavedResearchResult[]>(row.results_json, []),
-    analyses: parseJson<SavedResearchAnalysis[]>(row.analyses_json, []),
+    stats: parseJsonColumn<PriceStats>(row.stats_json, EMPTY_PRICE_STATS),
+    results: parseJsonColumn<SavedResearchResult[]>(row.results_json, []),
+    analyses: parseJsonColumn<SavedResearchAnalysis[]>(row.analyses_json, []),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+  };
+}
+
+export function toSavedResearchListItem(
+  research: SavedResearch,
+): SavedResearchListItem {
+  return {
+    id: research.id,
+    title: research.title,
+    query: research.query,
+    platform: research.platform,
+    resultsCount: research.results.length,
+    createdAt: research.createdAt,
+    updatedAt: research.updatedAt,
   };
 }
 
@@ -86,6 +83,12 @@ export function listSavedResearches(db: Database.Database): SavedResearch[] {
     .prepare("SELECT * FROM saved_researches ORDER BY updated_at DESC")
     .all() as SavedResearchRow[];
   return rows.map(rowToSavedResearch);
+}
+
+export function listSavedResearchItems(
+  db: Database.Database,
+): SavedResearchListItem[] {
+  return listSavedResearches(db).map(toSavedResearchListItem);
 }
 
 export function getSavedResearch(

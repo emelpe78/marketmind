@@ -10,6 +10,5 @@ export default defineApiHandler(researchRunBodySchema, async (db, body) => {
     analyze: body.analyze,
     save: body.save,
     saveName: body.saveName,
-    analyses: body.analyses,
   });
 });

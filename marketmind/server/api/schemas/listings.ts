@@ -11,3 +11,18 @@ export const listingCreateBodySchema = z.object({
 });
 
 export type ListingCreateBody = z.infer<typeof listingCreateBodySchema>;
+
+export const listingUpdateBodySchema = listingCreateBodySchema;
+
+export type ListingUpdateBody = z.infer<typeof listingUpdateBodySchema>;
+
+export const listingGenerateBodySchema = z.object({
+  query: z.string().min(1, "Query und Plattform erforderlich"),
+  platform: z.enum(["kleinanzeigen", "ebay"]),
+  condition: z.string().optional(),
+  extras: z.string().optional(),
+  desiredPrice: z.number().optional(),
+  searchId: z.number().int().positive().optional(),
+});
+
+export type ListingGenerateBody = z.infer<typeof listingGenerateBodySchema>;

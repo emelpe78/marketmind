@@ -15,3 +15,15 @@ export interface PriceStats {
   platformComparison: Record<string, { count: number; avgPrice: number }>;
   demandIndicator: number;
 }
+
+export const EMPTY_PRICE_STATS: PriceStats = {
+  min: 0,
+  max: 0,
+  avg: 0,
+  median: 0,
+  count: 0,
+  histogram: [],
+  conditionBreakdown: {},
+  platformComparison: {},
+  demandIndicator: 0,
+};

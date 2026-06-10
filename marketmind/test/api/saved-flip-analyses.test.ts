@@ -33,6 +33,8 @@ describe("saved flip analyses API", () => {
         price: 180,
         condition: "Gut",
         location: "Berlin",
+        description: null,
+        category: null,
       },
       marketStats: {
         min: 100,

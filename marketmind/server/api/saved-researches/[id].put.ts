@@ -1,25 +1,18 @@
-import { getDb } from "../../database/db";
+import { defineApiHandler, parseRouteId } from "../../utils/api-handler";
 import { updateSavedResearch } from "../../services/research/saved-research";
+import { titleUpdateBodySchema } from "../schemas/common";
 
-export default defineEventHandler(async (event) => {
-  const id = Number(getRouterParam(event, "id"));
-  if (!Number.isFinite(id)) {
-    throw createError({ statusCode: 400, message: "ID fehlt" });
-  }
-
-  const body = await readBody<{ title?: string }>(event);
-  if (!body?.title?.trim()) {
-    throw createError({ statusCode: 400, message: "Titel fehlt" });
-  }
-
-  const db = getDb();
-  const updated = updateSavedResearch(db, id, { title: body.title });
-  if (!updated) {
-    throw createError({
-      statusCode: 404,
-      message: "Gespeicherte Recherche nicht gefunden",
-    });
-  }
-
-  return updated;
-});
+export default defineApiHandler(
+  titleUpdateBodySchema,
+  async (db, body, event) => {
+    const id = parseRouteId(event);
+    const updated = updateSavedResearch(db, id, { title: body.title });
+    if (!updated) {
+      throw createError({
+        statusCode: 404,
+        message: "Gespeicherte Recherche nicht gefunden",
+      });
+    }
+    return updated;
+  },
+);

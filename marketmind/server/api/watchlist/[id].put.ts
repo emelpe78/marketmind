@@ -1,8 +1,11 @@
-import { getDb } from "../../database/db";
+import { defineApiHandler, parseRouteId } from "../../utils/api-handler";
 import { updateWatchlistItem } from "../../services/watchlist/repository";
+import { watchlistUpdateBodySchema } from "../schemas/watchlist";
 
-export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, "id");
-  const body = await readBody(event);
-  return updateWatchlistItem(getDb(), Number(id), body);
-});
+export default defineApiHandler(
+  watchlistUpdateBodySchema,
+  async (db, body, event) => {
+    const id = parseRouteId(event);
+    return updateWatchlistItem(db, id, body);
+  },
+);

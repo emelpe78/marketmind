@@ -124,7 +124,7 @@ async function confirmDelete() {
               </UBadge>
             </div>
             <p class="text-sm text-muted mt-1">
-              {{ item.query }} · {{ item.results.length }} Ergebnisse ·
+              {{ item.query }} · {{ item.resultsCount }} Ergebnisse ·
               {{ formatDateTime(item.updatedAt) }}
             </p>
           </div>

@@ -1,18 +1,10 @@
 import { load } from "cheerio";
 import type { DetectedPlatform } from "shared/detect-platform";
+import type { ListingDetail } from "shared/listing-detail-types";
 import { parseGermanPrice } from "shared/parse-german-price";
 import { scrapeListingPrice } from "./price-extract";
 
-export interface ListingDetail {
-  platform: DetectedPlatform;
-  url: string;
-  title: string;
-  price: number | null;
-  description: string | null;
-  condition: string | null;
-  location: string | null;
-  category: string | null;
-}
+export type { ListingDetail } from "shared/listing-detail-types";
 
 function cleanText(value: string): string {
   return value.replace(/\s+/g, " ").trim();
