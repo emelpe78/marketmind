@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { detectPlatformFromUrl } from "shared/detect-platform";
+import type { InventoryCreatePrefill } from "shared/inventory-types";
+import { detectPlatformFromUrl, isListingUrl } from "shared/detect-platform";
+import { buildInventoryPrefillFromWatchlist } from "shared/inventory-prefill";
 import { PLATFORM_LABELS } from "shared/platform-labels";
+import { buildFlipRoute } from "shared/workflow-handoff";
 
 definePageMeta({ layout: "default" });
 
@@ -14,7 +17,41 @@ const {
   scrapeItem: runScrapeItem,
   scrapeAll: runScrapeAll,
 } = await useWatchlist();
+const { todayIsoDate } = await useInventory();
 const toast = useToast();
+
+const inventoryModalOpen = ref(false);
+const inventoryPrefill = ref<InventoryCreatePrefill>({});
+const inventoryTitleSuffix = ref<string | undefined>();
+
+function canAnalyzeFlip(item: Record<string, unknown>): boolean {
+  const url = typeof item.url === "string" ? item.url : "";
+  return Boolean(url.trim() && isListingUrl(url));
+}
+
+function flipRouteFor(item: Record<string, unknown>): string | null {
+  const url = typeof item.url === "string" ? item.url.trim() : "";
+  if (!url || !isListingUrl(url)) return null;
+  return buildFlipRoute(url);
+}
+
+function openInventoryModal(item: Record<string, unknown>) {
+  inventoryTitleSuffix.value = String(item.title ?? "");
+  inventoryPrefill.value = buildInventoryPrefillFromWatchlist(
+    {
+      title: String(item.title ?? ""),
+      url: typeof item.url === "string" ? item.url : null,
+      target_price:
+        item.target_price != null ? Number(item.target_price) : null,
+      current_price:
+        item.current_price != null ? Number(item.current_price) : null,
+      last_scraped:
+        typeof item.last_scraped === "string" ? item.last_scraped : null,
+    },
+    { todayIsoDate },
+  );
+  inventoryModalOpen.value = true;
+}
 
 const platformLabels = PLATFORM_LABELS;
 
@@ -238,6 +275,25 @@ function currentPriceClass(item: Record<string, unknown>): string {
           </div>
           <div class="flex gap-2">
             <UButton
+              v-if="canAnalyzeFlip(item)"
+              size="sm"
+              variant="outline"
+              icon="i-lucide-sparkles"
+              :to="flipRouteFor(item) ?? undefined"
+              data-testid="handoff-flip"
+            >
+              Flipping analysieren
+            </UButton>
+            <UButton
+              size="sm"
+              variant="outline"
+              icon="i-lucide-package-plus"
+              data-testid="handoff-inventory"
+              @click="openInventoryModal(item)"
+            >
+              Ins Inventar
+            </UButton>
+            <UButton
               size="sm"
               variant="outline"
               icon="i-lucide-pencil"
@@ -316,6 +372,12 @@ function currentPriceClass(item: Record<string, unknown>): string {
         </div>
       </template>
     </UModal>
+
+    <InventoryCreateModal
+      v-model:open="inventoryModalOpen"
+      :prefill="inventoryPrefill"
+      :title-suffix="inventoryTitleSuffix"
+    />
 
     <UModal v-model:open="deleteModalOpen" title="Eintrag löschen?">
       <template v-if="deleteItem" #body>

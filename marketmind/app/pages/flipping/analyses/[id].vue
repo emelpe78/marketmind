@@ -1,6 +1,13 @@
 <script setup lang="ts">
+import type { InventoryCreatePrefill } from "shared/inventory-types";
+import { buildInventoryPrefillFromFlipListing } from "shared/inventory-prefill";
 import { formatDateTime } from "shared/format-datetime";
 import { platformLabelFor, PLATFORM_LABELS } from "shared/platform-labels";
+import {
+  buildListingsPrefillFromFlip,
+  buildListingsRoute,
+  canBuildListingsFromFlipListing,
+} from "shared/workflow-handoff";
 import type { SavedFlipAnalysisDetail } from "~/composables/useSavedFlipAnalyses";
 
 definePageMeta({ layout: "default" });
@@ -15,6 +22,37 @@ const {
 } = await useFetch<SavedFlipAnalysisDetail>(
   `/api/saved-flip-analyses/${savedAnalysisId}`,
 );
+
+const { todayIsoDate, normalizeInventoryPlatform } = await useInventory();
+const inventoryModalOpen = ref(false);
+const inventoryPrefill = ref<InventoryCreatePrefill>({});
+const inventoryTitleSuffix = ref<string | undefined>();
+
+function openInventoryModal() {
+  if (!saved.value) return;
+  inventoryTitleSuffix.value = saved.value.listing.title;
+  inventoryPrefill.value = buildInventoryPrefillFromFlipListing(
+    saved.value.listing,
+    {
+      todayIsoDate,
+      normalizePlatform: normalizeInventoryPlatform,
+      savedFlipAnalysisId: saved.value.id,
+    },
+  );
+  inventoryModalOpen.value = true;
+}
+
+const listingsHandoffRoute = computed(() => {
+  if (!saved.value || !canBuildListingsFromFlipListing(saved.value.listing)) {
+    return null;
+  }
+  return buildListingsRoute(
+    buildListingsPrefillFromFlip(saved.value, {
+      savedFlipAnalysisId: saved.value.id,
+      from: "flip-saved",
+    }),
+  );
+});
 
 const listingPlatformLabel = computed(() => {
   const platform = saved.value?.listing.platform;
@@ -48,9 +86,28 @@ const listingPlatformLabel = computed(() => {
           {{ formatDateTime(saved.createdAt) }}
         </p>
       </div>
-      <UButton to="/flipping" variant="outline" icon="i-lucide-banknote">
-        Neue Analyse
-      </UButton>
+      <div class="flex flex-wrap gap-2">
+        <UButton
+          v-if="listingsHandoffRoute"
+          :to="listingsHandoffRoute"
+          variant="outline"
+          icon="i-lucide-file-text"
+          data-testid="handoff-listings"
+        >
+          Anzeige erstellen
+        </UButton>
+        <UButton
+          variant="outline"
+          icon="i-lucide-package-plus"
+          data-testid="handoff-inventory"
+          @click="openInventoryModal"
+        >
+          Ins Inventar
+        </UButton>
+        <UButton to="/flipping" variant="outline" icon="i-lucide-banknote">
+          Neue Analyse
+        </UButton>
+      </div>
     </div>
 
     <div v-if="pending" class="text-muted">Lade Analyse...</div>
@@ -140,5 +197,11 @@ const listingPlatformLabel = computed(() => {
         :summary="saved.analysis"
       />
     </template>
+
+    <InventoryCreateModal
+      v-model:open="inventoryModalOpen"
+      :prefill="inventoryPrefill"
+      :title-suffix="inventoryTitleSuffix"
+    />
   </div>
 </template>

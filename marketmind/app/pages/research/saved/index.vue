@@ -4,6 +4,7 @@ import {
   platformLabelFor,
   RESEARCH_PLATFORM_LABELS,
 } from "shared/platform-labels";
+import { buildListingsRoute } from "shared/workflow-handoff";
 import type { SavedResearchListItem } from "~/composables/useSavedResearches";
 
 definePageMeta({ layout: "default" });
@@ -129,6 +130,20 @@ async function confirmDelete() {
             </p>
           </div>
           <div class="flex gap-2">
+            <UButton
+              size="sm"
+              variant="outline"
+              icon="i-lucide-file-text"
+              :to="
+                buildListingsRoute({
+                  q: item.query,
+                  platform: item.platform,
+                  savedResearchId: item.id,
+                  from: 'research-saved',
+                })
+              "
+              data-testid="handoff-listings"
+            />
             <UButton
               size="sm"
               variant="outline"

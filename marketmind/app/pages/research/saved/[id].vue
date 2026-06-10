@@ -4,6 +4,7 @@ import {
   platformLabelFor,
   RESEARCH_PLATFORM_LABELS,
 } from "shared/platform-labels";
+import { buildListingsRoute } from "shared/workflow-handoff";
 
 definePageMeta({ layout: "default" });
 
@@ -25,6 +26,7 @@ interface SavedResearch {
   title: string;
   query: string;
   platform: string;
+  searchId: number | null;
   stats: Record<string, unknown>;
   results: SavedResearchResult[];
   analyses: PlatformSummary[];
@@ -42,6 +44,16 @@ const {
 
 const platformLabels = RESEARCH_PLATFORM_LABELS;
 
+const listingsHandoffRoute = computed(() => {
+  if (!saved.value) return null;
+  return buildListingsRoute({
+    q: saved.value.query,
+    platform: saved.value.platform,
+    searchId: saved.value.searchId ?? undefined,
+    savedResearchId: saved.value.id,
+    from: "research-saved",
+  });
+});
 </script>
 
 <template>
@@ -73,9 +85,20 @@ const platformLabels = RESEARCH_PLATFORM_LABELS;
           {{ formatDateTime(saved.createdAt) }}
         </p>
       </div>
-      <UButton to="/research" variant="outline" icon="i-lucide-search">
-        Neue Recherche
-      </UButton>
+      <div class="flex flex-wrap gap-2">
+        <UButton
+          v-if="listingsHandoffRoute"
+          :to="listingsHandoffRoute"
+          variant="outline"
+          icon="i-lucide-file-text"
+          data-testid="handoff-listings"
+        >
+          Anzeige erstellen
+        </UButton>
+        <UButton to="/research" variant="outline" icon="i-lucide-search">
+          Neue Recherche
+        </UButton>
+      </div>
     </div>
 
     <div v-if="pending" class="text-muted">Lade Recherche...</div>

@@ -1,15 +1,56 @@
 <script setup lang="ts">
-import type { FlipAnalysisResult } from "~/composables/useFlipping";
+import type { InventoryCreatePrefill } from "shared/inventory-types";
+import { buildInventoryPrefillFromFlipListing } from "shared/inventory-prefill";
 import { platformLabelFor, PLATFORM_LABELS } from "shared/platform-labels";
+import {
+  buildListingsPrefillFromFlip,
+  buildListingsRoute,
+  canBuildListingsFromFlipListing,
+  parseFlipHandoffQuery,
+  type WorkflowHandoffSource,
+} from "shared/workflow-handoff";
+import type { FlipAnalysisResult } from "~/composables/useFlipping";
 
 definePageMeta({ layout: "default" });
 
+const route = useRoute();
 const url = ref("");
+const handoffSource = ref<WorkflowHandoffSource | undefined>();
 const result = ref<FlipAnalysisResult | null>(null);
 const { loading, analyze } = useFlipping();
 const { saveFromResult } = useSavedFlipAnalyses();
+const { todayIsoDate, normalizeInventoryPlatform } = await useInventory();
 const saving = ref(false);
+const inventoryModalOpen = ref(false);
+const inventoryPrefill = ref<InventoryCreatePrefill>({});
+const inventoryTitleSuffix = ref<string | undefined>();
 const toast = useToast();
+
+function applyRouteHandoff() {
+  const prefill = parseFlipHandoffQuery(route.query);
+  handoffSource.value = prefill?.handoffSource;
+  if (prefill?.url) url.value = prefill.url;
+}
+
+onMounted(applyRouteHandoff);
+watch(() => route.query, applyRouteHandoff);
+
+function openInventoryModal() {
+  if (!result.value) return;
+  inventoryTitleSuffix.value = result.value.listing.title;
+  inventoryPrefill.value = buildInventoryPrefillFromFlipListing(
+    result.value.listing,
+    { todayIsoDate, normalizePlatform: normalizeInventoryPlatform },
+  );
+  inventoryModalOpen.value = true;
+}
+
+const listingsHandoffRoute = computed(() => {
+  if (!result.value || !canBuildListingsFromFlipListing(result.value.listing)) {
+    return null;
+  }
+  return buildListingsRoute(buildListingsPrefillFromFlip(result.value));
+});
 
 async function runAnalysis() {
   const value = url.value.trim();
@@ -74,6 +115,8 @@ const listingPlatformLabel = computed(() => {
       </p>
     </div>
 
+    <WorkflowHandoffBanner :source="handoffSource" />
+
     <UCard>
       <form
         class="flex flex-col gap-4 sm:flex-row sm:items-end"
@@ -104,6 +147,23 @@ const listingPlatformLabel = computed(() => {
     </UCard>
 
     <div v-if="result?.analysis" class="flex flex-wrap justify-end gap-2">
+      <UButton
+        v-if="listingsHandoffRoute"
+        :to="listingsHandoffRoute"
+        variant="outline"
+        icon="i-lucide-file-text"
+        data-testid="handoff-listings"
+      >
+        Anzeige erstellen
+      </UButton>
+      <UButton
+        variant="outline"
+        icon="i-lucide-package-plus"
+        data-testid="handoff-inventory"
+        @click="openInventoryModal"
+      >
+        Ins Inventar
+      </UButton>
       <UButton
         icon="i-lucide-bookmark"
         data-testid="flip-save"
@@ -186,6 +246,12 @@ const listingPlatformLabel = computed(() => {
       v-if="result?.analysis"
       data-testid="flip-analysis"
       :summary="result.analysis"
+    />
+
+    <InventoryCreateModal
+      v-model:open="inventoryModalOpen"
+      :prefill="inventoryPrefill"
+      :title-suffix="inventoryTitleSuffix"
     />
   </div>
 </template>

@@ -4,6 +4,26 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.3.0] — 2026-06-10
+
+Feature-übergreifende Workflows: mit einem Klick von Recherche, Flipping, Watchlist und Inventar in den nächsten Reseller-Schritt wechseln — ohne Copy-Paste.
+
+### Hinzugefügt
+
+- **WorkflowHandoff** — `shared/workflow-handoff.ts` mit Route-Buildern (`buildListingsRoute`, `buildFlipRoute`), Query-Parsern und Prefill aus Flip/Inventar
+- **WorkflowHandoffBanner** — Hinweis auf Zielseiten nach Übergang (`app/components/WorkflowHandoffBanner.vue`)
+- **Inventar-Prefill Flip/Watchlist** — `buildInventoryPrefillFromFlipListing()`, `buildInventoryPrefillFromWatchlist()` in `shared/inventory-prefill.ts`
+- **Listing-Marktstats aus Snapshots** — `resolveListingMarketStats()` nutzt `searchId`, `savedResearchId` oder `savedFlipAnalysisId` beim Anzeigen-Generator
+- **Workflow-Buttons** — „Anzeige erstellen“, „Flipping analysieren“, „Ins Inventar“ auf Recherche, Flipping, Watchlist und Inventar
+- **E2E** — `test/e2e/workflow-handoff.spec.ts` für Query-Prefill und Watchlist-Guards
+
+### Geändert
+
+- **`useListings`** — Handoff-State (`searchId`, `savedResearchId`, `savedFlipAnalysisId`, `applyHandoff()`); `/listings` liest Query-Parameter beim Laden
+- **`/flipping`** — URL-Prefill aus Watchlist-Handoff (`?url=…&from=watchlist`)
+- **`InventoryCreateModal`** — zusätzlich auf `/flipping`, `/flipping/analyses/[id]` und `/watchlist`
+- **`POST /api/listings/generate`** — optionale Body-Felder `savedResearchId`, `savedFlipAnalysisId`
+
 ## [0.2.2] — 2026-06-10
 
 Architektur-Deepening: tiefere Domänen-Module, einheitliche HTTP-Seams, Workflow-Composables und Flipping-Speichern ohne Doppel-Scrape.
@@ -399,7 +419,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/emelpe78/marketmind/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/emelpe78/marketmind/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/emelpe78/marketmind/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/emelpe78/marketmind/compare/v0.1.7...v0.2.0

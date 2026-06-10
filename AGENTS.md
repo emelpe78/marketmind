@@ -1,6 +1,6 @@
 # MarketMind — Agent Guide
 
-Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.2.2**.
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.0**.
 
 ## Repository-Layout
 
@@ -67,7 +67,8 @@ Dev-DB: `MM_DATABASE_DEV` in `marketmind/.env` (Standard `data/marketmind.db`, g
 - **Dashboard:** `app/components/DashboardOverview.vue` — KPI-Karten in vier Abschnitten (Recherche & Tools, Inventar, Agents, KI & Nutzung); `DashboardKpiCard` mit optionaler Navigation; Daten über `useDashboard` / `GET /api/dashboard`
 - **Layout:** `app/layouts/default.vue` — Sidebar-Reihenfolge: Dashboard, Preisrecherche, Anzeigen, Flipping, Inventar, Watchlist, Agents, Einstellungen; Submenüs für Preisrecherche, Anzeigen, Flipping und Agents; Theme-Toggle, Versionsbadge
 - **KI-Analyse-UI:** `ResearchAnalysisList` (Accordion pro Plattform), `ResearchAnalysisSummary` (Einzel-Card), `ResearchResultsTable` (Collapsible), `AnalysisSectionTabs` (vertikale Tabs); Markdown über `app/utils/render-markdown.ts` (`parseMarkdownSections`, `stripPlatformSuffixFromTitle`, erlaubte HTML-Tags)
-- **Inventar-Modal:** `InventoryCreateModal` — globales Anlegen-Modal mit `prefill`/`titleSuffix`; genutzt auf `/inventory` und `/listings/saved`
+- **Inventar-Modal:** `InventoryCreateModal` — globales Anlegen-Modal mit `prefill`/`titleSuffix`; genutzt auf `/inventory`, `/listings/saved`, `/flipping`, `/flipping/analyses/[id]` und `/watchlist`
+- **Cross-Feature-Workflows:** `shared/workflow-handoff.ts` — Übergänge per Query-Prefill + Aktions-Buttons: Recherche → Anzeigen (`searchId`/`savedResearchId`), Watchlist → Flipping (`url`), Flip/Watchlist → Inventar (`inventory-prefill`), Flip/Inventar → Anzeigen; Listing-Generate nutzt `resolveListingMarketStats()` für Snapshot-IDs
 - **Utils:** Re-Exports aus `shared/`; `render-markdown.ts` bleibt app-lokal
 - Keine Pinia-Stores — State über Composables, `useFetch`, `ref`, `reactive`
 - **Datenrefresh:** stabile Keys in `app/utils/fetch-keys.ts`; nach Mutationen Domain-Bundles in `refresh-fetch-data.ts` — `refreshResearchData()`, `refreshFlippingData()`, `refreshListingsData()`, `refreshInventoryData()`, `refreshAgentsData()`
@@ -164,7 +165,8 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 | UI nach Speichern       | `app/utils/refresh-fetch-data.ts` — Domain-Bundles (`refreshResearchData`, …)                                                                     |
 | API-Handler + Zod       | `server/utils/api-handler.ts`, `server/api/schemas/`                                                                                              |
 | Shared API-Typen        | `shared/research-types.ts`, `shared/flipping-types.ts`, `shared/inventory-types.ts`, `shared/listings-types.ts`, `shared/listing-detail-types.ts` |
-| Inventar-Prefill        | `shared/inventory-prefill.ts` — `buildInventoryPrefillFromListing()`                                                                              |
+| Inventar-Prefill        | `shared/inventory-prefill.ts` — Listing/Flip/Watchlist-Prefill; Workflow-Routen `shared/workflow-handoff.ts`                                      |
+| Cross-Feature-Workflows | `shared/workflow-handoff.ts`, `WorkflowHandoffBanner.vue` — Query-Prefill + Buttons zwischen Recherche, Flipping, Watchlist, Inventar, Anzeigen   |
 | Agent-Prompt-Docs       | `docs/listing_agent.md`, `docs/flipping_agent.md`                                                                                                 |
 | Docker-Datenordner      | Repo-Root `.env` (`MARKETMIND_DATA_DIR`), `docker-compose.yml`                                                                                    |
 

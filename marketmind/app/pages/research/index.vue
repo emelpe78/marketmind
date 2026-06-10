@@ -4,6 +4,7 @@ import {
   PLATFORM_LABELS,
   RESEARCH_PLATFORM_OPTIONS,
 } from "shared/platform-labels";
+import { buildListingsRoute } from "shared/workflow-handoff";
 
 definePageMeta({ layout: "default" });
 
@@ -29,6 +30,16 @@ const toast = useToast();
 
 const platformLabels = PLATFORM_LABELS;
 const platformOptions = [...RESEARCH_PLATFORM_OPTIONS];
+
+const listingsHandoffRoute = computed(() => {
+  if (!searchId.value || results.value.length === 0) return null;
+  return buildListingsRoute({
+    q: query.value.trim(),
+    platform: platform.value,
+    searchId: searchId.value,
+    from: "research",
+  });
+});
 
 async function runSearch() {
   try {
@@ -164,6 +175,15 @@ async function saveResearch() {
       v-if="results.length && searchId"
       class="flex flex-wrap justify-end gap-2"
     >
+      <UButton
+        v-if="listingsHandoffRoute"
+        :to="listingsHandoffRoute"
+        variant="outline"
+        icon="i-lucide-file-text"
+        data-testid="handoff-listings"
+      >
+        Anzeige erstellen
+      </UButton>
       <UButton
         variant="outline"
         icon="i-lucide-sparkles"

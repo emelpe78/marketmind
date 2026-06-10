@@ -10,5 +10,7 @@ export default defineApiHandler(listingGenerateBodySchema, async (db, body) => {
     extras: body.extras,
     desiredPrice: body.desiredPrice,
     searchId: body.searchId,
+    savedResearchId: body.savedResearchId,
+    savedFlipAnalysisId: body.savedFlipAnalysisId,
   });
 });

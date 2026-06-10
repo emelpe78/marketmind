@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { parseListingsHandoffQuery } from "shared/workflow-handoff";
+
 definePageMeta({ layout: "default" });
 
+const route = useRoute();
 const {
   query,
   condition,
@@ -11,13 +14,23 @@ const {
   editingId,
   generated,
   generating: loading,
+  handoffSource,
   generate: executeGenerate,
   resetEditor,
   save: executeSave,
+  applyHandoff,
 } = useListings();
 
 const toast = useToast();
 const conditionOptions = ["Neu", "Gebraucht", "Defekt"];
+
+function applyRouteHandoff() {
+  const prefill = parseListingsHandoffQuery(route.query);
+  if (prefill) applyHandoff(prefill);
+}
+
+onMounted(applyRouteHandoff);
+watch(() => route.query, applyRouteHandoff);
 
 async function generateListing() {
   try {
@@ -67,6 +80,8 @@ function copyText(text: string) {
         Plattform-optimierte Texte für eBay & Kleinanzeigen
       </p>
     </div>
+
+    <WorkflowHandoffBanner :source="handoffSource" />
 
     <UCard>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

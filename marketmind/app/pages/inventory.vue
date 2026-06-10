@@ -3,6 +3,10 @@ import type { InventoryCreatePrefill } from "shared/inventory-types";
 import type { InventoryItem } from "shared/inventory-types";
 import { formatPlatformLabel } from "shared/platform-labels";
 import { formatDateTime } from "shared/format-datetime";
+import {
+  buildListingsPrefillFromInventory,
+  buildListingsRoute,
+} from "shared/workflow-handoff";
 
 definePageMeta({ layout: "default" });
 
@@ -227,6 +231,16 @@ async function confirmDelete() {
             </p>
           </div>
           <div class="flex gap-2">
+            <UButton
+              v-if="item.status !== 'verkauft'"
+              size="sm"
+              variant="outline"
+              icon="i-lucide-file-text"
+              :to="buildListingsRoute(buildListingsPrefillFromInventory(item))"
+              data-testid="handoff-listings-from-inventory"
+            >
+              Anzeige erstellen
+            </UButton>
             <UButton
               v-if="item.status !== 'verkauft'"
               size="sm"

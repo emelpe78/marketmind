@@ -5,6 +5,10 @@ import type {
   ListingItem,
 } from "shared/listings-types";
 import { toListingCreatePayload } from "shared/listings-types";
+import type {
+  ListingsHandoffPrefill,
+  WorkflowHandoffSource,
+} from "shared/workflow-handoff";
 import { FETCH_KEYS } from "~/utils/fetch-keys";
 import {
   refreshAfterAgentCall,
@@ -32,6 +36,10 @@ export function useListings() {
     key: FETCH_KEYS.listings,
   });
   const generating = ref(false);
+  const searchId = ref<number | undefined>();
+  const savedResearchId = ref<number | undefined>();
+  const savedFlipAnalysisId = ref<number | undefined>();
+  const handoffSource = ref<WorkflowHandoffSource | undefined>();
 
   const canSave = computed(() => {
     const value = generated.value;
@@ -65,6 +73,28 @@ export function useListings() {
     await refreshListings();
   }
 
+  function applyHandoff(prefill: ListingsHandoffPrefill) {
+    query.value = prefill.query;
+    activeTab.value = prefill.platform;
+    if (prefill.condition) condition.value = prefill.condition;
+    if (prefill.extras != null) extras.value = prefill.extras;
+    if (prefill.desiredPrice != null) {
+      desiredPrice.value = prefill.desiredPrice;
+    }
+    searchId.value = prefill.searchId;
+    savedResearchId.value = prefill.savedResearchId;
+    savedFlipAnalysisId.value = prefill.savedFlipAnalysisId;
+    handoffSource.value = prefill.handoffSource;
+    resetEditor();
+  }
+
+  function clearHandoffContext() {
+    searchId.value = undefined;
+    savedResearchId.value = undefined;
+    savedFlipAnalysisId.value = undefined;
+    handoffSource.value = undefined;
+  }
+
   async function generate() {
     if (!query.value.trim()) return null;
 
@@ -78,6 +108,9 @@ export function useListings() {
           condition: condition.value,
           extras: extras.value,
           desiredPrice: desiredPrice.value,
+          searchId: searchId.value,
+          savedResearchId: savedResearchId.value,
+          savedFlipAnalysisId: savedFlipAnalysisId.value,
         } satisfies ListingGenerateInput,
       });
       generated.value = result;
@@ -132,10 +165,16 @@ export function useListings() {
     canSave,
     listings,
     generating,
+    searchId,
+    savedResearchId,
+    savedFlipAnalysisId,
+    handoffSource,
     refreshListings,
     saveListing,
     updateListing,
     deleteListing,
+    applyHandoff,
+    clearHandoffContext,
     generate,
     buildSavePayload,
     resetEditor,

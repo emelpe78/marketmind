@@ -41,6 +41,8 @@ export interface ListingGenerateInput {
   extras?: string;
   desiredPrice?: number;
   searchId?: number;
+  savedResearchId?: number;
+  savedFlipAnalysisId?: number;
 }
 
 export function toListingCreatePayload(

@@ -1,5 +1,8 @@
 import type Database from "better-sqlite3";
+import type { PriceStats } from "shared/price-stats";
 import { runAgent } from "../ai/run-agent";
+import { getSavedFlipAnalysis } from "../flipping/saved-flip-analysis";
+import { getSavedResearch } from "../research/saved-research";
 import { getSearchStats } from "../searches/repository";
 import { buildListingUserPrompt } from "./prompts";
 import { parseListingGeneration } from "./parse-generation";
@@ -11,15 +14,36 @@ export interface GenerateListingInput {
   extras?: string;
   desiredPrice?: number;
   searchId?: number;
+  savedResearchId?: number;
+  savedFlipAnalysisId?: number;
+}
+
+export function resolveListingMarketStats(
+  db: Database.Database,
+  input: Pick<
+    GenerateListingInput,
+    "searchId" | "savedResearchId" | "savedFlipAnalysisId"
+  >,
+): PriceStats | null {
+  if (input.searchId) {
+    return getSearchStats(db, input.searchId);
+  }
+  if (input.savedResearchId) {
+    return getSavedResearch(db, input.savedResearchId)?.stats ?? null;
+  }
+  if (input.savedFlipAnalysisId) {
+    return (
+      getSavedFlipAnalysis(db, input.savedFlipAnalysisId)?.marketStats ?? null
+    );
+  }
+  return null;
 }
 
 export async function generateListing(
   db: Database.Database,
   input: GenerateListingInput,
 ) {
-  const marketStats = input.searchId
-    ? getSearchStats(db, input.searchId)
-    : null;
+  const marketStats = resolveListingMarketStats(db, input);
 
   const userInput = buildListingUserPrompt({
     query: input.query,

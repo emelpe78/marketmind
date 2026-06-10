@@ -23,6 +23,8 @@ export const listingGenerateBodySchema = z.object({
   extras: z.string().optional(),
   desiredPrice: z.number().optional(),
   searchId: z.number().int().positive().optional(),
+  savedResearchId: z.number().int().positive().optional(),
+  savedFlipAnalysisId: z.number().int().positive().optional(),
 });
 
 export type ListingGenerateBody = z.infer<typeof listingGenerateBodySchema>;
