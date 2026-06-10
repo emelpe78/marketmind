@@ -39,17 +39,17 @@ Die App ist erreichbar unter **http://127.0.0.1:5666**.
 
 ### Variante B: Docker (Port 5667)
 
-Docker läuft getrennt von der Dev-Instanz auf einem eigenen Port. Die SQLite-Datei liegt standardmäßig in einem Nextcloud-Ordner auf dem Host (Bind-Mount).
+Docker läuft getrennt von der Dev-Instanz auf einem eigenen Port. Persistente Daten liegen in einem Host-Ordner (Bind-Mount nach `/app/data` im Container).
 
 ```bash
 git clone https://github.com/emelpe78/marketmind.git
 cd marketmind
 
-cp .env.example .env   # optional: MARKETMIND_DATA_DIR anpassen
+cp .env.example .env   # MARKETMIND_DATA_DIR setzen (z. B. ./data oder Cloud-Ordner)
 docker compose up -d --build
 ```
 
-Host-Pfad (Standard): `/Users/mlp/Nextcloud/Apps/MarketMind` → im Container `/app/data/marketmind.db`. Den Pfad in den App-Einstellungen ändern funktioniert unter Docker nicht — nur über `.env` / `docker-compose.yml`.
+Die SQLite-Datei liegt im Container unter `/app/data/marketmind.db` (`MM_DATABASE_DOCKER` in `marketmind/.env`). Den Host-Ordner steuerst du über `MARKETMIND_DATA_DIR` in der Repo-Root `.env`.
 
 Die App ist erreichbar unter **http://127.0.0.1:5667**.
 
@@ -83,22 +83,22 @@ PORT=5666 node .output/server/index.mjs
 
 ## Konfiguration
 
-Die meisten Einstellungen werden in der App unter **Einstellungen** gespeichert (SQLite), nicht in `.env`. Die `.env` steuert vor allem Server-Port und Datenbankpfad beim Start.
+Die meisten Einstellungen werden in der App unter **Einstellungen** gespeichert (SQLite), nicht in `.env`. Die `.env` steuert den Datenbankpfad; der Dev-Server läuft fest auf Port **5666**.
 
 ### Umgebungsvariablen (`.env`)
 
 Kopiere `marketmind/.env.example` nach `marketmind/.env`:
 
-| Variable           | Standard             | Beschreibung              |
-| ------------------ | -------------------- | ------------------------- |
-| `MM_DATABASE_PATH` | `data/marketmind.db` | Pfad zur SQLite-Datenbank |
-| `MM_PORT`          | `5666`               | Port des Dev-Servers      |
+| Variable             | Standard                  | Beschreibung                               |
+| -------------------- | ------------------------- | ------------------------------------------ |
+| `MM_DATABASE_DEV`    | `data/marketmind.db`      | SQLite-Pfad für Dev (relativ oder absolut) |
+| `MM_DATABASE_DOCKER` | `/app/data/marketmind.db` | SQLite-Pfad im Docker-Container            |
 
-Unter Docker werden `PORT`, `HOST` und `MM_DATABASE_PATH` über `docker-compose.yml` gesetzt. Den **Host-Datenordner** steuerst du im Repo-Root über `.env` (`MARKETMIND_DATA_DIR` — siehe `.env.example`).
+Unter Docker setzt `docker-compose.yml` zusätzlich `MM_RUNTIME=docker`, `PORT` und `HOST`. Den **Host-Datenordner** steuerst du im Repo-Root über `.env` (`MARKETMIND_DATA_DIR` — siehe `.env.example`).
 
-| Variable (Repo-Root, Docker) | Standard                               | Beschreibung                            |
-| ---------------------------- | -------------------------------------- | --------------------------------------- |
-| `MARKETMIND_DATA_DIR`        | `/Users/mlp/Nextcloud/Apps/MarketMind` | Host-Ordner, gemountet nach `/app/data` |
+| Variable (Repo-Root, Docker) | Standard | Beschreibung                            |
+| ---------------------------- | -------- | --------------------------------------- |
+| `MARKETMIND_DATA_DIR`        | `./data` | Host-Ordner, gemountet nach `/app/data` |
 
 ### KI-Provider (in der App)
 
@@ -127,14 +127,11 @@ Unter **Einstellungen → Scraper**:
 | Cache TTL       | 6 Stunden | Wiederverwendung gecachter HTML-Seiten |
 | Max. Ergebnisse | 100       | Obergrenze pro Suche                   |
 
-### Datenbank (in der App)
+### Datenbank
 
-Unter **Einstellungen → Datenbank**:
+Der **Pfad** wird nur über `marketmind/.env` gesetzt (`MM_DATABASE_DEV` bzw. `MM_DATABASE_DOCKER`). In der App unter **Einstellungen → Datenbank** kannst du die Datenbank nur noch **zurücksetzen** (löscht alle Daten, behält den Pfad; Standard-Agents und -Einstellungen werden neu angelegt).
 
-- **Pfad ändern** — verschiebt die DB (bestehende Datei wird kopiert); **nur ohne Docker** — bei gesetztem `MM_DATABASE_PATH` ist das Feld gesperrt
-- **Zurücksetzen** — löscht alle Daten, behält den Pfad; Standard-Agents und -Einstellungen werden neu angelegt
-
-Dev-Daten liegen in `marketmind/data/` (nicht versioniert). Docker-Daten im Host-Ordner `MARKETMIND_DATA_DIR` (Standard: Nextcloud `Apps/MarketMind`), Datei `marketmind.db` plus `.settings-key` daneben.
+Dev-Daten liegen standardmäßig in `marketmind/data/` (nicht versioniert). Docker-Daten im Host-Ordner `MARKETMIND_DATA_DIR`, Datei `marketmind.db` plus `.settings-key` daneben.
 
 ## Projektstruktur
 

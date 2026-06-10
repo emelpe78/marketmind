@@ -22,7 +22,8 @@ ENV NODE_ENV=production
 ENV PORT=5667
 ENV HOST=0.0.0.0
 ENV MM_PORT=5667
-ENV MM_DATABASE_PATH=/app/data/marketmind.db
+ENV MM_RUNTIME=docker
+ENV MM_DATABASE_DOCKER=/app/data/marketmind.db
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates \

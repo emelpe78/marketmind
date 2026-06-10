@@ -13,7 +13,8 @@ export function createTestDb(): string {
   }
   tempDir = mkdtempSync(join(tmpdir(), "marketmind-test-"));
   const dbPath = join(tempDir, "test.db");
-  process.env.MM_DATABASE_PATH = dbPath;
+  delete process.env.MM_RUNTIME;
+  process.env.MM_DATABASE_DEV = dbPath;
   const db = initDatabase(dbPath);
   seedDatabase(db);
   return dbPath;
@@ -25,7 +26,9 @@ export function cleanupTestDb(): void {
     rmSync(tempDir, { recursive: true, force: true });
     tempDir = null;
   }
-  delete process.env.MM_DATABASE_PATH;
+  delete process.env.MM_DATABASE_DEV;
+  delete process.env.MM_DATABASE_DOCKER;
+  delete process.env.MM_RUNTIME;
 }
 
 export function expectAllTables(dbPath: string): void {

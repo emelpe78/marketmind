@@ -4,7 +4,6 @@ import { refreshFetchData } from "~/utils/refresh-fetch-data";
 export interface DatabaseInfo {
   path: string;
   exists: boolean;
-  pathLocked: boolean;
 }
 
 export async function useDatabaseAdmin() {
@@ -14,13 +13,6 @@ export async function useDatabaseAdmin() {
 
   async function refreshDatabase() {
     await refreshFetchData(FETCH_KEYS.database);
-  }
-
-  async function relocateDatabase(path: string) {
-    return $fetch<{ path: string; copied: boolean }>("/api/database/path", {
-      method: "PUT",
-      body: { path },
-    });
   }
 
   async function resetDatabase() {
@@ -33,7 +25,6 @@ export async function useDatabaseAdmin() {
   return {
     databaseInfo,
     refreshDatabase,
-    relocateDatabase,
     resetDatabase,
   };
 }

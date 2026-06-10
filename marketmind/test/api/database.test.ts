@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { mkdtempSync, rmSync, existsSync } from "node:fs";
+import { mkdtempSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { getDb, resetDb } from "../../server/database/db";
@@ -8,15 +8,18 @@ import { seedDatabase } from "../../server/database/seed";
 import { getSetting, setSetting } from "../../server/database/settings";
 import {
   getDatabaseInfo,
-  relocateDatabase,
   resetDatabase,
 } from "../../server/database/lifecycle";
-import { isDatabasePathLocked } from "../../server/database/paths";
+import {
+  getEnvDatabasePath,
+  isDockerRuntime,
+} from "../../server/database/paths";
 
 let tempDir: string | null = null;
 
 function setupDb(path: string) {
-  process.env.MM_DATABASE_PATH = path;
+  delete process.env.MM_RUNTIME;
+  process.env.MM_DATABASE_DEV = path;
   resetDb();
   const db = initDatabase(path);
   seedDatabase(db);
@@ -33,53 +36,31 @@ afterEach(() => {
     rmSync(tempDir, { recursive: true, force: true });
     tempDir = null;
   }
-  delete process.env.MM_DATABASE_PATH;
+  delete process.env.MM_DATABASE_DEV;
+  delete process.env.MM_DATABASE_DOCKER;
+  delete process.env.MM_RUNTIME;
 });
 
 describe("database admin", () => {
-  it("returns current database info", () => {
+  it("returns current database info from MM_DATABASE_DEV", () => {
     const dbPath = join(tempDir!, "main.db");
     setupDb(dbPath);
 
     const info = getDatabaseInfo();
     expect(info.path).toBe(dbPath);
     expect(info.exists).toBe(true);
-    expect(info.pathLocked).toBe(true);
   });
 
-  it("reflects MM_DATABASE_PATH in pathLocked", () => {
-    delete process.env.MM_DATABASE_PATH;
-    expect(isDatabasePathLocked()).toBe(false);
-
-    process.env.MM_DATABASE_PATH = join(tempDir!, "locked.db");
-    expect(isDatabasePathLocked()).toBe(true);
-  });
-
-  it("copies an existing database to a new path", () => {
-    const sourcePath = join(tempDir!, "source.db");
-    const targetPath = join(tempDir!, "nested", "target.db");
-    setupDb(sourcePath);
-
-    const db = getDb();
-    db.prepare("INSERT INTO watchlist (title, status) VALUES (?, ?)").run(
-      "GPU",
-      "aktiv",
-    );
-
-    const result = relocateDatabase(targetPath);
-
-    expect(result.copied).toBe(true);
-    expect(result.path).toBe(targetPath);
-    expect(existsSync(targetPath)).toBe(true);
-
+  it("uses MM_DATABASE_DOCKER when MM_RUNTIME is docker", () => {
+    const dockerPath = join(tempDir!, "docker.db");
+    process.env.MM_RUNTIME = "docker";
+    process.env.MM_DATABASE_DOCKER = dockerPath;
     resetDb();
-    process.env.MM_DATABASE_PATH = targetPath;
-    const copiedDb = getDb();
-    const row = copiedDb
-      .prepare("SELECT title FROM watchlist WHERE title = ?")
-      .get("GPU") as { title: string } | undefined;
-    expect(row?.title).toBe("GPU");
-    expect(getSetting(copiedDb, "database-path")).toBe(targetPath);
+    initDatabase(dockerPath);
+
+    expect(isDockerRuntime()).toBe(true);
+    expect(getEnvDatabasePath()).toBe(dockerPath);
+    expect(getDatabaseInfo().path).toBe(dockerPath);
   });
 
   it("resets the database at the current path", () => {

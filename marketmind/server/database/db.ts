@@ -24,24 +24,6 @@ let dbInstance: Database.Database | null = null;
 let currentPath: string | null = null;
 
 export function getDbPath(): string {
-  if (process.env.MM_DATABASE_PATH) {
-    return getActivePath();
-  }
-
-  if (dbInstance && currentPath) {
-    try {
-      const row = dbInstance
-        .prepare("SELECT value FROM settings WHERE key = 'database-path'")
-        .get() as { value: string } | undefined;
-      if (row?.value?.trim()) {
-        return getActivePath(row.value);
-      }
-    } catch {
-      return getActivePath(currentPath);
-    }
-    return getActivePath(currentPath);
-  }
-
   return getActivePath();
 }
 

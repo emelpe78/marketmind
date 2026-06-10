@@ -19,11 +19,11 @@ export default defineNuxtConfig({
     fallback: "light",
   },
   devServer: {
-    port: Number(process.env.MM_PORT) || 5666,
+    port: 5666,
     host: "127.0.0.1",
   },
   runtimeConfig: {
-    databasePath: process.env.MM_DATABASE_PATH || "data/marketmind.db",
+    databasePath: process.env.MM_DATABASE_DEV || "data/marketmind.db",
     public: {
       appVersion: pkg.version,
     },

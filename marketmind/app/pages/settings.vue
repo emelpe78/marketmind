@@ -4,11 +4,8 @@ definePageMeta({ layout: "default" });
 import { refreshAllFetchData } from "~/utils/refresh-fetch-data";
 
 const { settings, saving, saveSetting } = await useSettings();
-const { databaseInfo, relocateDatabase, resetDatabase } =
-  await useDatabaseAdmin();
+const { databaseInfo, resetDatabase } = await useDatabaseAdmin();
 
-const databasePathInput = ref("");
-const relocatingDatabase = ref(false);
 const resettingDatabase = ref(false);
 const resetModalOpen = ref(false);
 const toast = useToast();
@@ -36,14 +33,6 @@ async function switchAiProvider(value: string | number) {
   await updateSetting("ai-provider", provider);
 }
 
-watch(
-  databaseInfo,
-  (info) => {
-    if (info?.path) databasePathInput.value = info.path;
-  },
-  { immediate: true },
-);
-
 async function updateSetting(key: string, value: string) {
   try {
     await saveSetting(key, value);
@@ -53,43 +42,10 @@ async function updateSetting(key: string, value: string) {
   }
 }
 
-async function saveDatabasePath() {
-  if (!databasePathInput.value.trim()) {
-    toast.add({
-      title: "Datenbankpfad fehlt",
-      color: "warning",
-    });
-    return;
-  }
-
-  relocatingDatabase.value = true;
-  try {
-    const result = await relocateDatabase(databasePathInput.value.trim());
-    databasePathInput.value = result.path;
-    await refreshAllFetchData();
-    toast.add({
-      title: "Datenbankpfad gespeichert",
-      description: result.copied
-        ? "Bestehende Datenbank wurde kopiert."
-        : "Pfad aktualisiert.",
-      color: "success",
-    });
-  } catch (error: unknown) {
-    const err = error as { data?: { message?: string } };
-    toast.add({
-      title: err?.data?.message || "Pfad konnte nicht gespeichert werden",
-      color: "error",
-    });
-  } finally {
-    relocatingDatabase.value = false;
-  }
-}
-
 async function confirmResetDatabase() {
   resettingDatabase.value = true;
   try {
     const result = await resetDatabase();
-    databasePathInput.value = result.path;
     resetModalOpen.value = false;
     await refreshAllFetchData();
     toast.add({
@@ -301,55 +257,14 @@ async function confirmResetDatabase() {
       <template #header>
         <h3 class="font-semibold">Datenbank</h3>
       </template>
-      <div class="space-y-4">
-        <UAlert
-          v-if="databaseInfo?.pathLocked"
-          color="info"
-          variant="subtle"
-          title="Pfad über Docker festgelegt"
-          description="MM_DATABASE_PATH ist gesetzt. Der Speicherort wird über docker-compose.yml bzw. MARKETMIND_DATA_DIR auf dem Host konfiguriert — nicht über dieses Feld."
-          data-testid="database-path-locked-hint"
-        />
-        <UFormField
-          label="Datenbankpfad"
-          :hint="
-            databaseInfo?.pathLocked
-              ? 'Nur lesbar — Änderungen in docker-compose.yml vornehmen.'
-              : 'Relative oder absolute Pfade. Bestehende Datenbank wird beim Speichern kopiert.'
-          "
-        >
-          <UInput
-            v-model="databasePathInput"
-            data-testid="database-path"
-            placeholder="data/marketmind.db"
-            :disabled="databaseInfo?.pathLocked"
-          />
-        </UFormField>
-        <p v-if="databaseInfo" class="text-sm text-muted">
-          Aktuell:
-          <span class="font-mono text-default">{{ databaseInfo.path }}</span>
-          <span v-if="databaseInfo.exists"> · vorhanden</span>
-          <span v-else> · noch nicht angelegt</span>
-        </p>
-        <div class="flex flex-wrap gap-2">
-          <UButton
-            v-if="!databaseInfo?.pathLocked"
-            data-testid="save-database-path"
-            :loading="relocatingDatabase"
-            @click="saveDatabasePath"
-          >
-            Pfad speichern
-          </UButton>
-          <UButton
-            color="error"
-            variant="outline"
-            data-testid="open-reset-database"
-            @click="resetModalOpen = true"
-          >
-            Datenbank zurücksetzen
-          </UButton>
-        </div>
-      </div>
+      <UButton
+        color="error"
+        variant="outline"
+        data-testid="open-reset-database"
+        @click="resetModalOpen = true"
+      >
+        Datenbank zurücksetzen
+      </UButton>
     </UCard>
 
     <UModal v-model:open="resetModalOpen" title="Datenbank zurücksetzen?">
@@ -366,7 +281,7 @@ async function confirmResetDatabase() {
               class="font-mono text-error break-all"
               data-testid="reset-database-path"
             >
-              {{ databaseInfo?.path ?? databasePathInput }}
+              {{ databaseInfo?.path }}
             </span>
           </p>
           <div class="flex justify-end gap-2">

@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/nuxt.config.ts": {
-    "mtime": 1780989806.8475392,
-    "ast_hash": "ab2e88de8e616297e6d139428ab8f3ab",
+    "mtime": 1781073532.910782,
+    "ast_hash": "60ce41330cf8f95f6d661de6b9872599",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/tsconfig.json": {
@@ -105,8 +105,8 @@
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/app/pages/settings.vue": {
-    "mtime": 1781008840.239773,
-    "ast_hash": "9979c904ba5f2e9553580f51214cd194",
+    "mtime": 1781073170.1902242,
+    "ast_hash": "a860f072019b45e5306349c41b1f870b",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/app/pages/inventory.vue": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/test/api/database.test.ts": {
-    "mtime": 1781008871.126405,
-    "ast_hash": "7011ced6853a1ba102022a6c004de0a5",
+    "mtime": 1781073170.181225,
+    "ast_hash": "ef2bf6ab162e1e050f1858d4155f6b71",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/test/api/generate-prompt.test.ts": {
@@ -270,8 +270,8 @@
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/test/helpers/test-db.ts": {
-    "mtime": 1781002186.8598137,
-    "ast_hash": "acee58a40133cd9aea7baf443a9f6bd4",
+    "mtime": 1781073170.1638274,
+    "ast_hash": "1a93ca8db0aad267f45058622b749181",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/test/services/scraper-runtime.test.ts": {
@@ -315,8 +315,8 @@
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/server/database/lifecycle.ts": {
-    "mtime": 1781008830.328392,
-    "ast_hash": "a7bf20f1ce9dfe796c2a15c37f585ea9",
+    "mtime": 1781073170.181266,
+    "ast_hash": "530c13de0c2a43c901541ba9401408c0",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/server/database/seed.ts": {
@@ -325,13 +325,13 @@
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/server/database/paths.ts": {
-    "mtime": 1781008827.7672355,
-    "ast_hash": "d4dac00d51d017b45864a01ae257b7a5",
+    "mtime": 1781073170.190224,
+    "ast_hash": "f71397362fae2d3370d75b678e0632c7",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/server/database/db.ts": {
-    "mtime": 1780996500.014235,
-    "ast_hash": "82bcf1f86748f76054fc99224e3e9721",
+    "mtime": 1781073170.1812325,
+    "ast_hash": "c498bdb6aed7fd54661db3fcfbae1049",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/server/plugins/database.ts": {
@@ -372,11 +372,6 @@
   "/Users/mlp/Projekte/marketmind/marketmind/server/api/database/reset.post.ts": {
     "mtime": 1780991453.9321263,
     "ast_hash": "6eed56a6c43191d07066a4844689c0d3",
-    "semantic_hash": ""
-  },
-  "/Users/mlp/Projekte/marketmind/marketmind/server/api/database/path.put.ts": {
-    "mtime": 1781008868.2544558,
-    "ast_hash": "2b92e39555810da34c31ee4731ff51f1",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/server/api/agent-history/index.get.ts": {
@@ -700,28 +695,28 @@
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/CONTEXT.md": {
-    "mtime": 1781007907.31189,
-    "ast_hash": "a07adcea0f40110208b4afcb4dd143cf",
+    "mtime": 1781072744.7311585,
+    "ast_hash": "53f65310f77571a53774856bddac4059",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/CHANGELOG.md": {
-    "mtime": 1781008204.2236757,
-    "ast_hash": "c7923d353fbb54d24b87b413c36e8621",
+    "mtime": 1781072744.7309308,
+    "ast_hash": "23d5b453a8e96171112707365774af94",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/README.md": {
-    "mtime": 1781008848.6640728,
-    "ast_hash": "d2f063f725a9aeb972e8e283b5c7561e",
+    "mtime": 1781072744.731428,
+    "ast_hash": "3c7c4299fd432d665a793bac02a6af62",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/docker-compose.yml": {
-    "mtime": 1781008825.9296143,
-    "ast_hash": "1d1a5855d33e4e0a3954e66e88fe40af",
+    "mtime": 1781073400.288002,
+    "ast_hash": "ab271a0e0e11e0cd8f514d037b23096a",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/AGENTS.md": {
-    "mtime": 1781008849.7594323,
-    "ast_hash": "2ebb5f9a826b81dde081931893fcfc01",
+    "mtime": 1781073170.0347288,
+    "ast_hash": "aa2c11c1cefaef9f6d4f5b89db8cf23c",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/test/fixtures/ebay/page1.html": {
@@ -765,8 +760,8 @@
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/app/composables/useDatabaseAdmin.ts": {
-    "mtime": 1781008831.151313,
-    "ast_hash": "daf2813e3827ccc714b16351249e4262",
+    "mtime": 1781073170.1683161,
+    "ast_hash": "841749be976f9e89c8ffe9c453bfda05",
     "semantic_hash": ""
   },
   "/Users/mlp/Projekte/marketmind/marketmind/app/composables/useDashboard.ts": {

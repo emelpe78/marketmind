@@ -6,13 +6,15 @@ services:
     container_name: marketmind
     ports:
       - "5667:5667"
+    env_file:
+      - ./marketmind/.env
     environment:
       PORT: "5667"
       HOST: 0.0.0.0
       MM_PORT: "5667"
-      MM_DATABASE_PATH: /app/data/marketmind.db
+      MM_RUNTIME: docker
     volumes:
-      - ${MARKETMIND_DATA_DIR:-/Users/mlp/Nextcloud/Apps/MarketMind}:/app/data
+      - ${MARKETMIND_DATA_DIR}:/app/data
     restart: unless-stopped
     healthcheck:
       test:

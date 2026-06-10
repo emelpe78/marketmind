@@ -39,9 +39,9 @@ marketmind/                 # Repo-Root
 | Dev      | **5666** | `npm run dev`                      |
 | Docker   | **5667** | `docker compose up -d` (Repo-Root) |
 
-Env-Variablen: `MM_PORT`, `MM_DATABASE_PATH`, `PORT`, `HOST` — siehe `marketmind/.env.example`. Docker-Host-Datenordner: `MARKETMIND_DATA_DIR` — Repo-Root `.env.example`.
+Env-Variablen: `MM_DATABASE_DEV`, `MM_DATABASE_DOCKER`, `MM_RUNTIME`, `PORT`, `HOST` — siehe `marketmind/.env.example`. Dev-Port **5666** fest in `nuxt.config.ts`. Docker-Host-Datenordner: `MARKETMIND_DATA_DIR` — Repo-Root `.env.example`.
 
-Dev-DB: `marketmind/data/` (gitignored). Docker-DB: Host-Bind-Mount `MARKETMIND_DATA_DIR` → `/app/data/`; `MM_DATABASE_PATH` sperrt Pfadänderungen in der UI (`isDatabasePathLocked()`, `pathLocked` in `GET /api/database`).
+Dev-DB: `MM_DATABASE_DEV` in `marketmind/.env` (Standard `data/marketmind.db`, gitignored). Docker-DB: `MM_DATABASE_DOCKER` + `MM_RUNTIME=docker`; Host-Bind-Mount `MARKETMIND_DATA_DIR` → `/app/data/`. Pfad nur über `.env`, nicht über die UI.
 
 ## Architektur
 
@@ -75,7 +75,7 @@ Dev-DB: `marketmind/data/` (gitignored). Docker-DB: Host-Bind-Mount `MARKETMIND_
 
 - **API:** `server/api/**/*.ts` — dünne HTTP-Adapter
 - **Services:** Use-Cases + Repositories unter `server/services/`
-- **DB:** `server/database/` — Schema, `settings.ts`, `lifecycle.ts`, `paths.ts` (`isDatabasePathLocked`), `seed.ts`
+- **DB:** `server/database/` — Schema, `settings.ts`, `lifecycle.ts`, `paths.ts` (`MM_DATABASE_DEV` / `MM_DATABASE_DOCKER`), `seed.ts`
 - **Plugin:** `server/plugins/database.ts` — Init, Seed, Migrationen, Agent-Prompt-Sync beim Start
 - **Prompt-Bibliothek:** `server/services/prompt-library/` — Repository, Zuweisung (`assign.ts`), Sync aus `agents` (`agent-sync.ts`)
 
@@ -115,7 +115,7 @@ Vor Architekturfragen: `graphify-out/GRAPH_REPORT.md` und `graphify-out/wiki/ind
 ### API & Daten
 
 - Validierung mit Zod wo sinnvoll
-- SQLite-Pfad konfigurierbar (Dev: Einstellungen; Docker: `MARKETMIND_DATA_DIR` + `MM_DATABASE_PATH`); `PUT /api/database/path` → 409 wenn Pfad gesperrt; Reset behält Pfad, löscht Daten
+- SQLite-Pfad nur über `marketmind/.env` (`MM_DATABASE_DEV`, `MM_DATABASE_DOCKER`); Docker-Host-Ordner `MARKETMIND_DATA_DIR`; Reset behält Pfad, löscht Daten
 - Agent-Aufrufe in `agent_history` loggen (Tokens, Kosten)
 - `ScraperFetchError` in Research- und Flipping-Routes als 502 mit lesbarer Meldung mappen
 

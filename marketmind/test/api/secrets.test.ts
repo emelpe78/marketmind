@@ -14,9 +14,9 @@ let tempDir: string | null = null;
 
 beforeEach(() => {
   tempDir = mkdtempSync(join(tmpdir(), "marketmind-secrets-"));
-  process.env.MM_DATABASE_PATH = join(tempDir, "test.db");
+  process.env.MM_DATABASE_DEV = join(tempDir, "test.db");
   resetDb();
-  initDatabase(process.env.MM_DATABASE_PATH);
+  initDatabase(process.env.MM_DATABASE_DEV);
 });
 
 afterEach(() => {
@@ -25,7 +25,7 @@ afterEach(() => {
     rmSync(tempDir, { recursive: true, force: true });
     tempDir = null;
   }
-  delete process.env.MM_DATABASE_PATH;
+  delete process.env.MM_DATABASE_DEV;
 });
 
 describe("settings secrets", () => {
