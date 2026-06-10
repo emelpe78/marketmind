@@ -4,6 +4,36 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.2.1] — 2026-06-10
+
+Architektur-Refactor: klarere Schichten, serverseitige Speicher-Flows für KI-Daten, einheitliche API-Validierung und geteilte Typen.
+
+### Hinzugefügt
+
+- **`defineApiHandler`** — einheitlicher HTTP-Seam mit Zod-Validierung, Domain-Error-Mapping und Scraper-502-Handling (`server/utils/api-handler.ts`)
+- **Zod-Schemas** — `server/api/schemas/` für Research, Flipping, Inventar, Listings
+- **Shared API-Typen** — `shared/research-types.ts`, `shared/flipping-types.ts`, `shared/inventory-types.ts`, `shared/price-stats.ts`
+- **`PromptResolution`** — `resolveActiveAgentPrompt()`; Bibliotheks-Prompt hat Vorrang vor `agents.system_prompt` (`server/services/agents/prompt-resolve.ts`)
+- **`PromptBuilder`** — domänenspezifische KI-User-Prompts in `server/services/*/prompts.ts` (Research, Flipping, Listings)
+- **`searches.analyses_json`** — KI-Analysen werden serverseitig zwischen Analyze- und Save-Schritt gespeichert
+- **`POST /api/saved-flip-analyses/from-url`** — Flipping-Analyse speichern ohne Client-Blob-Re-POST
+- **Domain-Refresh-Bundles** — `refreshResearchData()`, `refreshFlippingData()`, `refreshListingsData()`, `refreshInventoryData()`
+- **`shared/inventory-prefill.ts`** — `buildInventoryPrefillFromListing()` für Übernahme aus gespeicherten Anzeigen
+- **`price-extract.ts`** — gemeinsame Preis-Extraktion für ListingDetailParser und Watchlist
+- **Repository `count*`-Methoden** — Dashboard-KPIs über Domänen-Repositories statt Ad-hoc-SQL
+
+### Geändert
+
+- **`ScraperRuntime`** — `scrapeSearch()` liefert nur Ergebnisse; Persistence in `searches/repository.ts` (`persistScrapeSearch`, …)
+- **Preisrecherche speichern** — `analyses` nicht mehr vom Client; Speichern nur nach vorheriger KI-Analyse (Button disabled ohne Analyse)
+- **Flipping speichern** — `useSavedFlipAnalyses.saveFromUrl()` statt vollem Analyse-Blob vom Browser
+- **`DashboardSummary`** — komponiert `count*`-Aufrufe aus Repositories
+- **Composables** — importieren geteilte Typen statt lokaler Duplikate; Inventar ohne `Record<string, unknown>`
+
+### Entfernt
+
+- **`server/services/flipping/calculator.ts`** — Re-Export-Shim (Legacy `FlippingCalculator` bleibt in `shared/`)
+
 ## [0.2.0] — 2026-06-10
 
 Einheitliches Inventar-Anlegen per Modal und Kartenlisten in Inventar sowie gespeicherten Anzeigen.
@@ -338,7 +368,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/emelpe78/marketmind/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/emelpe78/marketmind/compare/v0.1.7...v0.2.0
 [0.1.7]: https://github.com/emelpe78/marketmind/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/emelpe78/marketmind/compare/v0.1.5...v0.1.6

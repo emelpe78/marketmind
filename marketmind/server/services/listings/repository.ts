@@ -11,6 +11,13 @@ export interface ListingInput {
   keywords?: string | null;
 }
 
+export function countListings(db: Database.Database): number {
+  const row = db.prepare("SELECT COUNT(*) as count FROM listings").get() as {
+    count: number;
+  };
+  return row.count;
+}
+
 export function findAllListings(db: Database.Database) {
   return db.prepare("SELECT * FROM listings ORDER BY created_at DESC").all();
 }

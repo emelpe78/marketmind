@@ -14,6 +14,13 @@ export interface SavedResearchAnalysis {
   summary: string;
 }
 
+export function countSavedResearches(db: Database.Database): number {
+  const row = db
+    .prepare("SELECT COUNT(*) as count FROM saved_researches")
+    .get() as { count: number };
+  return row.count;
+}
+
 export interface SavedResearch {
   id: number;
   title: string;

@@ -1,6 +1,5 @@
 import type Database from "better-sqlite3";
 import { detectPlatformFromUrl, isListingUrl } from "shared/detect-platform";
-import { formatEuro } from "shared/format-currency";
 import { ScraperFetchError, type FetcherDeps } from "../scraper/fetcher";
 import {
   extractSearchQueryFromTitle,
@@ -8,9 +7,14 @@ import {
   type ListingDetail,
 } from "../scraper/listing-detail";
 import { createScraperRuntime } from "../scraper/runtime";
-import { findSearchResults, getSearchStats } from "../searches/repository";
+import {
+  findSearchResults,
+  getSearchStats,
+  persistScrapeSearch,
+} from "../searches/repository";
 import { analyzePrices } from "../stats/price-analysis";
 import { runAgent } from "../ai/run-agent";
+import { buildFlipUserPrompt } from "./prompts";
 import {
   InvalidFlipInputError,
   ListingScrapeError,
@@ -22,84 +26,17 @@ export interface AnalyzeFlipInput {
   scraperDeps?: FetcherDeps;
 }
 
-export interface FlipMarketSample {
-  title: string;
-  price: number;
-  platform: string;
-  condition: string | null;
-}
+import type {
+  AnalyzeFlipResult,
+  FlipMarketSample,
+} from "shared/flipping-types";
 
-export interface AnalyzeFlipResult {
-  analysis: string;
-  query: string;
-  listing: ListingDetail;
-  marketStats: ReturnType<typeof getSearchStats>;
-  marketSamples: FlipMarketSample[];
-}
+export type {
+  AnalyzeFlipResult,
+  FlipMarketSample,
+} from "shared/flipping-types";
 
 const EMPTY_MARKET_STATS = analyzePrices([]);
-
-function buildFlipAgentPrompt(input: {
-  query: string;
-  listing: ListingDetail;
-  marketStats: ReturnType<typeof getSearchStats>;
-  marketSamples: FlipMarketSample[];
-}): string {
-  const lines = [
-    "Analysiere das Flipping-Potenzial für den deutschen Gebrauchtmarkt (privater Verkauf, keine Plattformgebühren).",
-    `Suchbegriff / Produkt: ${input.query}`,
-    "",
-    "Quelle: konkrete Anzeige",
-    JSON.stringify(
-      {
-        platform: input.listing.platform,
-        url: input.listing.url,
-        title: input.listing.title,
-        price: input.listing.price,
-        condition: input.listing.condition,
-        location: input.listing.location,
-        category: input.listing.category,
-        description: input.listing.description?.slice(0, 2000) ?? null,
-      },
-      null,
-      2,
-    ),
-  ];
-
-  if (input.listing.price != null) {
-    lines.push(
-      `Einkaufspreis (Anzeigenpreis): ${formatEuro(input.listing.price)}`,
-    );
-  }
-
-  lines.push(
-    "",
-    "Marktdaten (Vergleichsangebote):",
-    JSON.stringify(
-      {
-        stats: input.marketStats,
-        samples: input.marketSamples,
-      },
-      null,
-      2,
-    ),
-  );
-
-  if (input.marketStats.count === 0) {
-    lines.push(
-      "",
-      "Hinweis: Keine Vergleichsangebote verfügbar – Einschätzungen nur auf Basis der Anzeige und Markterfahrung.",
-    );
-  }
-
-  lines.push(
-    "",
-    "Strukturiere die Antwort mit ###-Überschriften gemäß deinem System-Prompt.",
-    "Nutze die Marktdaten für Verkaufspreis-Schätzung und Nachfragebewertung.",
-  );
-
-  return lines.join("\n");
-}
 
 async function fetchMarketData(
   db: Database.Database,
@@ -110,7 +47,8 @@ async function fetchMarketData(
   marketSamples: FlipMarketSample[];
 }> {
   try {
-    const { searchId } = await runtime.runSearch(query, "both");
+    const { results: scraped } = await runtime.scrapeSearch(query, "both");
+    const searchId = persistScrapeSearch(db, query, "both", scraped);
     const marketStats = getSearchStats(db, searchId);
     const marketSamples = findSearchResults(db, searchId) as Array<{
       title: string;
@@ -170,7 +108,7 @@ export async function analyzeFlip(
     query,
   );
 
-  const userInput = buildFlipAgentPrompt({
+  const userInput = buildFlipUserPrompt({
     query,
     listing,
     marketStats,

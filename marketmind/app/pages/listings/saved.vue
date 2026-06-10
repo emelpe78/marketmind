@@ -1,7 +1,8 @@
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
 
-import type { InventoryCreatePrefill } from "~/components/InventoryCreateModal.vue";
+import type { InventoryCreatePrefill } from "shared/inventory-types";
+import { buildInventoryPrefillFromListing } from "shared/inventory-prefill";
 import type { ListingItem } from "~/composables/useListings";
 import { useInventory } from "~/composables/useInventory";
 import { formatDateTime } from "shared/format-datetime";
@@ -50,31 +51,12 @@ const platformOptions = [
   { label: "eBay", value: "ebay" },
 ];
 
-function buildListingNotes(item: ListingItem): string {
-  const parts: string[] = [];
-  if (item.category?.trim()) {
-    parts.push(`Kategorie: ${item.category.trim()}`);
-  }
-  if (item.keywords?.trim()) {
-    parts.push(`Keywords: ${item.keywords.trim()}`);
-  }
-  if (item.description.trim()) {
-    if (parts.length > 0) parts.push("");
-    parts.push(item.description.trim());
-  }
-  return parts.join("\n");
-}
-
 function openInventoryModal(item: ListingItem) {
   inventoryTitleSuffix.value = item.title;
-  inventoryPrefill.value = {
-    title: item.title,
-    buy_date: todayIsoDate(),
-    sell_price: item.price_suggestion ?? undefined,
-    sell_platform:
-      normalizeInventoryPlatform(item.platform) ?? "kleinanzeigen",
-    notes: buildListingNotes(item),
-  };
+  inventoryPrefill.value = buildInventoryPrefillFromListing(item, {
+    todayIsoDate,
+    normalizePlatform: normalizeInventoryPlatform,
+  });
   inventoryModalOpen.value = true;
 }
 

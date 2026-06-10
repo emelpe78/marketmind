@@ -1,30 +1,16 @@
-import { FETCH_KEYS } from "~/utils/fetch-keys";
+import type {
+  ResearchRunResult,
+  ResearchRunSummary,
+} from "shared/research-types";
 import {
   refreshAfterAgentCall,
-  refreshDashboardData,
-  refreshFetchData,
+  refreshResearchData,
 } from "~/utils/refresh-fetch-data";
 
-export interface SearchResult {
-  title: string;
-  price: number;
-  url: string;
-  platform: string;
-  condition?: string | null;
-}
+export type { ResearchRunSummary as PlatformSummary };
 
-export interface PlatformSummary {
-  platform: "ebay" | "kleinanzeigen";
-  summary: string;
-}
-
-export interface ResearchRunResponse {
-  searchId: number;
-  results: SearchResult[];
-  stats: Record<string, unknown>;
-  summaries?: PlatformSummary[];
-  savedResearchId?: number;
-}
+export type SearchResult = ResearchRunResult["results"][number];
+export type ResearchRunResponse = ResearchRunResult;
 
 export function useResearch() {
   async function runSearch(
@@ -46,24 +32,16 @@ export function useResearch() {
     return response;
   }
 
-  async function saveResearch(
-    searchId: number,
-    saveName: string,
-    analyses?: PlatformSummary[],
-  ) {
+  async function saveResearch(searchId: number, saveName: string) {
     const response = await $fetch<ResearchRunResponse>("/api/research/run", {
       method: "POST",
       body: {
         searchId,
         save: true,
         saveName,
-        ...(analyses?.length ? { analyses } : {}),
       },
     });
-    await Promise.all([
-      refreshDashboardData(),
-      refreshFetchData(FETCH_KEYS.savedResearches),
-    ]);
+    await refreshResearchData();
     return response;
   }
 

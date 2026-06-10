@@ -1,20 +1,12 @@
 <script setup lang="ts">
+import type { InventoryCreatePrefill } from "shared/inventory-types";
+import type { InventoryPlatform } from "shared/detect-platform";
 import {
   INVENTORY_PLATFORM_OPTIONS,
   useInventory,
 } from "~/composables/useInventory";
 
-type InventoryPlatform = "kleinanzeigen" | "ebay" | "sonstige";
-
-export interface InventoryCreatePrefill {
-  title?: string;
-  buy_price?: number;
-  buy_platform?: InventoryPlatform;
-  buy_date?: string;
-  sell_price?: number;
-  sell_platform?: InventoryPlatform;
-  notes?: string;
-}
+export type { InventoryCreatePrefill };
 
 const open = defineModel<boolean>("open", { default: false });
 

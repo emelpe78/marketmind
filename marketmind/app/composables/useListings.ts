@@ -1,7 +1,7 @@
 import { FETCH_KEYS } from "~/utils/fetch-keys";
 import {
   refreshAfterAgentCall,
-  refreshFetchData,
+  refreshListingsData,
 } from "~/utils/refresh-fetch-data";
 
 export interface ListingItem {
@@ -32,7 +32,7 @@ export function useListings() {
   const generating = ref(false);
 
   async function refreshListings() {
-    await refreshFetchData(FETCH_KEYS.listings);
+    await refreshListingsData();
   }
 
   async function saveListing(body: Record<string, unknown>) {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { InventoryCreatePrefill } from "~/components/InventoryCreateModal.vue";
+import type { InventoryCreatePrefill } from "shared/inventory-types";
+import type { InventoryItem } from "shared/inventory-types";
 import { formatPlatformLabel } from "shared/platform-labels";
 import { formatDateTime } from "shared/format-datetime";
 
@@ -31,7 +32,7 @@ function formatDate(value: unknown): string {
 
 type Platform = "kleinanzeigen" | "ebay" | "sonstige";
 
-function getItemProfit(item: Record<string, unknown>): number | null {
+function getItemProfit(item: InventoryItem): number | null {
   if (item.profit != null) return Number(item.profit);
   return null;
 }
@@ -39,7 +40,7 @@ function getItemProfit(item: Record<string, unknown>): number | null {
 const createModalOpen = ref(false);
 const createPrefill = ref<InventoryCreatePrefill>({});
 
-const sellItem = ref<Record<string, unknown> | null>(null);
+const sellItem = ref<InventoryItem | null>(null);
 const sellModalOpen = computed({
   get: () => sellItem.value !== null,
   set: (open: boolean) => {
@@ -52,7 +53,7 @@ const sellForm = reactive({
   sell_date: todayIsoDate(),
 });
 
-const deleteItem = ref<Record<string, unknown> | null>(null);
+const deleteItem = ref<InventoryItem | null>(null);
 const deleteModalOpen = computed({
   get: () => deleteItem.value !== null,
   set: (open: boolean) => {
@@ -65,7 +66,7 @@ function openCreateModal() {
   createModalOpen.value = true;
 }
 
-function openSellModal(item: Record<string, unknown>) {
+function openSellModal(item: InventoryItem) {
   sellItem.value = item;
   sellForm.sell_price = undefined;
   sellForm.sell_platform =
@@ -73,7 +74,7 @@ function openSellModal(item: Record<string, unknown>) {
   sellForm.sell_date = todayIsoDate();
 }
 
-function openDeleteModal(item: Record<string, unknown>) {
+function openDeleteModal(item: InventoryItem) {
   deleteItem.value = item;
 }
 

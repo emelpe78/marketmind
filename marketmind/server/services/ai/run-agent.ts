@@ -11,6 +11,7 @@ import {
   logAgentHistory,
   resolveAgentModel,
 } from "../agents/repository";
+import { resolveActiveAgentPrompt } from "../agents/prompt-resolve";
 
 export type RunAgentMode = "required" | "optional" | "skip";
 
@@ -59,7 +60,8 @@ export async function runAgent(
 
   const agent = getAgentByType(db, input.agentType);
   const model = input.model ?? resolveAgentModel(agent, ai.defaultModel);
-  const systemPrompt = input.systemPrompt ?? agent.system_prompt;
+  const systemPrompt =
+    input.systemPrompt ?? resolveActiveAgentPrompt(db, input.agentType);
   const temperature = input.temperature ?? agent.temperature;
 
   const completion = await chatCompletion(

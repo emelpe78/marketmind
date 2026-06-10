@@ -90,6 +90,13 @@ export function updatePrompt(
   return findPromptById(db, id);
 }
 
+export function countPrompts(db: Database.Database): number {
+  const row = db
+    .prepare("SELECT COUNT(*) as count FROM prompt_library")
+    .get() as { count: number };
+  return row.count;
+}
+
 export function deletePrompt(db: Database.Database, id: number): boolean {
   const result = db.prepare("DELETE FROM prompt_library WHERE id = ?").run(id);
   return result.changes > 0;

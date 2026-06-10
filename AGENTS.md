@@ -1,6 +1,6 @@
 # MarketMind — Agent Guide
 
-Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.2.0**.
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.2.1**.
 
 ## Repository-Layout
 
@@ -47,13 +47,13 @@ Dev-DB: `MM_DATABASE_DEV` in `marketmind/.env` (Standard `data/marketmind.db`, g
 
 ### Schichten-Konvention
 
-| Schicht          | Ort                                                                                                             | Aufgabe                                        |
-| ---------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| **Routes**       | `server/api/`                                                                                                   | HTTP-Adapter (Validierung, Statuscodes)        |
-| **Use-Cases**    | `server/services/ai/run-agent.ts`, `research/run-research.ts`, `flipping/analyze-flip.ts`, `scraper/runtime.ts` | Geschäftslogik                                 |
-| **Repositories** | `server/services/*/repository.ts`                                                                               | SQL + Row-Mapping pro Domäne                   |
-| **Shared**       | `shared/`                                                                                                       | Formatierung, Plattform-Erkennung, Preisparser |
-| **Composables**  | `app/composables/`                                                                                              | Frontend-State & API-Aufrufe                   |
+| Schicht          | Ort                                                                                                             | Aufgabe                                       |
+| ---------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| **Routes**       | `server/api/`                                                                                                   | HTTP-Adapter über `defineApiHandler` + Zod    |
+| **Use-Cases**    | `server/services/ai/run-agent.ts`, `research/run-research.ts`, `flipping/analyze-flip.ts`, `scraper/runtime.ts` | Geschäftslogik                                |
+| **Repositories** | `server/services/*/repository.ts`                                                                               | SQL + Row-Mapping pro Domäne (inkl. `count*`) |
+| **Shared**       | `shared/`                                                                                                       | Typen, Formatierung, Plattform-Erkennung      |
+| **Composables**  | `app/composables/`                                                                                              | Frontend-State & API-Aufrufe                  |
 
 ### Frontend (`marketmind/app/`)
 
@@ -70,11 +70,12 @@ Dev-DB: `MM_DATABASE_DEV` in `marketmind/.env` (Standard `data/marketmind.db`, g
 - **Inventar-Modal:** `InventoryCreateModal` — globales Anlegen-Modal mit `prefill`/`titleSuffix`; genutzt auf `/inventory` und `/listings/saved`
 - **Utils:** Re-Exports aus `shared/`; `render-markdown.ts` bleibt app-lokal
 - Keine Pinia-Stores — State über Composables, `useFetch`, `ref`, `reactive`
-- **Datenrefresh:** stabile Keys in `app/utils/fetch-keys.ts`; nach Mutationen `refreshNuxtData` über `app/utils/refresh-fetch-data.ts` — **Speichern = alle relevanten Stellen aktualisieren** (z. B. `refreshAgentsData()` für Agents + Bibliothek + Verlauf)
+- **Datenrefresh:** stabile Keys in `app/utils/fetch-keys.ts`; nach Mutationen Domain-Bundles in `refresh-fetch-data.ts` — `refreshResearchData()`, `refreshFlippingData()`, `refreshListingsData()`, `refreshInventoryData()`, `refreshAgentsData()`
 
 ### Backend (`marketmind/server/`)
 
-- **API:** `server/api/**/*.ts` — dünne HTTP-Adapter
+- **API:** `server/api/**/*.ts` — dünne HTTP-Adapter; Mutations-Routen über `defineApiHandler` + Zod (`server/api/schemas/`)
+- **Prompt-Auflösung:** `resolveActiveAgentPrompt()` — Bibliotheks-Prompt vor `agents.system_prompt` (`server/services/agents/prompt-resolve.ts`)
 - **Services:** Use-Cases + Repositories unter `server/services/`
 - **DB:** `server/database/` — Schema, `settings.ts`, `lifecycle.ts`, `paths.ts` (`MM_DATABASE_DEV` / `MM_DATABASE_DOCKER`), `seed.ts`
 - **Plugin:** `server/plugins/database.ts` — Init, Seed, Migrationen, Agent-Prompt-Sync beim Start
@@ -151,7 +152,7 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 | Gespeicherte Recherchen | `useSavedResearches`, `app/pages/research/saved/`, `server/api/saved-researches/`               |
 | Research-Navigation     | `shared/research-nav.ts`, `app/layouts/default.vue`                                             |
 | Flipping-Analyse        | `server/services/flipping/analyze-flip.ts`, `server/api/flipping/analyze.post.ts`               |
-| Flipping speichern      | `server/services/flipping/saved-flip-analysis.ts`, `server/api/saved-flip-analyses/`            |
+| Flipping speichern      | `saveFlipAnalysisFromUrl`, `server/api/saved-flip-analyses/from-url.post.ts`                    |
 | Anzeigen speichern      | `server/services/listings/repository.ts`, `server/api/listings/`                                |
 | Listings-Navigation     | `shared/listings-nav.ts`, `app/pages/listings/`                                                 |
 | Inventar                | `server/services/inventory/`, `app/pages/inventory.vue`, `useInventory`, `InventoryCreateModal` |
@@ -160,7 +161,10 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 | Default-Agents          | Research, Listing, Flipping (`analytics`), Prompt (`strategy`, Meta-Agent)                      |
 | Dashboard               | `server/services/dashboard/summary.ts`, `app/components/DashboardOverview.vue`, `useDashboard`  |
 | Fetch-Keys              | `app/utils/fetch-keys.ts` — `useFetch`-Keys für geteilten Cache                                 |
-| UI nach Speichern       | `app/utils/refresh-fetch-data.ts` — `refreshAgentsData`, `refreshAllFetchData`, …               |
+| UI nach Speichern       | `app/utils/refresh-fetch-data.ts` — Domain-Bundles (`refreshResearchData`, …)                   |
+| API-Handler + Zod       | `server/utils/api-handler.ts`, `server/api/schemas/`                                            |
+| Shared API-Typen        | `shared/research-types.ts`, `shared/flipping-types.ts`, `shared/inventory-types.ts`             |
+| Inventar-Prefill        | `shared/inventory-prefill.ts` — `buildInventoryPrefillFromListing()`                            |
 | Agent-Prompt-Docs       | `docs/listing_agent.md`, `docs/flipping_agent.md`                                               |
 | Docker-Datenordner      | Repo-Root `.env` (`MARKETMIND_DATA_DIR`), `docker-compose.yml`                                  |
 

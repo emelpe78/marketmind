@@ -1,18 +1,7 @@
 import type Database from "better-sqlite3";
+import type { InventoryItem } from "shared/inventory-types";
 
-export interface InventoryItem {
-  id?: number;
-  title: string;
-  buy_price: number | null;
-  buy_platform: string | null;
-  buy_date: string | null;
-  sell_price: number | null;
-  sell_platform: string | null;
-  sell_date: string | null;
-  status: string;
-  profit: number | null;
-  notes: string | null;
-}
+export type { InventoryItem } from "shared/inventory-types";
 
 function toNumber(value: unknown): number | null {
   if (value == null || value === "") return null;

@@ -95,6 +95,13 @@ export function updateInventory(
   return findInventoryById(db, id);
 }
 
+export function countOpenInventory(db: Database.Database): number {
+  const row = db
+    .prepare("SELECT COUNT(*) as count FROM inventory WHERE status = 'gekauft'")
+    .get() as { count: number };
+  return row.count;
+}
+
 export function deleteInventory(db: Database.Database, id: number): boolean {
   const result = db.prepare("DELETE FROM inventory WHERE id = ?").run(id);
   return result.changes > 0;

@@ -4,7 +4,9 @@ import {
   PLATFORM_LABELS,
   RESEARCH_PLATFORM_OPTIONS,
 } from "shared/platform-labels";
-import type { PlatformSummary, SearchResult } from "~/composables/useResearch";
+import type { PriceStats } from "shared/price-stats";
+import type { ResearchRunSummary } from "shared/research-types";
+import type { SearchResult } from "~/composables/useResearch";
 
 definePageMeta({ layout: "default" });
 
@@ -20,8 +22,8 @@ const loading = ref(false);
 const analyzing = ref(false);
 const saving = ref(false);
 const searchId = ref<number | null>(null);
-const stats = ref<Record<string, unknown> | null>(null);
-const summaries = ref<PlatformSummary[]>([]);
+const stats = ref<PriceStats | null>(null);
+const summaries = ref<ResearchRunSummary[]>([]);
 const results = ref<SearchResult[]>([]);
 const sorting = ref<{ id: string; desc: boolean }[]>([]);
 const toast = useToast();
@@ -80,11 +82,7 @@ async function saveResearch() {
   if (!searchId.value || !stats.value || results.value.length === 0) return;
   saving.value = true;
   try {
-    const saved = await requestSave(
-      searchId.value,
-      query.value.trim(),
-      summaries.value,
-    );
+    const saved = await requestSave(searchId.value, query.value.trim());
     toast.add({
       title: "Recherche gespeichert",
       description: "Unter Preisrecherche → Gespeicherte Recherchen aufrufbar.",
@@ -198,6 +196,7 @@ const platformOptions = [...RESEARCH_PLATFORM_OPTIONS];
       <UButton
         icon="i-lucide-bookmark"
         :loading="saving"
+        :disabled="!hasAnalysis"
         data-testid="save-research"
         @click="saveResearch"
       >

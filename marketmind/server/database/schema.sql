@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS searches (
   query TEXT NOT NULL,
   platform TEXT NOT NULL,
   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-  results_count INTEGER
+  results_count INTEGER,
+  analyses_json TEXT
 );
 
 -- Suchergebnisse (Rohdaten Scraper)

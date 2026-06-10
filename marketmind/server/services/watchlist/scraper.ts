@@ -1,25 +1,10 @@
 import type Database from "better-sqlite3";
-import { load } from "cheerio";
-import { parseGermanPrice } from "shared/parse-german-price";
+import { scrapeListingPrice } from "../scraper/price-extract";
 import { createScraperRuntime } from "../scraper/runtime";
 import { checkAlert } from "./alerts";
 import type { WatchlistItem } from "./repository";
 
-export function scrapeListingPrice(html: string): number | null {
-  const $ = load(html);
-  const ebayPrice = $(".x-price-primary, .s-item__price, .ux-textspans--PRICE")
-    .first()
-    .text();
-  if (ebayPrice) {
-    const price = parseGermanPrice(ebayPrice);
-    if (price !== null) return price;
-  }
-  const kaPrice = $(".boxedarticle--price, .aditem-main--middle--price")
-    .first()
-    .text();
-  if (kaPrice) return parseGermanPrice(kaPrice);
-  return null;
-}
+export { scrapeListingPrice } from "../scraper/price-extract";
 
 export async function scrapeWatchlistItem(
   db: Database.Database,

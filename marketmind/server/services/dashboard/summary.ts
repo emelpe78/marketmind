@@ -1,26 +1,18 @@
 import type Database from "better-sqlite3";
 import { getAiConfig, isAiConfigured } from "../ai/config";
-import { listAgentsWithStats } from "../agents/repository";
+import { countAgentHistory, listAgentsWithStats } from "../agents/repository";
+import { countSavedFlipAnalyses } from "../flipping/saved-flip-analysis";
 import { getInventorySummary } from "../inventory/index";
-import { findActiveWatchlistItems } from "../watchlist/repository";
-import { checkAlert } from "../watchlist/alerts";
-
-function countRows(
-  db: Database.Database,
-  sql: string,
-  ...params: unknown[]
-): number {
-  const row = db.prepare(sql).get(...params) as { count: number };
-  return row.count;
-}
+import { countListings } from "../listings/repository";
+import { countPrompts } from "../prompt-library/repository";
+import { countSavedResearches } from "../research/saved-research";
+import {
+  countActiveWatchlistAlerts,
+  countActiveWatchlistItems,
+} from "../watchlist/repository";
+import { countOpenInventory } from "../inventory/repository";
 
 export function getDashboardSummary(db: Database.Database) {
-  const watchlistItems = findActiveWatchlistItems(db);
-
-  const watchlistAlerts = watchlistItems.filter((item) =>
-    checkAlert(item.current_price, item.target_price, item.alert_active),
-  ).length;
-
   const inventorySummary = getInventorySummary(db);
 
   const tokenRow = db
@@ -30,29 +22,14 @@ export function getDashboardSummary(db: Database.Database) {
   const aiConfig = getAiConfig(db);
 
   return {
-    savedResearchCount: countRows(
-      db,
-      "SELECT COUNT(*) as count FROM saved_researches",
-    ),
-    savedFlipAnalysisCount: countRows(
-      db,
-      "SELECT COUNT(*) as count FROM saved_flip_analyses",
-    ),
-    savedListingCount: countRows(db, "SELECT COUNT(*) as count FROM listings"),
-    watchlistItemCount: watchlistItems.length,
-    watchlistAlerts,
-    openInventoryCount: countRows(
-      db,
-      "SELECT COUNT(*) as count FROM inventory WHERE status = 'gekauft'",
-    ),
-    agentCallCount: countRows(
-      db,
-      "SELECT COUNT(*) as count FROM agent_history",
-    ),
-    promptLibraryCount: countRows(
-      db,
-      "SELECT COUNT(*) as count FROM prompt_library",
-    ),
+    savedResearchCount: countSavedResearches(db),
+    savedFlipAnalysisCount: countSavedFlipAnalyses(db),
+    savedListingCount: countListings(db),
+    watchlistItemCount: countActiveWatchlistItems(db),
+    watchlistAlerts: countActiveWatchlistAlerts(db),
+    openInventoryCount: countOpenInventory(db),
+    agentCallCount: countAgentHistory(db),
+    promptLibraryCount: countPrompts(db),
     agents: listAgentsWithStats(db).map((agent) => ({
       id: agent.id,
       name: agent.name,

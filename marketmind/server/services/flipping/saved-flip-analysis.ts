@@ -1,17 +1,8 @@
 import type Database from "better-sqlite3";
-import type { PriceStats } from "../stats/price-analysis";
-import type { FlipMarketSample } from "./analyze-flip";
+import type { FlipListingInfo, FlipMarketSample } from "shared/flipping-types";
+import type { PriceStats } from "shared/price-stats";
 
-export interface SavedFlipListing {
-  platform: string;
-  url: string;
-  title: string;
-  price: number | null;
-  condition: string | null;
-  location: string | null;
-  category?: string | null;
-  description?: string | null;
-}
+export type SavedFlipListing = FlipListingInfo;
 
 export interface SavedFlipAnalysis {
   id: number;
@@ -85,6 +76,13 @@ function rowToSavedFlipAnalysis(row: SavedFlipAnalysisRow): SavedFlipAnalysis {
   };
 }
 
+export function countSavedFlipAnalyses(db: Database.Database): number {
+  const row = db
+    .prepare("SELECT COUNT(*) as count FROM saved_flip_analyses")
+    .get() as { count: number };
+  return row.count;
+}
+
 export function listSavedFlipAnalyses(
   db: Database.Database,
 ): SavedFlipAnalysis[] {
@@ -113,6 +111,24 @@ export interface CreateSavedFlipAnalysisInput {
   listing: SavedFlipListing;
   marketStats: PriceStats;
   marketSamples: FlipMarketSample[];
+}
+
+export async function saveFlipAnalysisFromUrl(
+  db: Database.Database,
+  input: { url: string; title?: string },
+): Promise<SavedFlipAnalysis> {
+  const { analyzeFlip } = await import("./analyze-flip");
+  const result = await analyzeFlip(db, { url: input.url });
+  return createSavedFlipAnalysis(db, {
+    title: input.title,
+    listingUrl: result.listing.url,
+    listingPlatform: result.listing.platform,
+    query: result.query,
+    analysis: result.analysis,
+    listing: result.listing,
+    marketStats: result.marketStats,
+    marketSamples: result.marketSamples,
+  });
 }
 
 export function createSavedFlipAnalysis(

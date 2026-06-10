@@ -2,11 +2,18 @@ import type Database from "better-sqlite3";
 import { createScraperRuntime } from "../scraper/runtime";
 import type { ScrapePlatform } from "../scraper/runtime";
 import type { FetcherDeps } from "../scraper/fetcher";
-import type { PriceStats } from "../stats/price-analysis";
+import type {
+  ResearchRunResult,
+  ResearchRunResultRow,
+  ResearchRunSummary,
+} from "shared/research-types";
 import {
   findSearchById,
   findSearchResults,
+  getSearchAnalyses,
   getSearchStats,
+  persistScrapeSearch,
+  saveSearchAnalyses,
 } from "../searches/repository";
 import {
   MissingQueryError,
@@ -16,18 +23,11 @@ import {
 import { analyzeSearchByPlatform } from "./analyze-search";
 import { createSavedResearch } from "./saved-research";
 
-export interface ResearchRunResultRow {
-  title: string;
-  price: number;
-  url: string;
-  platform: string;
-  condition?: string | null;
-}
-
-export interface ResearchRunSummary {
-  platform: "ebay" | "kleinanzeigen";
-  summary: string;
-}
+export type {
+  ResearchRunResult,
+  ResearchRunResultRow,
+  ResearchRunSummary,
+} from "shared/research-types";
 
 export interface ResearchRunInput {
   query?: string;
@@ -38,14 +38,6 @@ export interface ResearchRunInput {
   saveName?: string;
   analyses?: ResearchRunSummary[];
   scraperDeps?: FetcherDeps;
-}
-
-export interface ResearchRunResult {
-  searchId: number;
-  results: ResearchRunResultRow[];
-  stats: PriceStats;
-  summaries?: ResearchRunSummary[];
-  savedResearchId?: number;
 }
 
 function mapSearchResults(
@@ -84,9 +76,9 @@ export async function runResearch(
       throw new MissingQueryError();
     }
     const runtime = createScraperRuntime(db, input.scraperDeps);
-    const searchResult = await runtime.runSearch(query, platform);
-    searchId = searchResult.searchId;
-    results = searchResult.results.map((r) => ({
+    const { results: scraped } = await runtime.scrapeSearch(query, platform);
+    searchId = persistScrapeSearch(db, query, platform, scraped);
+    results = scraped.map((r) => ({
       title: r.title,
       price: r.price,
       url: r.url,
@@ -109,9 +101,14 @@ export async function runResearch(
       throw new NoAnalysisDataError();
     }
     summaries = platformSummaries;
+    saveSearchAnalyses(db, searchId, platformSummaries);
   }
 
   if (input.save) {
+    const analyses = summaries ?? getSearchAnalyses(db, searchId);
+    if (!analyses.length) {
+      throw new NoAnalysisDataError();
+    }
     const saved = createSavedResearch(db, {
       title: input.saveName,
       query,
@@ -119,7 +116,7 @@ export async function runResearch(
       searchId,
       stats,
       results,
-      analyses: input.analyses ?? summaries ?? [],
+      analyses,
     });
     savedResearchId = saved.id;
   }

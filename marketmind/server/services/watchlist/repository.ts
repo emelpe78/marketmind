@@ -129,3 +129,16 @@ export function findActiveWatchlistItems(
     .prepare("SELECT * FROM watchlist WHERE status = 'aktiv'")
     .all() as WatchlistItem[];
 }
+
+export function countActiveWatchlistItems(db: Database.Database): number {
+  const row = db
+    .prepare("SELECT COUNT(*) as count FROM watchlist WHERE status = 'aktiv'")
+    .get() as { count: number };
+  return row.count;
+}
+
+export function countActiveWatchlistAlerts(db: Database.Database): number {
+  return findActiveWatchlistItems(db).filter((item) =>
+    checkAlert(item.current_price, item.target_price, item.alert_active),
+  ).length;
+}

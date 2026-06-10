@@ -1,7 +1,7 @@
 import type Database from "better-sqlite3";
-import { formatEuro } from "shared/format-currency";
 import { runAgent } from "../ai/run-agent";
 import { getSearchStats } from "../searches/repository";
+import { buildListingUserPrompt } from "./prompts";
 import { parseListingGeneration } from "./parse-generation";
 
 export interface GenerateListingInput {
@@ -17,18 +17,18 @@ export async function generateListing(
   db: Database.Database,
   input: GenerateListingInput,
 ) {
-  let priceContext = "";
-  if (input.searchId) {
-    const stats = getSearchStats(db, input.searchId);
-    priceContext = `\nMarktdaten: Durchschnitt ${formatEuro(stats.avg)}, Median ${formatEuro(stats.median)}`;
-  }
+  const marketStats = input.searchId
+    ? getSearchStats(db, input.searchId)
+    : null;
 
-  const platformHint =
-    input.platform === "kleinanzeigen"
-      ? "Erstelle eine Kleinanzeigen-Anzeige: Titel max 70 Zeichen, informeller Ton. Antworte als JSON mit: title, description, priceSuggestion, category."
-      : "Erstelle eine eBay-Anzeige: Titel max 80 Zeichen, professionell mit Bullet Points. Antworte als JSON mit: title, description, priceSuggestion, category, itemSpecifics (Objekt).";
-
-  const userInput = `${platformHint}\nProdukt: ${input.query}\nZustand: ${input.condition}\nZusatz: ${input.extras || "-"}\nWunschpreis: ${input.desiredPrice || "-"}${priceContext}`;
+  const userInput = buildListingUserPrompt({
+    query: input.query,
+    platform: input.platform,
+    condition: input.condition,
+    extras: input.extras,
+    desiredPrice: input.desiredPrice,
+    marketStats,
+  });
 
   const { content } = await runAgent(db, {
     agentType: "listing",

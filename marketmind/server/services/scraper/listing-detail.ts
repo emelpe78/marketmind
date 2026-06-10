@@ -1,7 +1,7 @@
 import { load } from "cheerio";
 import type { DetectedPlatform } from "shared/detect-platform";
 import { parseGermanPrice } from "shared/parse-german-price";
-import { scrapeListingPrice } from "../watchlist/scraper";
+import { scrapeListingPrice } from "./price-extract";
 
 export interface ListingDetail {
   platform: DetectedPlatform;

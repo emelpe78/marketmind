@@ -1,5 +1,6 @@
 import type Database from "better-sqlite3";
 import { runAgent } from "../ai/run-agent";
+import { buildResearchUserPrompt } from "./prompts";
 
 export type AnalysisPlatform = "ebay" | "kleinanzeigen";
 
@@ -7,11 +8,6 @@ export interface PlatformAnalysis {
   platform: AnalysisPlatform;
   summary: string;
 }
-
-const PLATFORM_LABEL: Record<AnalysisPlatform, string> = {
-  ebay: "eBay.de",
-  kleinanzeigen: "Kleinanzeigen.de",
-};
 
 export function platformsForSearch(platform: string): AnalysisPlatform[] {
   if (platform === "both") return ["ebay", "kleinanzeigen"];
@@ -39,8 +35,7 @@ export async function analyzeSearchByPlatform(
     const results = stmt.all(searchId, platform);
     if (!results.length) continue;
 
-    const label = PLATFORM_LABEL[platform];
-    const userInput = `Analysiere Marktdaten für "${search.query}" ausschließlich von ${label}. Ignoriere andere Plattformen.\n${JSON.stringify(results, null, 2)}`;
+    const userInput = buildResearchUserPrompt(search.query, platform, results);
 
     const { content, tokensUsed: used } = await runAgent(db, {
       agentType: "research",

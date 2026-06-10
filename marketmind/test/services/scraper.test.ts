@@ -84,7 +84,7 @@ describe("eBay scraper", () => {
       sleepFn: async () => {},
       randomFn: () => 0,
       skipWarmUp: true,
-    }).runSearch("rtx 3060", "ebay");
+    }).scrapeSearch("rtx 3060", "ebay");
 
     expect(results.length).toBe(4);
     expect(mockFetch).toHaveBeenCalledTimes(3);

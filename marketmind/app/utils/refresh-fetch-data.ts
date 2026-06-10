@@ -28,3 +28,23 @@ export async function refreshAgentHistoryData() {
 export async function refreshAfterAgentCall() {
   await refreshFetchData(FETCH_KEYS.agentHistory, FETCH_KEYS.dashboard);
 }
+
+export async function refreshResearchData() {
+  await refreshFetchData(FETCH_KEYS.savedResearches, FETCH_KEYS.dashboard);
+}
+
+export async function refreshFlippingData() {
+  await refreshFetchData(FETCH_KEYS.savedFlipAnalyses, FETCH_KEYS.dashboard);
+}
+
+export async function refreshListingsData() {
+  await refreshFetchData(FETCH_KEYS.listings, FETCH_KEYS.dashboard);
+}
+
+export async function refreshInventoryData() {
+  await refreshFetchData(
+    FETCH_KEYS.inventory,
+    FETCH_KEYS.inventorySummary,
+    FETCH_KEYS.dashboard,
+  );
+}

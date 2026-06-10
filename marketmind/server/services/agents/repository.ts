@@ -37,6 +37,13 @@ export function getAgentByType(db: Database.Database, type: string): AgentRow {
   return agent;
 }
 
+export function countAgentHistory(db: Database.Database): number {
+  const row = db
+    .prepare("SELECT COUNT(*) as count FROM agent_history")
+    .get() as { count: number };
+  return row.count;
+}
+
 export function listAgentsWithStats(db: Database.Database): AgentWithStats[] {
   return db
     .prepare(

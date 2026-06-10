@@ -1,34 +1,8 @@
+import type { AnalyzeFlipResult } from "shared/flipping-types";
 import { refreshAfterAgentCall } from "~/utils/refresh-fetch-data";
 
-export interface FlipListingInfo {
-  platform: string;
-  url: string;
-  title: string;
-  price: number | null;
-  condition: string | null;
-  location: string | null;
-}
-
-export interface FlipMarketSample {
-  title: string;
-  price: number;
-  platform: string;
-  condition: string | null;
-}
-
-export interface FlipAnalysisResult {
-  analysis: string;
-  query: string;
-  listing: FlipListingInfo;
-  marketStats: {
-    min: number;
-    max: number;
-    avg: number;
-    median: number;
-    count: number;
-  };
-  marketSamples: FlipMarketSample[];
-}
+export type FlipAnalysisResult = AnalyzeFlipResult;
+export type { FlipListingInfo, FlipMarketSample } from "shared/flipping-types";
 
 export function useFlipping() {
   const loading = ref(false);

@@ -44,10 +44,10 @@ export interface ScraperRuntime {
     query: string,
     maxResults: number,
   ) => Promise<ScrapeResult[]>;
-  runSearch: (
+  scrapeSearch: (
     query: string,
     platform: ScrapePlatform,
-  ) => Promise<{ searchId: number; results: ScrapeResult[] }>;
+  ) => Promise<{ results: ScrapeResult[] }>;
 }
 
 export function createScraperRuntime(
@@ -148,17 +148,11 @@ export function createScraperRuntime(
     return results;
   }
 
-  async function runSearch(
+  async function scrapeSearch(
     query: string,
     platform: ScrapePlatform,
-  ): Promise<{ searchId: number; results: ScrapeResult[] }> {
+  ): Promise<{ results: ScrapeResult[] }> {
     const maxResults = Number(settings["scraper-max-results"] || 100);
-
-    const insertSearch = db.prepare(
-      "INSERT INTO searches (query, platform) VALUES (?, ?)",
-    );
-    const searchResult = insertSearch.run(query, platform);
-    const searchId = Number(searchResult.lastInsertRowid);
 
     let allResults: ScrapeResult[] = [];
 
@@ -171,30 +165,7 @@ export function createScraperRuntime(
       allResults = allResults.concat(await scrapeKleinanzeigen(query, kaMax));
     }
 
-    const insertResult = db.prepare(
-      `INSERT INTO search_results (search_id, title, price, url, platform, condition, sold, location, end_date)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    );
-    for (const r of allResults) {
-      insertResult.run(
-        searchId,
-        r.title,
-        r.price,
-        r.url,
-        r.platform,
-        r.condition ?? null,
-        r.sold ?? 0,
-        r.location ?? null,
-        r.end_date ?? null,
-      );
-    }
-
-    db.prepare("UPDATE searches SET results_count = ? WHERE id = ?").run(
-      allResults.length,
-      searchId,
-    );
-
-    return { searchId, results: allResults };
+    return { results: allResults };
   }
 
   return {
@@ -203,6 +174,6 @@ export function createScraperRuntime(
     fetchPage,
     scrapeEbay,
     scrapeKleinanzeigen,
-    runSearch,
+    scrapeSearch,
   };
 }

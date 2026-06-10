@@ -2,21 +2,19 @@ import {
   normalizeInventoryPlatform,
   type InventoryPlatform,
 } from "shared/detect-platform";
+import type { InventoryItem } from "shared/inventory-types";
 import { INVENTORY_PLATFORM_SELECT_OPTIONS } from "shared/platform-labels";
 import { FETCH_KEYS } from "~/utils/fetch-keys";
-import { refreshFetchData } from "~/utils/refresh-fetch-data";
+import { refreshInventoryData } from "~/utils/refresh-fetch-data";
 
 export const INVENTORY_PLATFORM_OPTIONS = [
   ...INVENTORY_PLATFORM_SELECT_OPTIONS,
 ];
 
 export function useInventory() {
-  const { data: items } = useFetch<Array<Record<string, unknown>>>(
-    "/api/inventory",
-    {
-      key: FETCH_KEYS.inventory,
-    },
-  );
+  const { data: items } = useFetch<InventoryItem[]>("/api/inventory", {
+    key: FETCH_KEYS.inventory,
+  });
   const { data: summary } = useFetch<Record<string, unknown>>(
     "/api/inventory/summary",
     {
@@ -25,11 +23,7 @@ export function useInventory() {
   );
 
   async function refreshInventory() {
-    await refreshFetchData(
-      FETCH_KEYS.inventory,
-      FETCH_KEYS.inventorySummary,
-      FETCH_KEYS.dashboard,
-    );
+    await refreshInventoryData();
   }
 
   function todayIsoDate(): string {
@@ -37,7 +31,7 @@ export function useInventory() {
   }
 
   function buildInventoryPayload(
-    item: Record<string, unknown>,
+    item: InventoryItem,
     overrides: {
       status?: string;
       sell_price?: number | null;
@@ -63,12 +57,12 @@ export function useInventory() {
     };
   }
 
-  async function createItem(body: Record<string, unknown>) {
+  async function createItem(body: Omit<InventoryItem, "id" | "profit">) {
     await $fetch("/api/inventory", { method: "POST", body });
     await refreshInventory();
   }
 
-  async function updateItem(id: number, body: Record<string, unknown>) {
+  async function updateItem(id: number, body: Partial<InventoryItem>) {
     await $fetch(`/api/inventory/${id}`, { method: "PUT", body });
     await refreshInventory();
   }
