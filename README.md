@@ -10,7 +10,9 @@ Das **Dashboard** gibt dir auf einen Blick Kennzahlen zu gespeicherten Recherche
 
 **Workflow-Übergänge** verbinden die Bereiche ohne Copy-Paste: Von der Preisrecherche oder einer gespeicherten Recherche direkt **Anzeige erstellen** (Marktdaten werden übernommen), von der Watchlist per Klick **Flipping analysieren**, nach einer Flip-Analyse **Ins Inventar** oder **Anzeige erstellen**, und aus offenen Inventar-Artikeln wieder eine Verkaufsanzeige vorbereiten. Zielseiten zeigen einen kurzen Hinweis, wenn Daten aus einem anderen Feature übernommen wurden.
 
-Die Sidebar führt von oben nach unten durch **Dashboard**, **Preisrecherche**, **Anzeigen**, **Flipping**, **Inventar**, **Watchlist**, **Agents** und **Einstellungen**. Preisrecherche, Anzeigen, Flipping und Agents haben jeweils ein Submenu (z. B. Recherche / Gespeicherte Recherchen, Generator / Gespeicherte Anzeigen, Kalkulator / Analysen, Feature-Agents / System-Prompt-Generator / KI-Verlauf). Der Agent-Manager umfasst **Feature-Agents** (Research, Listing, Flipping, Prompt Agent), die **Prompt-Bibliothek** (CRUD, optionale Agent-Zuordnung — ein Prompt pro Agent) und den **KI-Verlauf**. Änderungen an Agents, Prompts und Zuordnungen erscheinen sofort in der UI — ohne manuellen Reload.
+Bei **KI-Aufrufen und Scraping** siehst du unter der Eingabe einen Statusbalken mit Fortschritt und Meldung (z. B. „Anzeigen werden gesucht…“ oder „KI bewertet Flipping-Potenzial…“) — auf Preisrecherche, Flipping, Anzeigen-Generator, Prompt-Generator und Watchlist.
+
+Die Sidebar führt von oben nach unten durch **Dashboard**, **Preisrecherche**, **Anzeigen**, **Flipping**, **Inventar**, **Watchlist**, **Agents** und **Einstellungen**. Preisrecherche, Anzeigen, Flipping und Agents haben jeweils ein Submenu (z. B. Recherche / Gespeicherte Recherchen, Generator / Gespeicherte Anzeigen, Kalkulator / Analysen, Feature-Agents / System-Prompt-Generator / KI-Verlauf). Der Agent-Manager umfasst **Feature-Agents** (Research, Listing, Flipping, Prompt Agent), die **Prompt-Bibliothek** (CRUD, optionale Agent-Zuordnung — ein Prompt pro Agent) und den **KI-Verlauf** (inkl. Provider und korrekter Kosten). Änderungen an Agents, Prompts und Zuordnungen erscheinen sofort in der UI — ohne manuellen Reload.
 
 Referenz-System-Prompts für Listing und Flipping Agent: [`docs/listing_agent.md`](docs/listing_agent.md), [`docs/flipping_agent.md`](docs/flipping_agent.md).
 
@@ -190,6 +192,6 @@ Nutze **moderate Abfragefrequenzen** (einstellbarer Delay), cache Ergebnisse und
 
 ## Lizenz & Status
 
-- **Version:** 0.3.3 — siehe [CHANGELOG.md](CHANGELOG.md)
+- **Version:** 0.3.4 — siehe [CHANGELOG.md](CHANGELOG.md)
 - **Lizenz:** Noch nicht veröffentlicht (geplant: Open Source)
 - **Issues:** [GitHub Issues](https://github.com/emelpe78/marketmind/issues)

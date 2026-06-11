@@ -216,6 +216,8 @@ function currentPriceClass(item: Record<string, unknown>): string {
       </div>
     </UCard>
 
+    <AiStatusBar />
+
     <div class="space-y-3">
       <UCard
         v-for="item in items"

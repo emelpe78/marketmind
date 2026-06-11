@@ -5,17 +5,23 @@ export type FlipAnalysisResult = AnalyzeFlipResult;
 export type { FlipListingInfo, FlipMarketSample } from "shared/flipping-types";
 
 export function useFlipping() {
+  const { runWithAiStatus } = useAiStatus();
   const loading = ref(false);
 
   async function analyze(url: string): Promise<FlipAnalysisResult> {
     loading.value = true;
     try {
-      const result = await $fetch<FlipAnalysisResult>("/api/flipping/analyze", {
-        method: "POST",
-        body: { url },
+      return await runWithAiStatus("flipping-analyze", async () => {
+        const result = await $fetch<FlipAnalysisResult>(
+          "/api/flipping/analyze",
+          {
+            method: "POST",
+            body: { url },
+          },
+        );
+        await refreshAfterAgentCall();
+        return result;
       });
-      await refreshAfterAgentCall();
-      return result;
     } finally {
       loading.value = false;
     }

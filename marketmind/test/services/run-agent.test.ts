@@ -86,7 +86,40 @@ describe("runAgent", () => {
 
     expect(result.skipped).toBe(false);
     expect(result.content).toBe("Antwort");
-    const history = db.prepare("SELECT * FROM agent_history").all();
+    const history = db.prepare("SELECT * FROM agent_history").all() as Array<{
+      cost_usd: number;
+      provider: string;
+    }>;
     expect(history).toHaveLength(1);
+    expect(history[0]?.cost_usd).toBe(0.001);
+    expect(history[0]?.provider).toBe("openrouter");
+  });
+
+  it("logs zero cost and local provider when local AI is active", async () => {
+    const db = getDb();
+    setSetting(db, "ai-provider", "local");
+    setSetting(db, "local-ai-model", "llama3");
+    setSetting(db, "local-ai-api-url", "http://127.0.0.1:11434/v1");
+    mockChatCompletion.mockResolvedValue({
+      content: "Lokale Antwort",
+      tokensUsed: 500,
+      costUsd: 0.0005,
+      model: "llama3",
+    });
+
+    const result = await runAgent(db, {
+      agentType: "research",
+      userInput: "Analysiere Preise",
+      mode: "required",
+    });
+
+    expect(result.costUsd).toBe(0);
+    const history = db.prepare("SELECT * FROM agent_history").all() as Array<{
+      cost_usd: number;
+      provider: string;
+    }>;
+    expect(history).toHaveLength(1);
+    expect(history[0]?.cost_usd).toBe(0);
+    expect(history[0]?.provider).toBe("local");
   });
 });

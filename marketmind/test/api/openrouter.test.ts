@@ -33,12 +33,12 @@ describe("openrouter client", () => {
     );
   });
 
-  it("chatCompletion returns structured response", async () => {
+  it("chatCompletion returns structured response with OpenRouter cost", async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
         choices: [{ message: { content: "Marktanalyse: Preise stabil." } }],
-        usage: { total_tokens: 150 },
+        usage: { total_tokens: 150, cost: 0.0025 },
         model: "google/gemini-2.5-pro",
       }),
     });
@@ -53,6 +53,28 @@ describe("openrouter client", () => {
 
     expect(result.content).toContain("Marktanalyse");
     expect(result.tokensUsed).toBe(150);
+    expect(result.costUsd).toBe(0.0025);
     expect(result.model).toBe("google/gemini-2.5-pro");
+  });
+
+  it("chatCompletion defaults cost to 0 when usage.cost is missing", async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        choices: [{ message: { content: "Antwort" } }],
+        usage: { total_tokens: 100 },
+        model: "local-model",
+      }),
+    });
+
+    const result = await chatCompletion(
+      { apiKey: "", baseUrl: "http://127.0.0.1:11434/v1" },
+      "local-model",
+      [{ role: "user", content: "Test" }],
+      0.7,
+      mockFetch as typeof fetch,
+    );
+
+    expect(result.costUsd).toBe(0);
   });
 });

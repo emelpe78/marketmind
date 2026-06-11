@@ -4,6 +4,25 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.3.4] — 2026-06-10
+
+KI- und Scraping-Feedback mit Statusbalken; korrekte Token-Kosten und Provider im Agent-Verlauf.
+
+### Hinzugefügt
+
+- **KI-Statusbalken** — `AiStatusBar`, `useAiStatus`, `shared/ai-status.ts`; Fortschrittsbalken und Schritt-Meldungen bei Preisrecherche (Suche + KI-Analyse), Flipping, Anzeigen-Generator, Prompt-Generator und Watchlist-Scraping
+- **Agent-Verlauf Provider** — Spalte `provider` in `agent_history` (Migration); Anzeige in `/agents/history` über `formatAiProvider()`
+- **Tests** — `test/composables/use-ai-status.test.ts`
+
+### Geändert
+
+- **Statusbalken-Platzierung** — pro Seite unter Eingabe bzw. Aktion statt global im Layout
+- **OpenRouter-Kosten** — `chatCompletion` nutzt `usage.cost` aus der API-Antwort
+
+### Behoben
+
+- **Token-Kosten bei lokaler KI** — Kosten werden auf `0` gesetzt und nicht mehr aus Token-Anzahl geschätzt; OpenRouter ohne `usage.cost` ebenfalls `0` statt falscher Schätzung
+
 ## [0.3.3] — 2026-06-10
 
 Verkaufte Inventar-Artikel lassen sich nachträglich bearbeiten.
@@ -462,7 +481,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.3.3...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.3.4...HEAD
+[0.3.4]: https://github.com/emelpe78/marketmind/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/emelpe78/marketmind/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/emelpe78/marketmind/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/emelpe78/marketmind/compare/v0.3.0...v0.3.1

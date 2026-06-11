@@ -1,4 +1,5 @@
 import type Database from "better-sqlite3";
+import type { AiProvider } from "../ai/config";
 import { syncAgentPromptToLibrary } from "../prompt-library/agent-sync";
 
 export interface AgentInput {
@@ -77,10 +78,11 @@ export function logAgentHistory(
   response: string,
   tokensUsed: number,
   costUsd: number,
+  provider?: AiProvider,
 ): void {
   db.prepare(
-    "INSERT INTO agent_history (agent_id, user_input, response, tokens_used, cost_usd) VALUES (?, ?, ?, ?, ?)",
-  ).run(agentId, userInput, response, tokensUsed, costUsd);
+    "INSERT INTO agent_history (agent_id, user_input, response, tokens_used, cost_usd, provider) VALUES (?, ?, ?, ?, ?, ?)",
+  ).run(agentId, userInput, response, tokensUsed, costUsd, provider ?? null);
 }
 
 export function createAgent(db: Database.Database, body: AgentInput) {

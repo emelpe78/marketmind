@@ -75,6 +75,8 @@ export async function runAgent(
     input.fetchFn,
   );
 
+  const costUsd = ai.provider === "local" ? 0 : completion.costUsd;
+
   if (logHistory) {
     logAgentHistory(
       db,
@@ -82,14 +84,15 @@ export async function runAgent(
       input.userInput,
       completion.content,
       completion.tokensUsed,
-      completion.costUsd,
+      costUsd,
+      ai.provider,
     );
   }
 
   return {
     content: completion.content,
     tokensUsed: completion.tokensUsed,
-    costUsd: completion.costUsd,
+    costUsd,
     agentId: agent.id,
     skipped: false,
   };

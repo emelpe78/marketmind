@@ -129,6 +129,8 @@ function copyText(text: string) {
       Anzeige generieren
     </UButton>
 
+    <AiStatusBar />
+
     <UCard v-if="generated" data-testid="generated-listing">
       <template #header>
         <div class="flex items-center justify-between gap-3">

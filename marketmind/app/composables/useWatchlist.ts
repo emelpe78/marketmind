@@ -4,6 +4,7 @@ import { FETCH_KEYS } from "~/utils/fetch-keys";
 import { refreshFetchData } from "~/utils/refresh-fetch-data";
 
 export function useWatchlist() {
+  const { runWithAiStatus } = useAiStatus();
   const { data: items } = useFetch<Array<Record<string, unknown>>>(
     "/api/watchlist",
     {
@@ -43,7 +44,9 @@ export function useWatchlist() {
   async function scrapeItem(id: number) {
     loading.value = true;
     try {
-      return await $fetch(`/api/watchlist/${id}/scrape`, { method: "POST" });
+      return await runWithAiStatus("watchlist-scrape", async () => {
+        return await $fetch(`/api/watchlist/${id}/scrape`, { method: "POST" });
+      });
     } finally {
       loading.value = false;
       await refreshWatchlist();
@@ -53,7 +56,9 @@ export function useWatchlist() {
   async function scrapeAll() {
     loading.value = true;
     try {
-      return await $fetch("/api/watchlist/scrape-all", { method: "POST" });
+      return await runWithAiStatus("watchlist-scrape-all", async () => {
+        return await $fetch("/api/watchlist/scrape-all", { method: "POST" });
+      });
     } finally {
       loading.value = false;
       await refreshWatchlist();

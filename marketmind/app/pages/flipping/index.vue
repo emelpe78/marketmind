@@ -146,6 +146,8 @@ const listingPlatformLabel = computed(() => {
       </form>
     </UCard>
 
+    <AiStatusBar />
+
     <div v-if="result?.analysis" class="flex flex-wrap justify-end gap-2">
       <UButton
         v-if="listingsHandoffRoute"

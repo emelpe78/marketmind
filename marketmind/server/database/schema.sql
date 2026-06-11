@@ -93,6 +93,7 @@ CREATE TABLE IF NOT EXISTS agent_history (
   response TEXT,
   tokens_used INTEGER,
   cost_usd REAL,
+  provider TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

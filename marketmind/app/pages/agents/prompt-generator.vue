@@ -232,6 +232,8 @@ async function confirmDelete() {
       </div>
     </UCard>
 
+    <AiStatusBar />
+
     <UCard class="min-w-0" data-testid="prompt-library">
       <template #header>
         <h3 class="font-semibold">Prompt-Bibliothek</h3>

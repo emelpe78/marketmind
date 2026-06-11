@@ -29,6 +29,7 @@ export interface PromptLibraryEntry {
 }
 
 export function useAgents() {
+  const { runWithAiStatus } = useAiStatus();
   const { data: agents } = useFetch<Agent[]>("/api/agents", {
     key: FETCH_KEYS.agents,
   });
@@ -54,15 +55,17 @@ export function useAgents() {
   async function generatePrompt(description: string) {
     loading.value = true;
     try {
-      const result = await $fetch<{ prompt: string }>(
-        "/api/agents/generate-prompt",
-        {
-          method: "POST",
-          body: { description },
-        },
-      );
-      await refreshAfterAgentCall();
-      return result;
+      return await runWithAiStatus("prompt-generate", async () => {
+        const result = await $fetch<{ prompt: string }>(
+          "/api/agents/generate-prompt",
+          {
+            method: "POST",
+            body: { description },
+          },
+        );
+        await refreshAfterAgentCall();
+        return result;
+      });
     } finally {
       loading.value = false;
     }

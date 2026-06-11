@@ -62,14 +62,15 @@ export async function chatCompletion(
   }
   const data = (await response.json()) as {
     choices: { message: { content: string } }[];
-    usage?: { total_tokens?: number };
+    usage?: { total_tokens?: number; cost?: number };
     model: string;
   };
   const tokensUsed = data.usage?.total_tokens ?? 0;
+  const costUsd = data.usage?.cost ?? 0;
   return {
     content: data.choices[0]?.message?.content ?? "",
     tokensUsed,
-    costUsd: tokensUsed * 0.000001,
+    costUsd,
     model: data.model,
   };
 }

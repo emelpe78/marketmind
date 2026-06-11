@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatAiProvider, formatUsdCost } from "shared/format-agent";
 import { formatDateTime } from "shared/format-datetime";
 
 definePageMeta({ layout: "default" });
@@ -40,11 +41,30 @@ const historyRows = computed(() =>
         :data="historyRows"
         :columns="[
           { accessorKey: 'agent_name', header: 'Agent' },
+          { accessorKey: 'provider', header: 'Provider' },
           { accessorKey: 'tokens_used', header: 'Tokens' },
-          { accessorKey: 'cost_usd', header: 'Kosten ($)' },
+          { accessorKey: 'cost_usd', header: 'Kosten' },
           { accessorKey: 'created_at', header: 'Datum' },
         ]"
       >
+        <template #provider-cell="{ row }">
+          <span class="text-sm">
+            {{
+              formatAiProvider(
+                (row.original as Record<string, unknown>).provider,
+              )
+            }}
+          </span>
+        </template>
+        <template #cost_usd-cell="{ row }">
+          <span class="tabular-nums text-sm">
+            {{
+              formatUsdCost(
+                (row.original as Record<string, unknown>).cost_usd,
+              )
+            }}
+          </span>
+        </template>
         <template #created_at-cell="{ row }">
           <span class="tabular-nums text-sm">
             {{

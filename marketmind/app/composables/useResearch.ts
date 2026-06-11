@@ -14,6 +14,7 @@ export type SearchResult = ResearchRunResult["results"][number];
 export type ResearchRunResponse = ResearchRunResult;
 
 export function useResearch() {
+  const { runWithAiStatus } = useAiStatus();
   const query = ref("");
   const platform = ref<"ebay" | "kleinanzeigen" | "both">("both");
   const loading = ref(false);
@@ -42,14 +43,19 @@ export function useResearch() {
     loading.value = true;
     summaries.value = [];
     try {
-      const response = await $fetch<ResearchRunResponse>("/api/research/run", {
-        method: "POST",
-        body: { query: query.value, platform: platform.value },
+      return await runWithAiStatus("research-search", async () => {
+        const response = await $fetch<ResearchRunResponse>(
+          "/api/research/run",
+          {
+            method: "POST",
+            body: { query: query.value, platform: platform.value },
+          },
+        );
+        searchId.value = response.searchId;
+        results.value = response.results;
+        stats.value = response.stats;
+        return response;
       });
-      searchId.value = response.searchId;
-      results.value = response.results;
-      stats.value = response.stats;
-      return response;
     } finally {
       loading.value = false;
     }
@@ -60,13 +66,18 @@ export function useResearch() {
 
     analyzing.value = true;
     try {
-      const response = await $fetch<ResearchRunResponse>("/api/research/run", {
-        method: "POST",
-        body: { searchId: searchId.value, analyze: true },
+      return await runWithAiStatus("research-analyze", async () => {
+        const response = await $fetch<ResearchRunResponse>(
+          "/api/research/run",
+          {
+            method: "POST",
+            body: { searchId: searchId.value, analyze: true },
+          },
+        );
+        summaries.value = response.summaries ?? [];
+        await refreshAfterAgentCall();
+        return response;
       });
-      summaries.value = response.summaries ?? [];
-      await refreshAfterAgentCall();
-      return response;
     } finally {
       analyzing.value = false;
     }

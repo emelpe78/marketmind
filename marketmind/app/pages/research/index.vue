@@ -132,6 +132,8 @@ async function saveResearch() {
       </form>
     </UCard>
 
+    <AiStatusBar />
+
     <div
       v-if="stats"
       data-testid="stats-dashboard"

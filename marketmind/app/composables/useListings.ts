@@ -23,6 +23,7 @@ export type {
 } from "shared/listings-types";
 
 export function useListings() {
+  const { runWithAiStatus } = useAiStatus();
   const query = ref("");
   const condition = ref("Gebraucht");
   const extras = ref("");
@@ -100,23 +101,28 @@ export function useListings() {
 
     generating.value = true;
     try {
-      const result = await $fetch<GeneratedListing>("/api/listings/generate", {
-        method: "POST",
-        body: {
-          query: query.value,
-          platform: activeTab.value,
-          condition: condition.value,
-          extras: extras.value,
-          desiredPrice: desiredPrice.value,
-          searchId: searchId.value,
-          savedResearchId: savedResearchId.value,
-          savedFlipAnalysisId: savedFlipAnalysisId.value,
-        } satisfies ListingGenerateInput,
+      return await runWithAiStatus("listing-generate", async () => {
+        const result = await $fetch<GeneratedListing>(
+          "/api/listings/generate",
+          {
+            method: "POST",
+            body: {
+              query: query.value,
+              platform: activeTab.value,
+              condition: condition.value,
+              extras: extras.value,
+              desiredPrice: desiredPrice.value,
+              searchId: searchId.value,
+              savedResearchId: savedResearchId.value,
+              savedFlipAnalysisId: savedFlipAnalysisId.value,
+            } satisfies ListingGenerateInput,
+          },
+        );
+        generated.value = result;
+        editingId.value = null;
+        await refreshAfterAgentCall();
+        return result;
       });
-      generated.value = result;
-      editingId.value = null;
-      await refreshAfterAgentCall();
-      return result;
     } finally {
       generating.value = false;
     }

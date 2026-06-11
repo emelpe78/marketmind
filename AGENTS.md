@@ -1,6 +1,6 @@
 # MarketMind — Agent Guide
 
-Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.3**.
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.4**.
 
 ## Repository-Layout
 
@@ -58,12 +58,13 @@ Dev-DB: `MM_DATABASE_DEV` in `marketmind/.env` (Standard `data/marketmind.db`, g
 ### Frontend (`marketmind/app/`)
 
 - **Pages:** file-based routing unter `app/pages/`
-- **Composables:** `useResearch` (Workflow-State), `useSavedResearches`, `useFlipping`, `useSavedFlipAnalyses`, `useDashboard`, `useInventory`, `useWatchlist`, `useSettings`, `useListings` (Workflow-State), `useAgents`, `useDatabaseAdmin`
+- **Composables:** `useResearch` (Workflow-State), `useSavedResearches`, `useFlipping`, `useSavedFlipAnalyses`, `useDashboard`, `useInventory`, `useWatchlist`, `useSettings`, `useListings` (Workflow-State), `useAgents`, `useAiStatus`, `useDatabaseAdmin`
 - **Research-UI:** `/research` (Recherche), `/research/saved` (Gespeicherte Recherchen), `/research/saved/[id]` (Detail); Submenu in `default.vue` (`shared/research-nav.ts`)
 - **Listings-UI:** `/listings` (Generator), `/listings/saved` (gespeicherte Anzeigen, Bearbeiten per Modal, Inventar über `InventoryCreateModal`); Submenu in `default.vue` (`shared/listings-nav.ts`)
 - **Inventar-UI:** `/inventory` — Kartenliste, Anlegen per `InventoryCreateModal`, Verkauf/Löschen per Modal; verkaufte Artikel bearbeitbar per Bearbeiten-Modal (Titel, Einkauf, Verkauf, Notizen); Plattformen Kleinanzeigen, eBay, Sonstige (`INVENTORY_PLATFORM_SELECT_OPTIONS`, `normalizeInventoryPlatform()`)
 - **Flipping-UI:** `/flipping` (Kalkulator), `/flipping/analyses` (Liste), `/flipping/analyses/[id]` (Detail); Submenu in `default.vue` (`shared/flipping-nav.ts`)
-- **Agents-UI:** `/agents/feature-agents` (Konfiguration), `/agents/prompt-generator` (Bibliothek + Generator), `/agents/history` (KI-Verlauf); Submenu in `default.vue`
+- **Agents-UI:** `/agents/feature-agents` (Konfiguration), `/agents/prompt-generator` (Bibliothek + Generator), `/agents/history` (KI-Verlauf mit Provider und Kosten); Submenu in `default.vue`
+- **KI-/Scraping-Feedback:** `AiStatusBar` + `useAiStatus` (`runWithAiStatus`) — Fortschrittsbalken und Statusmeldungen unter Eingabe auf Recherche, Flipping, Anzeigen, Prompt-Generator und Watchlist; Schritt-Texte in `shared/ai-status.ts`
 - **Dashboard:** `app/components/DashboardOverview.vue` — KPI-Karten in vier Abschnitten (Recherche & Tools, Inventar, Agents, KI & Nutzung); `DashboardKpiCard` mit optionaler Navigation; Daten über `useDashboard` / `GET /api/dashboard`
 - **Layout:** `app/layouts/default.vue` — Sidebar-Reihenfolge: Dashboard, Preisrecherche, Anzeigen, Flipping, Inventar, Watchlist, Agents, Einstellungen; Submenüs für Preisrecherche, Anzeigen, Flipping und Agents; Theme-Toggle, Versionsbadge
 - **KI-Analyse-UI:** `ResearchAnalysisList` (Accordion pro Plattform), `ResearchAnalysisSummary` (Einzel-Card), `ResearchResultsTable` (Collapsible), `AnalysisSectionTabs` (vertikale Tabs); Markdown über `app/utils/render-markdown.ts` (`parseMarkdownSections`, `stripPlatformSuffixFromTitle`, erlaubte HTML-Tags)
@@ -120,7 +121,7 @@ Vor Architekturfragen: `graphify-out/GRAPH_REPORT.md` und `graphify-out/wiki/ind
 
 - Validierung mit Zod wo sinnvoll
 - SQLite-Pfad nur über `marketmind/.env` (`MM_DATABASE_DEV`, `MM_DATABASE_DOCKER`); Docker-Host-Ordner `MARKETMIND_DATA_DIR`; fehlende DB-Datei wird beim Start angelegt; Reset/Backup/Restore in Einstellungen → Datenbank
-- Agent-Aufrufe in `agent_history` loggen (Tokens, Kosten)
+- Agent-Aufrufe in `agent_history` loggen (Tokens, Kosten, Provider); lokale KI: Kosten `0`; OpenRouter: `usage.cost` aus API
 - `ScraperFetchError` in Research- und Flipping-Routes als 502 mit lesbarer Meldung mappen
 
 ### Git
@@ -172,6 +173,8 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 | Docker-Datenordner      | Repo-Root `.env` (`MARKETMIND_DATA_DIR`), `docker-compose.yml` (`extra_hosts` für lokale KI)                                                      |
 | Lokale KI in Docker     | `server/services/ai/config.ts` (`resolveLocalAiBaseUrl`), `MM_LOCAL_AI_HOST` in `marketmind/.env`                                                 |
 | SQL-Backup/Restore      | `server/database/sql-transfer.ts`, `GET /api/database/backup`, `POST /api/database/restore`, `useDatabaseAdmin`, Einstellungen → Datenbank        |
+| KI-/Scraping-Feedback   | `useAiStatus`, `AiStatusBar`, `shared/ai-status.ts` — Statusbalken bei KI-Aufrufen und Scraping                                                   |
+| Agent-Verlauf Provider  | `agent_history.provider`, `formatAiProvider()`, `/agents/history`                                                                                 |
 
 ## Was vermeiden
 

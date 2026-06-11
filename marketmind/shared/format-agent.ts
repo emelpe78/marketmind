@@ -18,6 +18,12 @@ export function formatUsdCost(value: unknown): string {
   }).format(num);
 }
 
+export function formatAiProvider(value: unknown): string {
+  if (value === "openrouter") return "OpenRouter";
+  if (value === "local") return "Lokal";
+  return "–";
+}
+
 export function formatCallsLabel(count: unknown): string {
   const num = Number(count);
   if (!Number.isFinite(num) || num <= 0) return "Keine Aufrufe";

@@ -26,6 +26,10 @@ export function runMigrations(db: Database.Database): void {
     db.exec("ALTER TABLE prompt_library DROP COLUMN category");
   }
 
+  if (!hasColumn(db, "agent_history", "provider")) {
+    db.exec("ALTER TABLE agent_history ADD COLUMN provider TEXT");
+  }
+
   db.exec(`
     CREATE UNIQUE INDEX IF NOT EXISTS idx_prompt_library_agent_id
     ON prompt_library(agent_id)
