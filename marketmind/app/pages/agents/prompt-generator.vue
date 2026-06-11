@@ -10,6 +10,11 @@ import {
 
 definePageMeta({ layout: "default" });
 
+usePageHead(
+  "System-Prompt-Generator",
+  "Neue System-Prompts per KI erstellen und in der Bibliothek ablegen",
+);
+
 const {
   agents,
   prompts,

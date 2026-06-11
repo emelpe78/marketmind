@@ -1,6 +1,11 @@
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
 
+usePageHead(
+  "Einstellungen",
+  "API-Keys, Scraper-Konfiguration, Datenbank und Theme",
+);
+
 import { refreshAllFetchData } from "~/utils/refresh-fetch-data";
 
 const { settings, saving, saveSetting } = await useSettings();

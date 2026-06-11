@@ -7,6 +7,8 @@ import { buildFlipRoute } from "shared/workflow-handoff";
 
 definePageMeta({ layout: "default" });
 
+usePageHead("Watchlist", "Artikel beobachten und Preisalarme erhalten");
+
 const {
   items,
   loading,

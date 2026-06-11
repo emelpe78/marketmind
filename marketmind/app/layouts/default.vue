@@ -10,6 +10,7 @@ import {
   LISTINGS_NAV_ITEMS,
   isListingsRoute,
 } from "shared/listings-nav";
+import { BRAND_ICON } from "shared/brand";
 import {
   RESEARCH_ICON,
   RESEARCH_NAV_ITEMS,
@@ -94,13 +95,22 @@ function toggleTheme() {
       class="w-64 border-r border-muted bg-elevated p-4 flex flex-col gap-2"
     >
       <div class="mb-4 px-2">
-        <div class="flex items-baseline gap-2">
-          <h1 class="text-lg font-bold text-highlighted">MarketMind</h1>
-          <span class="text-xs text-muted"
-            >v. {{ publicConfig.appVersion }}</span
-          >
+        <div class="flex items-start gap-2.5">
+          <UIcon
+            :name="BRAND_ICON"
+            class="size-8 shrink-0 text-primary"
+            aria-hidden="true"
+          />
+          <div class="min-w-0">
+            <div class="flex items-baseline gap-2">
+              <h1 class="text-lg font-bold text-highlighted">MarketMind</h1>
+              <span class="text-xs text-muted"
+                >v. {{ publicConfig.appVersion }}</span
+              >
+            </div>
+            <p class="text-xs text-muted">eBay & Kleinanzeigen</p>
+          </div>
         </div>
-        <p class="text-xs text-muted">eBay & Kleinanzeigen</p>
       </div>
       <nav class="flex flex-col gap-1">
         <UButton

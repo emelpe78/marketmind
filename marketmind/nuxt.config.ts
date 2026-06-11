@@ -3,6 +3,21 @@ import { fileURLToPath } from "node:url";
 import pkg from "./package.json";
 
 export default defineNuxtConfig({
+  app: {
+    head: {
+      title: "MarketMind",
+      titleTemplate: "%s · MarketMind",
+      link: [
+        { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+        { rel: "apple-touch-icon", href: "/favicon.svg" },
+      ],
+    },
+  },
+  icon: {
+    clientBundle: {
+      icons: ["ph:graph"],
+    },
+  },
   alias: {
     shared: fileURLToPath(new URL("./shared", import.meta.url)),
   },

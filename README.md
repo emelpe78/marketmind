@@ -12,6 +12,8 @@ Das **Dashboard** gibt dir auf einen Blick Kennzahlen zu gespeicherten Recherche
 
 Bei **KI-Aufrufen und Scraping** siehst du unter der Eingabe einen Statusbalken mit Fortschritt und Meldung (z. B. „Anzeigen werden gesucht…“ oder „KI bewertet Flipping-Potenzial…“) — auf Preisrecherche, Flipping, Anzeigen-Generator, Prompt-Generator und Watchlist.
 
+Jede Seite hat einen eigenen **Browser-Titel** (z. B. „Preisrecherche · MarketMind“) und eine passende Meta-Beschreibung; bei gespeicherten Recherchen und Flipping-Analysen wird der Titel aus dem Datensatz übernommen. In der Sidebar und im Browser-Tab erscheint das **Graph-Icon** (Phosphor) als Markenzeichen.
+
 Die Sidebar führt von oben nach unten durch **Dashboard**, **Preisrecherche**, **Anzeigen**, **Flipping**, **Inventar**, **Watchlist**, **Agents** und **Einstellungen**. Preisrecherche, Anzeigen, Flipping und Agents haben jeweils ein Submenu (z. B. Recherche / Gespeicherte Recherchen, Generator / Gespeicherte Anzeigen, Kalkulator / Analysen, Feature-Agents / System-Prompt-Generator / KI-Verlauf). Der Agent-Manager umfasst **Feature-Agents** (Research, Listing, Flipping, Prompt Agent), die **Prompt-Bibliothek** (CRUD, optionale Agent-Zuordnung — ein Prompt pro Agent) und den **KI-Verlauf** (inkl. Provider und korrekter Kosten). Änderungen an Agents, Prompts und Zuordnungen erscheinen sofort in der UI — ohne manuellen Reload.
 
 Referenz-System-Prompts für Listing und Flipping Agent: [`docs/listing_agent.md`](docs/listing_agent.md), [`docs/flipping_agent.md`](docs/flipping_agent.md).
@@ -192,6 +194,6 @@ Nutze **moderate Abfragefrequenzen** (einstellbarer Delay), cache Ergebnisse und
 
 ## Lizenz & Status
 
-- **Version:** 0.3.4 — siehe [CHANGELOG.md](CHANGELOG.md)
+- **Version:** 0.3.5 — siehe [CHANGELOG.md](CHANGELOG.md)
 - **Lizenz:** Noch nicht veröffentlicht (geplant: Open Source)
 - **Issues:** [GitHub Issues](https://github.com/emelpe78/marketmind/issues)

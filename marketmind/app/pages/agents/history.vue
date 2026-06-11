@@ -4,6 +4,11 @@ import { formatDateTime } from "shared/format-datetime";
 
 definePageMeta({ layout: "default" });
 
+usePageHead(
+  "Verlauf",
+  "Letzte KI-Aufrufe mit Tokens, Kosten und Zeitstempel",
+);
+
 const { agents, history } = await useAgents();
 
 const agentNameById = computed(() => {

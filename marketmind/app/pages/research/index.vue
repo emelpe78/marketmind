@@ -8,6 +8,11 @@ import { buildListingsRoute } from "shared/workflow-handoff";
 
 definePageMeta({ layout: "default" });
 
+usePageHead(
+  "Preisrecherche",
+  "Marktpreise auf eBay.de und Kleinanzeigen.de ermitteln",
+);
+
 const {
   query,
   platform,

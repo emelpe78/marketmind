@@ -83,6 +83,8 @@ Pro Agent ist höchstens **ein** Prompt in der Bibliothek zugeordnet; eine neue 
 | **PlatformLabels**          | `shared/platform-labels.ts`                       | UI-Labels für eBay / Kleinanzeigen / Beide (Recherche); Inventar-Optionen inkl. Sonstige (`INVENTORY_PLATFORM_SELECT_OPTIONS`)                                                  |
 | **InventoryPlatform**       | `shared/detect-platform.ts`                       | `normalizeInventoryPlatform()` — eBay, Kleinanzeigen, Sonstige (nur Inventar; URL-Erkennung unverändert)                                                                        |
 | **InventoryCreateModal**    | `app/components/InventoryCreateModal.vue`         | Globales Modal zum Anlegen von Inventar-Items; `prefill`/`titleSuffix`; genutzt auf `/inventory`, `/listings/saved`, `/flipping`, `/flipping/analyses/[id]` und `/watchlist`    |
+| **usePageHead**             | `app/composables/usePageHead.ts`                  | Seitenmetadaten (`title`, `meta description`) pro Route; nutzt `useHead`; Detailseiten mit reaktivem Titel                                                                      |
+| **BrandIcon**               | `shared/brand.ts`                                 | `BRAND_ICON` — Phosphor `graph` (`i-ph-graph`); Sidebar-Logo in `default.vue`                                                                                                   |
 | **FlippingCalculator**      | `shared/flipping-calculator.ts`                   | Margen-/Score-Hilfsfunktion (Legacy; nicht mehr im Flipping-UI-Flow)                                                                                                            |
 
 ## Schichten-Konvention

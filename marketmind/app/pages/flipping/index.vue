@@ -13,6 +13,11 @@ import type { FlipAnalysisResult } from "~/composables/useFlipping";
 
 definePageMeta({ layout: "default" });
 
+usePageHead(
+  "Flipping-Kalkulator",
+  "Flipping-Potenzial einer Anzeige per KI bewerten",
+);
+
 const route = useRoute();
 const url = ref("");
 const handoffSource = ref<WorkflowHandoffSource | undefined>();

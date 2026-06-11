@@ -9,6 +9,11 @@ import type { SavedFlipAnalysisListItem } from "~/composables/useSavedFlipAnalys
 
 definePageMeta({ layout: "default" });
 
+usePageHead(
+  "Flipping-Analysen",
+  "Gespeicherte KI-Analysen zu Anzeigen",
+);
+
 const { analyses, pending, deleteAnalysis } = useSavedFlipAnalyses();
 const toast = useToast();
 

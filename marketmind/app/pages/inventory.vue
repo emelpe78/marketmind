@@ -10,6 +10,8 @@ import {
 
 definePageMeta({ layout: "default" });
 
+usePageHead("Inventar", "Gekaufte und verkaufte Artikel verwalten");
+
 const {
   items,
   summary,

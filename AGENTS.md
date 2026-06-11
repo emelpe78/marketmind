@@ -1,6 +1,6 @@
 # MarketMind — Agent Guide
 
-Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.4**.
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.5**.
 
 ## Repository-Layout
 
@@ -23,14 +23,14 @@ marketmind/                 # Repo-Root
 
 ## Stack
 
-| Schicht   | Technologie                                  |
-| --------- | -------------------------------------------- |
-| Framework | Nuxt 4 (SPA, `ssr: false`)                   |
-| UI        | @nuxt/ui v4, Tailwind, Lucide Icons          |
-| DB        | SQLite via better-sqlite3 (kein ORM)         |
-| KI        | OpenRouter oder lokale OpenAI-kompatible API |
-| Scraping  | Cheerio + Nitro fetch                        |
-| Tests     | Vitest (Unit/API), Playwright (E2E)          |
+| Schicht   | Technologie                                    |
+| --------- | ---------------------------------------------- |
+| Framework | Nuxt 4 (SPA, `ssr: false`)                     |
+| UI        | @nuxt/ui v4, Tailwind, Lucide + Phosphor Icons |
+| DB        | SQLite via better-sqlite3 (kein ORM)           |
+| KI        | OpenRouter oder lokale OpenAI-kompatible API   |
+| Scraping  | Cheerio + Nitro fetch                          |
+| Tests     | Vitest (Unit/API), Playwright (E2E)            |
 
 ## Ports & Umgebungen
 
@@ -58,7 +58,7 @@ Dev-DB: `MM_DATABASE_DEV` in `marketmind/.env` (Standard `data/marketmind.db`, g
 ### Frontend (`marketmind/app/`)
 
 - **Pages:** file-based routing unter `app/pages/`
-- **Composables:** `useResearch` (Workflow-State), `useSavedResearches`, `useFlipping`, `useSavedFlipAnalyses`, `useDashboard`, `useInventory`, `useWatchlist`, `useSettings`, `useListings` (Workflow-State), `useAgents`, `useAiStatus`, `useDatabaseAdmin`
+- **Composables:** `useResearch` (Workflow-State), `useSavedResearches`, `useFlipping`, `useSavedFlipAnalyses`, `useDashboard`, `useInventory`, `useWatchlist`, `useSettings`, `useListings` (Workflow-State), `useAgents`, `useAiStatus`, `useDatabaseAdmin`, `usePageHead`
 - **Research-UI:** `/research` (Recherche), `/research/saved` (Gespeicherte Recherchen), `/research/saved/[id]` (Detail); Submenu in `default.vue` (`shared/research-nav.ts`)
 - **Listings-UI:** `/listings` (Generator), `/listings/saved` (gespeicherte Anzeigen, Bearbeiten per Modal, Inventar über `InventoryCreateModal`); Submenu in `default.vue` (`shared/listings-nav.ts`)
 - **Inventar-UI:** `/inventory` — Kartenliste, Anlegen per `InventoryCreateModal`, Verkauf/Löschen per Modal; verkaufte Artikel bearbeitbar per Bearbeiten-Modal (Titel, Einkauf, Verkauf, Notizen); Plattformen Kleinanzeigen, eBay, Sonstige (`INVENTORY_PLATFORM_SELECT_OPTIONS`, `normalizeInventoryPlatform()`)
@@ -66,7 +66,8 @@ Dev-DB: `MM_DATABASE_DEV` in `marketmind/.env` (Standard `data/marketmind.db`, g
 - **Agents-UI:** `/agents/feature-agents` (Konfiguration), `/agents/prompt-generator` (Bibliothek + Generator), `/agents/history` (KI-Verlauf mit Provider und Kosten); Submenu in `default.vue`
 - **KI-/Scraping-Feedback:** `AiStatusBar` + `useAiStatus` (`runWithAiStatus`) — Fortschrittsbalken und Statusmeldungen unter Eingabe auf Recherche, Flipping, Anzeigen, Prompt-Generator und Watchlist; Schritt-Texte in `shared/ai-status.ts`
 - **Dashboard:** `app/components/DashboardOverview.vue` — KPI-Karten in vier Abschnitten (Recherche & Tools, Inventar, Agents, KI & Nutzung); `DashboardKpiCard` mit optionaler Navigation; Daten über `useDashboard` / `GET /api/dashboard`
-- **Layout:** `app/layouts/default.vue` — Sidebar-Reihenfolge: Dashboard, Preisrecherche, Anzeigen, Flipping, Inventar, Watchlist, Agents, Einstellungen; Submenüs für Preisrecherche, Anzeigen, Flipping und Agents; Theme-Toggle, Versionsbadge
+- **Layout:** `app/layouts/default.vue` — Sidebar-Reihenfolge: Dashboard, Preisrecherche, Anzeigen, Flipping, Inventar, Watchlist, Agents, Einstellungen; Submenüs für Preisrecherche, Anzeigen, Flipping und Agents; Brand-Logo (`BRAND_ICON` aus `shared/brand.ts`); Theme-Toggle, Versionsbadge
+- **Seitenmetadaten:** `usePageHead(title, description?)` auf jeder Page; `titleTemplate` `%s · MarketMind` in `nuxt.config.ts`; Detailseiten mit `computed`-Titel
 - **KI-Analyse-UI:** `ResearchAnalysisList` (Accordion pro Plattform), `ResearchAnalysisSummary` (Einzel-Card), `ResearchResultsTable` (Collapsible), `AnalysisSectionTabs` (vertikale Tabs); Markdown über `app/utils/render-markdown.ts` (`parseMarkdownSections`, `stripPlatformSuffixFromTitle`, erlaubte HTML-Tags)
 - **Inventar-Modal:** `InventoryCreateModal` — globales Anlegen-Modal mit `prefill`/`titleSuffix`; genutzt auf `/inventory`, `/listings/saved`, `/flipping`, `/flipping/analyses/[id]` und `/watchlist`
 - **Cross-Feature-Workflows:** `shared/workflow-handoff.ts` — Übergänge per Query-Prefill + Aktions-Buttons: Recherche → Anzeigen (`searchId`/`savedResearchId`), Watchlist → Flipping (`url`), Flip/Watchlist → Inventar (`inventory-prefill`), Flip/Inventar → Anzeigen; Listing-Generate nutzt `resolveListingMarketStats()` für Snapshot-IDs
@@ -175,6 +176,8 @@ Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte
 | SQL-Backup/Restore      | `server/database/sql-transfer.ts`, `GET /api/database/backup`, `POST /api/database/restore`, `useDatabaseAdmin`, Einstellungen → Datenbank        |
 | KI-/Scraping-Feedback   | `useAiStatus`, `AiStatusBar`, `shared/ai-status.ts` — Statusbalken bei KI-Aufrufen und Scraping                                                   |
 | Agent-Verlauf Provider  | `agent_history.provider`, `formatAiProvider()`, `/agents/history`                                                                                 |
+| Seitenmetadaten         | `usePageHead`, `nuxt.config.ts` (`titleTemplate`, Favicon-Links)                                                                                  |
+| Brand-Icon / Favicon    | `shared/brand.ts` (`BRAND_ICON`), `public/favicon.svg`, `default.vue`                                                                             |
 
 ## Was vermeiden
 

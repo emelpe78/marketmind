@@ -3,6 +3,11 @@ import { parseListingsHandoffQuery } from "shared/workflow-handoff";
 
 definePageMeta({ layout: "default" });
 
+usePageHead(
+  "Anzeigen-Generator",
+  "Plattform-optimierte Texte für eBay & Kleinanzeigen",
+);
+
 const route = useRoute();
 const {
   query,

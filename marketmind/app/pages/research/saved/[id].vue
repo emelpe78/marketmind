@@ -42,6 +42,11 @@ const {
   error,
 } = await useFetch<SavedResearch>(`/api/saved-researches/${savedResearchId}`);
 
+usePageHead(
+  computed(() => saved.value?.title ?? "Gespeicherte Recherche"),
+  "Gespeicherte Preisrecherche mit Statistiken und KI-Analyse",
+);
+
 const platformLabels = RESEARCH_PLATFORM_LABELS;
 
 const listingsHandoffRoute = computed(() => {

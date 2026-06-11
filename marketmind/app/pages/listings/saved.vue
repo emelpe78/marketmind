@@ -1,6 +1,11 @@
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
 
+usePageHead(
+  "Gespeicherte Anzeigen",
+  "Gespeicherte Texte bearbeiten, ins Inventar übernehmen oder löschen",
+);
+
 import type { InventoryCreatePrefill } from "shared/inventory-types";
 import { buildInventoryPrefillFromListing } from "shared/inventory-prefill";
 import type { ListingItem } from "~/composables/useListings";

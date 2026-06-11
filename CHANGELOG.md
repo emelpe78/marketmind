@@ -4,6 +4,19 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.3.5] — 2026-06-11
+
+Seitenmetadaten für alle Routen; Phosphor-Graph-Icon als Favicon und Brand-Logo in der Sidebar.
+
+### Hinzugefügt
+
+- **Seitenmetadaten** — `usePageHead` (`app/composables/usePageHead.ts`) auf allen 16 Seiten; Browser-Titel im Format `Seitentitel · MarketMind` (`titleTemplate` in `nuxt.config.ts`); Meta-Description pro Seite; Detailseiten mit dynamischem Titel aus gespeicherten Daten
+- **Brand-Icon** — Phosphor `graph` (`shared/brand.ts`, `BRAND_ICON`); Graph-Icon in der Sidebar neben „MarketMind“; SVG-Favicon (`public/favicon.svg`); `@iconify-json/ph` für lokales Icon-Bundle
+
+### Geändert
+
+- **Favicon** — `favicon.ico` durch `favicon.svg` ersetzt; Apple-Touch-Icon verweist auf dasselbe SVG
+
 ## [0.3.4] — 2026-06-10
 
 KI- und Scraping-Feedback mit Statusbalken; korrekte Token-Kosten und Provider im Agent-Verlauf.
@@ -481,7 +494,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.3.4...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.3.5...HEAD
+[0.3.5]: https://github.com/emelpe78/marketmind/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/emelpe78/marketmind/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/emelpe78/marketmind/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/emelpe78/marketmind/compare/v0.3.1...v0.3.2

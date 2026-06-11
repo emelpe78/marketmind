@@ -4,6 +4,11 @@ import { formatAgentUsageMode, getAgentUsage } from "shared/agent-usage";
 
 definePageMeta({ layout: "default" });
 
+usePageHead(
+  "Feature-Agents",
+  "KI-Agents für Preisrecherche, Anzeigen, Flipping und Prompt-Generierung",
+);
+
 interface Agent {
   id: number;
   name: string;

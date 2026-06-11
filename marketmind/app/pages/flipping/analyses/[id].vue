@@ -23,6 +23,11 @@ const {
   `/api/saved-flip-analyses/${savedAnalysisId}`,
 );
 
+usePageHead(
+  computed(() => saved.value?.title ?? "Gespeicherte Analyse"),
+  "Gespeicherte Flipping-Analyse mit Kalkulation und Empfehlung",
+);
+
 const { todayIsoDate, normalizeInventoryPlatform } = await useInventory();
 const inventoryModalOpen = ref(false);
 const inventoryPrefill = ref<InventoryCreatePrefill>({});

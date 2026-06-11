@@ -9,6 +9,11 @@ import type { SavedResearchListItem } from "~/composables/useSavedResearches";
 
 definePageMeta({ layout: "default" });
 
+usePageHead(
+  "Gespeicherte Recherchen",
+  "Gespeicherte Suchergebnisse und KI-Analysen aufrufen, bearbeiten oder löschen",
+);
+
 const {
   savedResearches,
   pending,
