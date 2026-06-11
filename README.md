@@ -2,21 +2,51 @@
 
 **MarketMind** ist ein lokales Reseller-Tool für [eBay.de](https://www.ebay.de) und [Kleinanzeigen.de](https://www.kleinanzeigen.de). Die App läuft auf deinem Rechner, speichert Daten in SQLite und verbindet sich optional mit einer KI über OpenRouter oder einen lokalen Server (z. B. Ollama).
 
-> **Hinweis:** Das Projekt ist derzeit noch nicht als Open Source veröffentlicht. Die Lizenz wird vor dem Release festgelegt.
+> **Hinweis:** Die Lizenz wird vor der öffentlichen Open-Source-Veröffentlichung festgelegt. Bis dahin kannst du das Repository klonen und lokal nutzen; für Mitwirkende gibt es [AGENTS.md](AGENTS.md).
+
+## Inhaltsverzeichnis
+
+- [Schnellstart](#schnellstart)
+- [Was MarketMind kann](#was-marketmind-kann)
+- [Voraussetzungen](#voraussetzungen)
+- [Installation](#installation)
+- [Erste Schritte](#erste-schritte)
+- [Konfiguration](#konfiguration)
+- [Mit und ohne KI](#mit-und-ohne-ki)
+- [Projektstruktur](#projektstruktur)
+- [Entwicklung & Tests](#entwicklung--tests)
+- [Fehlerbehebung](#fehlerbehebung)
+- [Rechtlicher Hinweis zum Scraping](#rechtlicher-hinweis-zum-scraping)
+- [Lizenz & Status](#lizenz--status)
+
+## Schnellstart
+
+Nach dem Klonen liegt die **Nuxt-App** im Unterordner `marketmind/` — alle `npm`-Befehle werden dort ausgeführt.
+
+```bash
+git clone https://github.com/emelpe78/marketmind.git
+cd marketmind/marketmind
+
+cp .env.example .env
+npm install
+npm run dev
+```
+
+Öffne **http://127.0.0.1:5666**, gehe zu **Einstellungen → API** und trage einen KI-Provider ein. Danach kannst du unter **Preisrecherche** eine erste Suche starten.
+
+| Umgebung         | Port               | Start                                       |
+| ---------------- | ------------------ | ------------------------------------------- |
+| Entwicklung      | 5666               | `npm run dev` in `marketmind/`              |
+| Docker           | 5667               | `docker compose up -d --build` im Repo-Root |
+| Production-Build | 3000 (oder `PORT`) | `npm run build && npm run start`            |
 
 ## Was MarketMind kann
 
-Das **Dashboard** gibt dir auf einen Blick Kennzahlen zu gespeicherten Recherchen, Flipping-Analysen, Anzeigen, Watchlist, Inventar und KI-Nutzung — mit direkten Links zu den jeweiligen Bereichen, sobald Daten vorhanden sind. MarketMind hilft beim **Einkaufen und Wiederverkaufen** gebrauchter Artikel: Du recherchierst Marktpreise per Scraper, lässt die Ergebnisse von einer KI auswerten (Abschnitte wie Preisübersicht und Marktbewertung in einer Tab-Ansicht) und speicherst Recherchen inklusive KI-Analyse für später — die Analyse wird dabei serverseitig zwischengespeichert, nicht im Browser mitgeschickt. Unter **Preisrecherche → Gespeicherte Recherchen** findest du alle Snapshots; in der Detailansicht klappst du Marktanalysen pro Plattform und die Ergebnisliste per Klick auf. Der **Flipping-Kalkulator** bewertet per KI das Potenzial einer konkreten eBay- oder Kleinanzeigen-Anzeige (URL eingeben → Analyse in Tabs → optional speichern aus dem Analyse-Ergebnis, ohne erneutes Scrapen). Unter **Flipping-Analysen** findest du gespeicherte Auswertungen wieder. Der **Anzeigen-Generator** erstellt plattformgerechte Texte für eBay und Kleinanzeigen; unter **Gespeicherte Anzeigen** verwaltest du Texte, bearbeitest sie im Modal und kannst sie per gemeinsamem Dialog ins **Inventar** übernehmen. Mit der **Watchlist** beobachtest du einzelne Angebote und erhältst Preisalarme; im **Inventar** legst du Artikel über dasselbe Modal an, verwaltest sie in einer Kartenliste und trackst Einkauf, Verkauf und Gewinn (Plattformen: Kleinanzeigen, eBay, Sonstige). Verkaufte Artikel kannst du nachträglich bearbeiten — z. B. Verkaufspreis oder Notizen korrigieren.
+MarketMind unterstützt den **Einkauf und Wiederverkauf** gebrauchter Artikel auf eBay und Kleinanzeigen. Das **Dashboard** fasst Kennzahlen zu Recherchen, Flipping-Analysen, Anzeigen, Watchlist, Inventar und KI-Nutzung zusammen. **Preisrecherche** scrapt Marktpreise, wertet sie per KI aus und speichert Snapshots inklusive Analyse serverseitig. **Flipping** bewertet einzelne Anzeigen per URL; **Anzeigen** generiert und verwaltet Verkaufstexte; **Watchlist** und **Inventar** tracken Angebote bzw. Einkauf, Verkauf und Gewinn.
 
-**Workflow-Übergänge** verbinden die Bereiche ohne Copy-Paste: Von der Preisrecherche oder einer gespeicherten Recherche direkt **Anzeige erstellen** (Marktdaten werden übernommen), von der Watchlist per Klick **Flipping analysieren**, nach einer Flip-Analyse **Ins Inventar** oder **Anzeige erstellen**, und aus offenen Inventar-Artikeln wieder eine Verkaufsanzeige vorbereiten. Zielseiten zeigen einen kurzen Hinweis, wenn Daten aus einem anderen Feature übernommen wurden.
+**Workflow-Übergänge** verbinden die Bereiche direkt (z. B. Recherche → Anzeige, Watchlist → Flipping, Flip/Inventar → Anzeige oder Inventar). Bei KI und Scraping zeigt ein **Statusbalken** Fortschritt und Meldung.
 
-Bei **KI-Aufrufen und Scraping** siehst du unter der Eingabe einen Statusbalken mit Fortschritt und Meldung (z. B. „Anzeigen werden gesucht…“ oder „KI bewertet Flipping-Potenzial…“) — auf Preisrecherche, Flipping, Anzeigen-Generator, Prompt-Generator und Watchlist.
-
-Jede Seite hat einen eigenen **Browser-Titel** (z. B. „Preisrecherche · MarketMind“) und eine passende Meta-Beschreibung; bei gespeicherten Recherchen und Flipping-Analysen wird der Titel aus dem Datensatz übernommen. In der Sidebar und im Browser-Tab erscheint das **Graph-Icon** (Phosphor) als Markenzeichen.
-
-Die Sidebar führt von oben nach unten durch **Dashboard**, **Preisrecherche**, **Anzeigen**, **Flipping**, **Inventar**, **Watchlist**, **Agents** und **Einstellungen**. Preisrecherche, Anzeigen, Flipping und Agents haben jeweils ein Submenu (z. B. Recherche / Gespeicherte Recherchen, Generator / Gespeicherte Anzeigen, Kalkulator / Analysen, Feature-Agents / System-Prompt-Generator / KI-Verlauf). Der Agent-Manager umfasst **Feature-Agents** (Research, Listing, Flipping, Prompt Agent), die **Prompt-Bibliothek** (CRUD, optionale Agent-Zuordnung — ein Prompt pro Agent) und den **KI-Verlauf** (inkl. Provider und korrekter Kosten). Änderungen an Agents, Prompts und Zuordnungen erscheinen sofort in der UI — ohne manuellen Reload.
-
-Referenz-System-Prompts für Listing und Flipping Agent: [`docs/listing_agent.md`](docs/listing_agent.md), [`docs/flipping_agent.md`](docs/flipping_agent.md).
+Navigation: **Dashboard**, **Preisrecherche**, **Anzeigen**, **Flipping**, **Inventar**, **Watchlist**, **Agents**, **Einstellungen** — mit Submenüs für Recherche, Anzeigen, Flipping und Agents (Feature-Agents, Prompt-Bibliothek, KI-Verlauf).
 
 ## Voraussetzungen
 
@@ -26,7 +56,9 @@ Referenz-System-Prompts für Listing und Flipping Agent: [`docs/listing_agent.md
 | npm               | ≥ 10                         |
 | Docker (optional) | aktuelle Version mit Compose |
 
-Für die **KI-Funktionen** brauchst du entweder einen [OpenRouter](https://openrouter.ai)-Account mit API-Key oder einen lokalen OpenAI-kompatiblen Server (z. B. [Ollama](https://ollama.com), LM Studio). Ohne KI-Provider funktionieren Scraper, Watchlist und Inventar; Analysen und Textgenerierung nicht.
+Für `npm install` wird **better-sqlite3** kompiliert — unter Linux/macOS können Build-Tools nötig sein (Python, `make`, C++-Compiler). Im Docker-Image sind diese bereits enthalten.
+
+Für **KI-Funktionen** brauchst du einen [OpenRouter](https://openrouter.ai)-Account mit API-Key oder einen lokalen OpenAI-kompatiblen Server (z. B. [Ollama](https://ollama.com), LM Studio). Details unter [Mit und ohne KI](#mit-und-ohne-ki).
 
 ## Installation
 
@@ -47,19 +79,28 @@ Die App ist erreichbar unter **http://127.0.0.1:5666**.
 
 Docker läuft getrennt von der Dev-Instanz auf einem eigenen Port. Persistente Daten liegen in einem Host-Ordner (Bind-Mount nach `/app/data` im Container).
 
+**Zwei `.env`-Dateien** sind nötig:
+
 ```bash
 git clone https://github.com/emelpe78/marketmind.git
 cd marketmind
 
-cp .env.example .env   # MARKETMIND_DATA_DIR setzen (z. B. ./data oder Cloud-Ordner)
+cp .env.example .env                        # Repo-Root: Host-Datenordner
+cp marketmind/.env.example marketmind/.env  # App: Datenbankpfad, optional MM_LOCAL_AI_HOST
+
 docker compose up -d --build
 ```
 
-Die SQLite-Datei liegt im Container unter `/app/data/marketmind.db` (`MM_DATABASE_DOCKER` in `marketmind/.env`). Den Host-Ordner steuerst du über `MARKETMIND_DATA_DIR` in der Repo-Root `.env`.
+| Datei              | Zweck                                                              |
+| ------------------ | ------------------------------------------------------------------ |
+| `.env` (Repo-Root) | `MARKETMIND_DATA_DIR` — Host-Ordner für SQLite und `.settings-key` |
+| `marketmind/.env`  | `MM_DATABASE_DOCKER`, optional `MM_LOCAL_AI_HOST`                  |
+
+Die SQLite-Datei liegt im Container unter `/app/data/marketmind.db`. Auf dem Host findest du sie in `MARKETMIND_DATA_DIR` (Standard `./data/marketmind.db`).
 
 Die App ist erreichbar unter **http://127.0.0.1:5667**.
 
-**Lokale KI unter Docker:** Wenn du in den Einstellungen einen lokalen KI-Server (Ollama, LM Studio) auf `127.0.0.1` einträgst, leitet MarketMind die Anfrage im Container automatisch an den Host weiter (`host.docker.internal`). Der KI-Server muss von außen erreichbar sein (z. B. LM Studio: Netzwerk-Server aktivieren). Abweichender Host optional über `MM_LOCAL_AI_HOST` in `marketmind/.env`.
+**Lokale KI unter Docker:** Trägst du in den Einstellungen `127.0.0.1` als KI-URL ein, leitet MarketMind die Anfrage im Container an den Host weiter (`host.docker.internal`). Der KI-Server muss von außen erreichbar sein (z. B. bei LM Studio den Netzwerk-Server aktivieren). Abweichender Host optional über `MM_LOCAL_AI_HOST` in `marketmind/.env`.
 
 Container stoppen:
 
@@ -71,6 +112,7 @@ docker compose down
 
 ```bash
 cd marketmind/marketmind
+cp .env.example .env
 npm install
 npm run build
 npm run start
@@ -82,20 +124,22 @@ Standardmäßig startet der Server auf Port **3000** (Nitro-Default), sofern `PO
 PORT=5666 node .output/server/index.mjs
 ```
 
-## Erste Schritte nach der Installation
+## Erste Schritte
 
-1. **App im Browser öffnen** (5666 für Dev, 5667 für Docker).
-2. Auf dem Dashboard siehst du KPI-Karten und ggf. einen Hinweis, wenn noch kein KI-Provider konfiguriert ist.
-3. Gehe zu **Einstellungen** und richte API sowie optional Scraper und Datenbank ein (inkl. SQL-Backup und -Import).
-4. Starte eine **Preisrecherche** unter `/research`, um Scraper und KI zu testen.
+1. **App öffnen** — Dev: Port 5666, Docker: Port 5667.
+2. **Dashboard prüfen** — KPI-Karten zeigen den Datenstand; ohne KI-Provider erscheint ein Hinweis.
+3. **KI einrichten** — **Einstellungen → API**: OpenRouter (API-Key + Modell) oder lokale KI (URL + Modellname). Einstellungen werden in SQLite gespeichert, nicht in `.env`.
+4. **Scraper prüfen** (optional) — **Einstellungen → Scraper**: Delay, Cache und Ergebnislimit anpassen.
+5. **Erste Recherche** — **Preisrecherche**: Suchbegriff eingeben, Plattform wählen, Ergebnis und KI-Analyse prüfen.
+6. **Weitere Bereiche** — Gespeicherte Recherchen unter **Preisrecherche → Gespeicherte Recherchen**; Flipping per Anzeigen-URL; Inventar und Watchlist auch ohne KI nutzbar.
 
 ## Konfiguration
 
-Die meisten Einstellungen werden in der App unter **Einstellungen** gespeichert (SQLite), nicht in `.env`. Die `.env` steuert den Datenbankpfad; der Dev-Server läuft fest auf Port **5666**.
+Die meisten Einstellungen liegen in der App unter **Einstellungen** (SQLite), nicht in `.env`. Die `.env` steuert vor allem den **Datenbankpfad**; der Dev-Server läuft fest auf Port **5666**.
 
-### Umgebungsvariablen (`.env`)
+### Umgebungsvariablen
 
-Kopiere `marketmind/.env.example` nach `marketmind/.env`:
+**`marketmind/.env`** (aus `marketmind/.env.example`):
 
 | Variable             | Standard                  | Beschreibung                               |
 | -------------------- | ------------------------- | ------------------------------------------ |
@@ -103,11 +147,13 @@ Kopiere `marketmind/.env.example` nach `marketmind/.env`:
 | `MM_DATABASE_DOCKER` | `/app/data/marketmind.db` | SQLite-Pfad im Docker-Container            |
 | `MM_LOCAL_AI_HOST`   | `host.docker.internal`    | Optional: Hostname für lokale KI in Docker |
 
-Unter Docker setzt `docker-compose.yml` zusätzlich `MM_RUNTIME=docker`, `PORT` und `HOST`. Den **Host-Datenordner** steuerst du im Repo-Root über `.env` (`MARKETMIND_DATA_DIR` — siehe `.env.example`).
+**`.env` im Repo-Root** (nur Docker, aus `.env.example`):
 
-| Variable (Repo-Root, Docker) | Standard | Beschreibung                            |
-| ---------------------------- | -------- | --------------------------------------- |
-| `MARKETMIND_DATA_DIR`        | `./data` | Host-Ordner, gemountet nach `/app/data` |
+| Variable              | Standard | Beschreibung                            |
+| --------------------- | -------- | --------------------------------------- |
+| `MARKETMIND_DATA_DIR` | `./data` | Host-Ordner, gemountet nach `/app/data` |
+
+Unter Docker setzt `docker-compose.yml` zusätzlich `MM_RUNTIME=docker`, `PORT` und `HOST`.
 
 ### KI-Provider (in der App)
 
@@ -138,11 +184,27 @@ Unter **Einstellungen → Scraper**:
 
 ### Datenbank
 
-Der **Pfad** wird nur über `marketmind/.env` gesetzt (`MM_DATABASE_DEV` bzw. `MM_DATABASE_DOCKER`). Fehlt die Datei am konfigurierten Ort, legt MarketMind sie beim Start an. In der App unter **Einstellungen → Datenbank** kannst du die Datenbank als **SQL sichern**, ein SQL-Backup **importieren** (ersetzt alle Daten — vorher Backup empfohlen) oder **zurücksetzen** (löscht alle Daten, behält den Pfad; Standard-Agents und -Einstellungen werden neu angelegt).
+Der **Pfad** wird nur über `marketmind/.env` gesetzt (`MM_DATABASE_DEV` bzw. `MM_DATABASE_DOCKER`). Fehlt die Datei am konfigurierten Ort, legt MarketMind sie beim Start an.
 
-Unter Docker kann `MM_DATABASE_DOCKER` auch einen Host-Pfad (z. B. Nextcloud-Ordner) angeben; im Container wird er auf `/app/data` gemappt. Dazu `MARKETMIND_DATA_DIR` in der Repo-Root `.env` auf dasselbe Host-Verzeichnis setzen.
+Unter **Einstellungen → Datenbank** kannst du:
 
-Dev-Daten liegen standardmäßig in `marketmind/data/` (nicht versioniert). Docker-Daten im Host-Ordner `MARKETMIND_DATA_DIR`, Datei `marketmind.db` plus `.settings-key` daneben.
+- die Datenbank als **SQL sichern** (Download),
+- ein SQL-Backup **importieren** (ersetzt alle Daten — vorher Backup empfohlen),
+- die Datenbank **zurücksetzen** (löscht alle Daten, Standard-Agents und -Einstellungen werden neu angelegt).
+
+Dev-Daten liegen standardmäßig in `marketmind/data/` (nicht versioniert). Docker-Daten im Host-Ordner `MARKETMIND_DATA_DIR` — Datei `marketmind.db` plus `.settings-key` daneben.
+
+## Mit und ohne KI
+
+| Bereich                               | Ohne KI | Mit KI |
+| ------------------------------------- | ------- | ------ |
+| Dashboard, Inventar, Watchlist        | ✓       | ✓      |
+| Scraper / Rohdaten einer Recherche    | ✓       | ✓      |
+| KI-Marktanalyse (Recherche, Flipping) | —       | ✓      |
+| Anzeigen-Generator                    | —       | ✓      |
+| Prompt-Generator (Agents)             | —       | ✓      |
+
+Ohne konfigurierten Provider kannst du MarketMind also für Inventar, Watchlist und reine Preissammlung nutzen; für Analysen und Textgenerierung ist ein KI-Provider nötig.
 
 ## Projektstruktur
 
@@ -152,16 +214,16 @@ marketmind/           # Repository-Root
 ├── CONTEXT.md        # Domänensprache & Modul-Begriffe
 ├── CHANGELOG.md
 ├── .env.example      # Docker: MARKETMIND_DATA_DIR (Host-Datenordner)
-├── docs/             # PRD, Agent-Prompt-Referenzen
 ├── docker-compose.yml
-└── marketmind/       # Nuxt-App (npm-Befehle hier ausführen)
+└── marketmind/       # Nuxt-App — npm-Befehle hier ausführen
+    ├── .env.example  # MM_DATABASE_DEV / MM_DATABASE_DOCKER
     ├── app/          # Frontend (Pages, Composables, Components)
     ├── shared/       # Formatierung, Plattform-Erkennung, Preisparser
     ├── server/       # API-Routen, Use-Cases, Repositories, SQLite
     └── test/         # Unit- & E2E-Tests
 ```
 
-Die Architektur folgt einer klaren Schichtung: **Routes** (HTTP mit Zod-Validierung) → **Use-Cases** (z. B. `runAgent`, `runResearch`, `ScraperRuntime`) → **Repositories** (SQL pro Domäne) → **Shared** (Typen und Pure Functions). Details in [AGENTS.md](AGENTS.md) und [CONTEXT.md](CONTEXT.md).
+Die Architektur folgt einer klaren Schichtung: **Routes** (HTTP mit Zod-Validierung) → **Use-Cases** → **Repositories** (SQL pro Domäne) → **Shared** (Typen und Pure Functions). Details in [AGENTS.md](AGENTS.md) und [CONTEXT.md](CONTEXT.md).
 
 ## Entwicklung & Tests
 
@@ -175,6 +237,17 @@ npx nuxi typecheck   # TypeScript-Prüfung
 ```
 
 Weitere Hinweise für Mitwirkende: [AGENTS.md](AGENTS.md) · Domänenbegriffe: [CONTEXT.md](CONTEXT.md)
+
+## Fehlerbehebung
+
+| Problem                                         | Mögliche Ursache                              | Lösung                                                                    |
+| ----------------------------------------------- | --------------------------------------------- | ------------------------------------------------------------------------- |
+| `npm install` schlägt bei `better-sqlite3` fehl | Fehlende Build-Tools                          | Python, `make` und C++-Compiler installieren (macOS: Xcode CLI Tools)     |
+| Docker startet nicht                            | Fehlende `.env`                               | Beide Dateien anlegen: Repo-Root `.env` und `marketmind/.env`             |
+| Keine eBay-Ergebnisse / HTTP 403                | Plattform blockiert Scraping                  | Kein Installationsfehler — Delay erhöhen, später erneut versuchen         |
+| KI-Anfragen schlagen unter Docker fehl          | Lokaler Server nicht vom Container erreichbar | Netzwerk-Server am KI-Tool aktivieren; `MM_LOCAL_AI_HOST` prüfen          |
+| Port bereits belegt                             | Andere Instanz läuft                          | Dev (5666) und Docker (5667) nicht gleichzeitig auf demselben Port nutzen |
+| Dashboard zeigt „KI nicht konfiguriert“         | Kein Provider in Einstellungen                | **Einstellungen → API** — Key/URL und Modell eintragen                    |
 
 ## Rechtlicher Hinweis zum Scraping
 
@@ -196,4 +269,4 @@ Nutze **moderate Abfragefrequenzen** (einstellbarer Delay), cache Ergebnisse und
 
 - **Version:** 0.3.5 — siehe [CHANGELOG.md](CHANGELOG.md)
 - **Lizenz:** Noch nicht veröffentlicht (geplant: Open Source)
-- **Issues:** [GitHub Issues](https://github.com/emelpe78/marketmind/issues)
+- **Mitwirkung:** [AGENTS.md](AGENTS.md) · **Issues:** [GitHub Issues](https://github.com/emelpe78/marketmind/issues)

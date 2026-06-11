@@ -1,6 +1,6 @@
 # MarketMind — Agent Guide
 
-Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.5**.
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.5**. Domänenbegriffe: `CONTEXT.md`.
 
 ## Repository-Layout
 
@@ -39,96 +39,86 @@ marketmind/                 # Repo-Root
 | Dev      | **5666** | `npm run dev`                      |
 | Docker   | **5667** | `docker compose up -d` (Repo-Root) |
 
-Env-Variablen: `MM_DATABASE_DEV`, `MM_DATABASE_DOCKER`, `MM_RUNTIME`, `PORT`, `HOST` — siehe `marketmind/.env.example`. Dev-Port **5666** fest in `nuxt.config.ts`. Docker-Host-Datenordner: `MARKETMIND_DATA_DIR` — Repo-Root `.env.example`.
-
-Dev-DB: `MM_DATABASE_DEV` in `marketmind/.env` (Standard `data/marketmind.db`, gitignored). Docker-DB: `MM_DATABASE_DOCKER` + `MM_RUNTIME=docker`; Host-Bind-Mount `MARKETMIND_DATA_DIR` → `/app/data/`. Pfad nur über `.env`, nicht über die UI.
+Env: `MM_DATABASE_DEV`, `MM_DATABASE_DOCKER`, `MM_RUNTIME`, `PORT`, `HOST` — `marketmind/.env.example`; Dev-Port in `nuxt.config.ts`. Docker-Daten: `MARKETMIND_DATA_DIR` — Repo-Root `.env.example`. DB-Pfad nur über `.env` (Dev: `data/marketmind.db`; Docker: Bind-Mount → `/app/data/`), nicht über die UI. Reset/Backup/Restore: Einstellungen → Datenbank.
 
 ## Architektur
 
 ### Schichten-Konvention
 
-| Schicht          | Ort                                                                                                             | Aufgabe                                                     |
-| ---------------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| **Routes**       | `server/api/`                                                                                                   | HTTP-Adapter über `defineApiHandler` + Zod                  |
-| **Use-Cases**    | `server/services/ai/run-agent.ts`, `research/run-research.ts`, `flipping/analyze-flip.ts`, `scraper/runtime.ts` | Geschäftslogik                                              |
-| **Repositories** | `server/services/*/repository.ts`                                                                               | SQL + Row-Mapping pro Domäne (inkl. `count*`)               |
-| **Shared**       | `shared/`                                                                                                       | Typen, Formatierung, Plattform-Erkennung                    |
-| **Composables**  | `app/composables/`                                                                                              | Workflow-State & API-Aufrufe (`useResearch`, `useListings`) |
+| Schicht          | Ort                                               | Aufgabe                                       |
+| ---------------- | ------------------------------------------------- | --------------------------------------------- |
+| **Routes**       | `server/api/`                                     | HTTP-Adapter über `defineApiHandler` + Zod    |
+| **Use-Cases**    | `server/services/{ai,research,flipping,scraper}/` | Geschäftslogik                                |
+| **Repositories** | `server/services/*/repository.ts`                 | SQL + Row-Mapping pro Domäne (inkl. `count*`) |
+| **Shared**       | `shared/`                                         | Typen, Formatierung, Plattform-Erkennung      |
+| **Composables**  | `app/composables/`                                | Workflow-State & API-Aufrufe                  |
 
 ### Frontend (`marketmind/app/`)
 
-- **Pages:** file-based routing unter `app/pages/`
-- **Composables:** `useResearch` (Workflow-State), `useSavedResearches`, `useFlipping`, `useSavedFlipAnalyses`, `useDashboard`, `useInventory`, `useWatchlist`, `useSettings`, `useListings` (Workflow-State), `useAgents`, `useAiStatus`, `useDatabaseAdmin`, `usePageHead`
-- **Research-UI:** `/research` (Recherche), `/research/saved` (Gespeicherte Recherchen), `/research/saved/[id]` (Detail); Submenu in `default.vue` (`shared/research-nav.ts`)
-- **Listings-UI:** `/listings` (Generator), `/listings/saved` (gespeicherte Anzeigen, Bearbeiten per Modal, Inventar über `InventoryCreateModal`); Submenu in `default.vue` (`shared/listings-nav.ts`)
-- **Inventar-UI:** `/inventory` — Kartenliste, Anlegen per `InventoryCreateModal`, Verkauf/Löschen per Modal; verkaufte Artikel bearbeitbar per Bearbeiten-Modal (Titel, Einkauf, Verkauf, Notizen); Plattformen Kleinanzeigen, eBay, Sonstige (`INVENTORY_PLATFORM_SELECT_OPTIONS`, `normalizeInventoryPlatform()`)
-- **Flipping-UI:** `/flipping` (Kalkulator), `/flipping/analyses` (Liste), `/flipping/analyses/[id]` (Detail); Submenu in `default.vue` (`shared/flipping-nav.ts`)
-- **Agents-UI:** `/agents/feature-agents` (Konfiguration), `/agents/prompt-generator` (Bibliothek + Generator), `/agents/history` (KI-Verlauf mit Provider und Kosten); Submenu in `default.vue`
-- **KI-/Scraping-Feedback:** `AiStatusBar` + `useAiStatus` (`runWithAiStatus`) — Fortschrittsbalken und Statusmeldungen unter Eingabe auf Recherche, Flipping, Anzeigen, Prompt-Generator und Watchlist; Schritt-Texte in `shared/ai-status.ts`
-- **Dashboard:** `app/components/DashboardOverview.vue` — KPI-Karten in vier Abschnitten (Recherche & Tools, Inventar, Agents, KI & Nutzung); `DashboardKpiCard` mit optionaler Navigation; Daten über `useDashboard` / `GET /api/dashboard`
-- **Layout:** `app/layouts/default.vue` — Sidebar-Reihenfolge: Dashboard, Preisrecherche, Anzeigen, Flipping, Inventar, Watchlist, Agents, Einstellungen; Submenüs für Preisrecherche, Anzeigen, Flipping und Agents; Brand-Logo (`BRAND_ICON` aus `shared/brand.ts`); Theme-Toggle, Versionsbadge
-- **Seitenmetadaten:** `usePageHead(title, description?)` auf jeder Page; `titleTemplate` `%s · MarketMind` in `nuxt.config.ts`; Detailseiten mit `computed`-Titel
-- **KI-Analyse-UI:** `ResearchAnalysisList` (Accordion pro Plattform), `ResearchAnalysisSummary` (Einzel-Card), `ResearchResultsTable` (Collapsible), `AnalysisSectionTabs` (vertikale Tabs); Markdown über `app/utils/render-markdown.ts` (`parseMarkdownSections`, `stripPlatformSuffixFromTitle`, erlaubte HTML-Tags)
-- **Inventar-Modal:** `InventoryCreateModal` — globales Anlegen-Modal mit `prefill`/`titleSuffix`; genutzt auf `/inventory`, `/listings/saved`, `/flipping`, `/flipping/analyses/[id]` und `/watchlist`
-- **Cross-Feature-Workflows:** `shared/workflow-handoff.ts` — Übergänge per Query-Prefill + Aktions-Buttons: Recherche → Anzeigen (`searchId`/`savedResearchId`), Watchlist → Flipping (`url`), Flip/Watchlist → Inventar (`inventory-prefill`), Flip/Inventar → Anzeigen; Listing-Generate nutzt `resolveListingMarketStats()` für Snapshot-IDs
-- **Utils:** Re-Exports aus `shared/`; `render-markdown.ts` bleibt app-lokal
-- Keine Pinia-Stores — State über Composables, `useFetch`, `ref`, `reactive`
-- **Datenrefresh:** stabile Keys in `app/utils/fetch-keys.ts`; nach Mutationen Domain-Bundles in `refresh-fetch-data.ts` — `refreshResearchData()`, `refreshFlippingData()`, `refreshListingsData()`, `refreshInventoryData()`, `refreshAgentsData()`
+| Bereich        | Routen                                                                  | Submenu (`shared/*-nav.ts`) |
+| -------------- | ----------------------------------------------------------------------- | --------------------------- |
+| Dashboard      | `/`                                                                     | —                           |
+| Preisrecherche | `/research`, `/research/saved`, `/research/saved/[id]`                  | `research-nav`              |
+| Anzeigen       | `/listings`, `/listings/saved`                                          | `listings-nav`              |
+| Flipping       | `/flipping`, `/flipping/analyses`, `/flipping/analyses/[id]`            | `flipping-nav`              |
+| Inventar       | `/inventory`                                                            | —                           |
+| Watchlist      | `/watchlist`                                                            | —                           |
+| Agents         | `/agents/feature-agents`, `/agents/prompt-generator`, `/agents/history` | `agent-nav`                 |
+| Einstellungen  | `/settings` (KI, Datenbank)                                             | —                           |
+
+- **Composables:** `useResearch`, `useSavedResearches`, `useFlipping`, `useSavedFlipAnalyses`, `useDashboard`, `useInventory`, `useWatchlist`, `useSettings`, `useListings`, `useAgents`, `useAiStatus`, `useDatabaseAdmin`, `usePageHead`
+- **Layout:** `default.vue` — Sidebar wie Tabelle; Theme-Toggle, Versionsbadge, `BRAND_ICON` (`shared/brand.ts`)
+- **Dashboard:** `DashboardOverview` + `DashboardKpiCard` — KPI in vier Abschnitten; `useDashboard` / `GET /api/dashboard`
+- **KI-Feedback:** `AiStatusBar` + `useAiStatus` (`runWithAiStatus`); Schritte in `shared/ai-status.ts`
+- **KI-Analyse-UI:** `ResearchAnalysisList`, `ResearchAnalysisSummary`, `ResearchResultsTable`, `AnalysisSectionTabs`; Markdown in `app/utils/render-markdown.ts`
+- **Inventar:** Kartenliste; verkaufte Artikel bearbeitbar; `InventoryCreateModal` (prefill) auf Inventar, Listings, Flipping, Watchlist
+- **Workflows:** `workflow-handoff.ts` + `WorkflowHandoffBanner` — Handoffs zwischen Features; Listing-Generate: `resolveListingMarketStats()`
+- **State:** keine Pinia-Stores; Fetch-Keys `app/utils/fetch-keys.ts`; Refresh-Bundles `app/utils/refresh-fetch-data.ts`
+- **Seitenmetadaten:** `usePageHead`; `titleTemplate` `%s · MarketMind` in `nuxt.config.ts`
 
 ### Backend (`marketmind/server/`)
 
-- **API:** `server/api/**/*.ts` — dünne HTTP-Adapter; Mutations-Routen über `defineApiHandler` + Zod (`server/api/schemas/`)
-- **Prompt-Auflösung:** `resolveActiveAgentPrompt()` — Bibliotheks-Prompt vor `agents.system_prompt` (`server/services/agents/prompt-resolve.ts`)
+- **API:** `server/api/**/*.ts` — dünne Adapter; Zod in `server/api/schemas/`
+- **Prompt-Auflösung:** `resolveActiveAgentPrompt()` — Bibliothek vor `agents.system_prompt` (`prompt-resolve.ts`)
 - **Services:** Use-Cases + Repositories unter `server/services/`
-- **DB:** `server/database/` — Schema, `settings.ts`, `lifecycle.ts`, `paths.ts` (`MM_DATABASE_DEV` / `MM_DATABASE_DOCKER`, Docker-Host-Pfad-Mapping), `sql-transfer.ts` (SQL-Export/Import), `seed.ts`
-- **Plugin:** `server/plugins/database.ts` — Init, Seed, Migrationen, Agent-Prompt-Sync beim Start
-- **Prompt-Bibliothek:** `server/services/prompt-library/` — Repository, Zuweisung (`assign.ts`), Sync aus `agents` (`agent-sync.ts`)
+- **DB:** `server/database/` — Schema, `settings.ts`, `lifecycle.ts`, `paths.ts`, `sql-transfer.ts`, `seed.ts`
+- **Plugin:** `server/plugins/database.ts` — Init, Seed, Migrationen, Agent-Prompt-Sync
+- **Prompt-Bibliothek:** `server/services/prompt-library/` — CRUD, `assign.ts`, `agent-sync.ts`
 
 ### KI-Konfiguration
 
 - Nur über **Einstellungen** (SQLite `settings`), nicht über `.env`
-- Provider: `openrouter` | `local` — Routing in `server/services/ai/config.ts`
-- Docker + lokale KI: `resolveLocalAiBaseUrl()` schreibt `localhost`/`127.0.0.1` auf `host.docker.internal`; optional `MM_LOCAL_AI_HOST` in `marketmind/.env`; `docker-compose.yml` mit `extra_hosts`
+- Provider `openrouter` \| `local` — `server/services/ai/config.ts`; Docker: `resolveLocalAiBaseUrl()` → `host.docker.internal` (optional `MM_LOCAL_AI_HOST`)
 - API-Keys verschlüsselt (AES-256-GCM, `.settings-key` neben DB)
-- `isAiConfigured()` steuert z. B. Dashboard-Hinweis; Flipping-Analyse und Preisrecherche-KI erfordern konfigurierte KI
+- `isAiConfigured()` steuert Dashboard-Hinweis; Flipping und Preisrecherche-KI erfordern konfigurierte KI
 
 ### Wissensgraph (graphify)
 
-Vor Architekturfragen: `graphify-out/GRAPH_REPORT.md` und `graphify-out/wiki/index.md` lesen. Nach Code-Änderungen: `graphify update .` (siehe `.cursor/rules/graphify.mdc`).
+Vor Architekturfragen: `graphify-out/GRAPH_REPORT.md` und `graphify-out/wiki/index.md`. Nach Code-Änderungen: `graphify update .` (siehe `.cursor/rules/graphify.mdc`).
 
 ## Konventionen
 
 ### Sprache & Formatierung
 
 - **UI-Texte:** Deutsch
-- **Euro:** `formatEuro()` / `formatEuroDelta()` — `de-DE` (`1.000,00 €`)
-- **Prozent:** `formatPercent()` — `de-DE` (`33,33 %`)
-- **Datum/Uhrzeit:** `formatDateTime()` / `formatDate()` aus `shared/format-datetime.ts` für SQLite-`DATETIME` (UTC); sonst `toLocaleDateString("de-DE")` / `toLocaleString("de-DE")`
+- **Euro/Prozent:** `formatEuro()`, `formatEuroDelta()`, `formatPercent()` — `de-DE`
+- **Datum:** `formatDateTime()` / `formatDate()` aus `shared/format-datetime.ts` für SQLite-UTC
 
-### TypeScript
+### TypeScript & UI
 
-- `noUncheckedIndexedAccess` beachten: Array-/Regex-Zugriffe explizit prüfen (`rows[1]`, `match?.[1]`)
-- Konkrete Interfaces statt `Record<string, unknown>` für Formulare/Modals
-- `npx nuxi typecheck` vor größeren Änderungen
-
-### UI (@nuxt/ui)
-
-- Tabellen: keine horizontale Scrollbar — `table-fixed`, Spaltenbreiten in `meta.class`, Textumbruch
-- **Löschen:** immer mit Bestätigungsmodal (`UModal` + Abbrechen/Löschen)
-- Buttons auf farbigen Alerts: `color="neutral" variant="solid"` (nicht `outline` auf Warning)
-- E2E-relevante Elemente: `data-testid` setzen
+- `noUncheckedIndexedAccess`: Array-/Regex-Zugriffe prüfen (`match?.[1]`)
+- Konkrete Interfaces statt `Record<string, unknown>`; `npx nuxi typecheck` vor größeren Änderungen
+- Tabellen: `table-fixed`, keine horizontale Scrollbar; Löschen nur mit Bestätigungsmodal
+- Alerts: Buttons `color="neutral" variant="solid"`; E2E: `data-testid`
 
 ### API & Daten
 
-- Validierung mit Zod wo sinnvoll
-- SQLite-Pfad nur über `marketmind/.env` (`MM_DATABASE_DEV`, `MM_DATABASE_DOCKER`); Docker-Host-Ordner `MARKETMIND_DATA_DIR`; fehlende DB-Datei wird beim Start angelegt; Reset/Backup/Restore in Einstellungen → Datenbank
-- Agent-Aufrufe in `agent_history` loggen (Tokens, Kosten, Provider); lokale KI: Kosten `0`; OpenRouter: `usage.cost` aus API
-- `ScraperFetchError` in Research- und Flipping-Routes als 502 mit lesbarer Meldung mappen
+- Zod-Validierung; `ScraperFetchError` → 502 mit lesbarer Meldung
+- Agent-Aufrufe in `agent_history` (Tokens, Kosten, Provider); lokale KI: Kosten `0`
 
 ### Git
 
-- Nur committen/pushen wenn explizit angefragt
-- Eine `.gitignore` im Repo-Root (nicht in `marketmind/`)
+- Nur committen/pushen wenn explizit angefragt; eine `.gitignore` im Repo-Root
 
 ## Tests
 
@@ -139,51 +129,39 @@ npm run test:e2e          # Playwright (baut vorher)
 npx nuxi typecheck        # TypeScript
 ```
 
-Alle Tests unter `marketmind/test/` — E2E in `test/e2e/`. Playwright-Artefakte: `test/test-results/`.
+E2E unter `test/e2e/`; Artefakte: `test/test-results/`.
 
 ## Häufige Aufgaben
 
-| Aufgabe                 | Ort                                                                                                                                               |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Neue API-Route          | `server/api/<name>.<method>.ts`                                                                                                                   |
-| Neue Seite              | `app/pages/<route>.vue`                                                                                                                           |
-| Scraper-Logik           | `server/services/scraper/`                                                                                                                        |
-| DB-Schema               | `server/database/schema.sql` + Seed anpassen                                                                                                      |
-| Formatierung            | `shared/format-*.ts` wiederverwenden                                                                                                              |
-| Einstellungen-Keys      | `server/database/settings.ts`, Settings-UI                                                                                                        |
-| KI-Aufruf               | `server/services/ai/run-agent.ts`                                                                                                                 |
-| Preisrecherche          | `server/services/research/run-research.ts`, `app/pages/research/`                                                                                 |
-| Gespeicherte Recherchen | `useSavedResearches`, `app/pages/research/saved/`, `server/api/saved-researches/`                                                                 |
-| Research-Navigation     | `shared/research-nav.ts`, `app/layouts/default.vue`                                                                                               |
-| Flipping-Analyse        | `server/services/flipping/analyze-flip.ts`, `server/api/flipping/analyze.post.ts`                                                                 |
-| Flipping speichern      | `createSavedFlipAnalysisFromResult`, `useSavedFlipAnalyses.saveFromResult`, `POST /api/saved-flip-analyses`                                       |
-| Anzeigen speichern      | `server/services/listings/repository.ts`, `server/api/listings/`                                                                                  |
-| Listings-Navigation     | `shared/listings-nav.ts`, `app/pages/listings/`                                                                                                   |
-| Inventar                | `server/services/inventory/`, `app/pages/inventory.vue`, `useInventory`, `InventoryCreateModal`                                                   |
-| Prompt-Bibliothek       | `server/services/prompt-library/`, `server/api/prompt-library/`                                                                                   |
-| Agent-Seed/Namen        | `server/database/seed.ts`, `server/database/migrations.ts`                                                                                        |
-| Default-Agents          | Research, Listing, Flipping (`analytics`), Prompt (`strategy`, Meta-Agent)                                                                        |
-| Dashboard               | `server/services/dashboard/summary.ts`, `app/components/DashboardOverview.vue`, `useDashboard`                                                    |
-| Fetch-Keys              | `app/utils/fetch-keys.ts` — `useFetch`-Keys für geteilten Cache                                                                                   |
-| UI nach Speichern       | `app/utils/refresh-fetch-data.ts` — Domain-Bundles (`refreshResearchData`, …)                                                                     |
-| API-Handler + Zod       | `server/utils/api-handler.ts`, `server/api/schemas/`                                                                                              |
-| Shared API-Typen        | `shared/research-types.ts`, `shared/flipping-types.ts`, `shared/inventory-types.ts`, `shared/listings-types.ts`, `shared/listing-detail-types.ts` |
-| Inventar-Prefill        | `shared/inventory-prefill.ts` — Listing/Flip/Watchlist-Prefill; Workflow-Routen `shared/workflow-handoff.ts`                                      |
-| Cross-Feature-Workflows | `shared/workflow-handoff.ts`, `WorkflowHandoffBanner.vue` — Query-Prefill + Buttons zwischen Recherche, Flipping, Watchlist, Inventar, Anzeigen   |
-| Agent-Prompt-Docs       | `docs/listing_agent.md`, `docs/flipping_agent.md`                                                                                                 |
-| Docker-Datenordner      | Repo-Root `.env` (`MARKETMIND_DATA_DIR`), `docker-compose.yml` (`extra_hosts` für lokale KI)                                                      |
-| Lokale KI in Docker     | `server/services/ai/config.ts` (`resolveLocalAiBaseUrl`), `MM_LOCAL_AI_HOST` in `marketmind/.env`                                                 |
-| SQL-Backup/Restore      | `server/database/sql-transfer.ts`, `GET /api/database/backup`, `POST /api/database/restore`, `useDatabaseAdmin`, Einstellungen → Datenbank        |
-| KI-/Scraping-Feedback   | `useAiStatus`, `AiStatusBar`, `shared/ai-status.ts` — Statusbalken bei KI-Aufrufen und Scraping                                                   |
-| Agent-Verlauf Provider  | `agent_history.provider`, `formatAiProvider()`, `/agents/history`                                                                                 |
-| Seitenmetadaten         | `usePageHead`, `nuxt.config.ts` (`titleTemplate`, Favicon-Links)                                                                                  |
-| Brand-Icon / Favicon    | `shared/brand.ts` (`BRAND_ICON`), `public/favicon.svg`, `default.vue`                                                                             |
+| Aufgabe                 | Ort                                                                                      |
+| ----------------------- | ---------------------------------------------------------------------------------------- |
+| Neue API-Route          | `server/api/<name>.<method>.ts`                                                          |
+| Neue Seite              | `app/pages/<route>.vue`                                                                  |
+| API-Handler + Zod       | `server/utils/api-handler.ts`, `server/api/schemas/`                                     |
+| Scraper                 | `server/services/scraper/`                                                               |
+| DB-Schema / Seed        | `server/database/schema.sql`, `seed.ts`, `migrations.ts`                                 |
+| Formatierung            | `shared/format-*.ts`                                                                     |
+| Einstellungen           | `server/database/settings.ts`, `app/pages/settings.vue`                                  |
+| KI-Aufruf               | `server/services/ai/run-agent.ts`                                                        |
+| Preisrecherche          | `server/services/research/run-research.ts`, `app/pages/research/`                        |
+| Gespeicherte Recherchen | `useSavedResearches`, `server/api/saved-researches/`                                     |
+| Flipping                | `analyze-flip.ts`, `server/api/flipping/`, `useSavedFlipAnalyses`                        |
+| Anzeigen                | `generate-listing.ts`, `server/api/listings/`, `useListings`                             |
+| Inventar                | `server/services/inventory/`, `useInventory`, `InventoryCreateModal`                     |
+| Watchlist               | `server/services/watchlist/`, `useWatchlist`, `app/pages/watchlist.vue`                  |
+| Dashboard               | `server/services/dashboard/summary.ts`, `DashboardOverview.vue`                          |
+| Prompt-Bibliothek       | `server/services/prompt-library/`, `server/api/prompt-library/`                          |
+| Default-Agents          | Research, Listing, Flipping (`analytics`), Prompt (`strategy`, Meta-Agent)               |
+| Shared API-Typen        | `shared/*-types.ts`, `shared/price-stats.ts`                                             |
+| Workflows / Prefill     | `shared/workflow-handoff.ts`, `shared/inventory-prefill.ts`, `WorkflowHandoffBanner.vue` |
+| Docker / lokale KI      | `docker-compose.yml`, `MARKETMIND_DATA_DIR`, `resolveLocalAiBaseUrl`, `MM_LOCAL_AI_HOST` |
+| SQL-Backup/Restore      | `sql-transfer.ts`, `/api/database/backup`, `/api/database/restore`, `useDatabaseAdmin`   |
+| Agent-Prompt-Docs       | `docs/listing_agent.md`, `docs/flipping_agent.md`                                        |
 
 ## Was vermeiden
 
 - Keine API-Keys in `.env` oder Commits
-- Kein ORM einführen
-- Keine englischen UI-Strings ohne Anlass
+- Kein ORM; keine englischen UI-Strings ohne Anlass
 - Kein direktes Löschen ohne Bestätigungsdialog
 - Keine neuen README/CHANGELOG-Dateien ohne Anfrage
 - Scope klein halten — keine unnötigen Abstraktionen oder Tests für triviales Verhalten
