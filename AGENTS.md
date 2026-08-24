@@ -1,6 +1,6 @@
 # MarketMind — Agent Guide
 
-Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.3.5**. Domänenbegriffe: `CONTEXT.md`.
+Lokales Reseller-Tool für **eBay.de** und **Kleinanzeigen.de**: Preisrecherche, Flipping, Anzeigen, Watchlist, Inventar, KI-Agents. UI auf **Deutsch**, Version **0.4.0**, Lizenz **MIT**. Domänenbegriffe: `CONTEXT.md`.
 
 ## Repository-Layout
 

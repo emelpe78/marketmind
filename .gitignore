@@ -25,6 +25,8 @@ logs
 
 # Database
 data/
+*.db
+.settings-key
 
 # Test artifacts
 .playwright-mcp
@@ -36,3 +38,6 @@ coverage/
 
 # AI
 docs
+
+# Agent knowledge graph (local: graphify update .)
+graphify-out/

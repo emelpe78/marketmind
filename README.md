@@ -1,8 +1,11 @@
 # MarketMind
 
-**MarketMind** ist ein lokales Reseller-Tool für [eBay.de](https://www.ebay.de) und [Kleinanzeigen.de](https://www.kleinanzeigen.de). Die App läuft auf deinem Rechner, speichert Daten in SQLite und verbindet sich optional mit einer KI über OpenRouter oder einen lokalen Server (z. B. Ollama).
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-0.4.0-green)](https://github.com/emelpe78/marketmind/releases/tag/v0.4.0)
 
-> **Hinweis:** Die Lizenz wird vor der öffentlichen Open-Source-Veröffentlichung festgelegt. Bis dahin kannst du das Repository klonen und lokal nutzen; für Mitwirkende gibt es [AGENTS.md](AGENTS.md).
+**MarketMind** ist ein lokales Open-Source-Reseller-Tool für [eBay.de](https://www.ebay.de) und [Kleinanzeigen.de](https://www.kleinanzeigen.de). Die App läuft auf deinem Rechner, speichert Daten in SQLite und verbindet sich optional mit einer KI über OpenRouter oder einen lokalen Server (z. B. Ollama).
+
+> **Lizenz:** [MIT](LICENSE) · Mitwirkung: [CONTRIBUTING.md](CONTRIBUTING.md) · Agent-Guide: [AGENTS.md](AGENTS.md)
 
 ## Inhaltsverzeichnis
 
@@ -256,7 +259,7 @@ MarketMind ruft öffentlich zugängliche Seiten von **eBay.de** und **Kleinanzei
 **Wichtige Punkte:**
 
 - Die **AGB und Nutzungsbedingungen** von eBay und Kleinanzeigen können automatisiertes Auslesen (Scraping, Crawling, Bots) **untersagen oder einschränken**. Verstöße können zu Sperren, IP-Blocks oder rechtlichen Schritten führen.
-- MarketMind ist ein **privates Werkzeug** für den persönlichen Gebrauch. Es ist nicht vom Betreiber von eBay oder Kleinanzeigen autorisiert oder unterstützt.
+- MarketMind ist ein **Open-Source-Werkzeug** für den persönlichen Gebrauch (MIT-Lizenz). Es ist nicht vom Betreiber von eBay oder Kleinanzeigen autorisiert oder unterstützt.
 - **eBay** kann automatische Anfragen blockieren (z. B. HTTP 403). Die App kann dann keine Ergebnisse liefern — das ist kein Fehler der Installation, sondern eine Schutzmaßnahme der Plattform.
 - Bei **Kleinanzeigen** werden in der Regel nur **Angebotspreise** erfasst, keine tatsächlichen Verkaufspreise. Die KI weist in Analysen darauf hin, wenn die Datenlage eingeschränkt ist.
 - Scraping kann **personenbezogene Daten** (z. B. in Anzeigentiteln oder Standortangaben) berühren. Verarbeite solche Daten nur, wenn du dazu berechtigt bist, und beachte die **DSGVO**.
@@ -267,6 +270,6 @@ Nutze **moderate Abfragefrequenzen** (einstellbarer Delay), cache Ergebnisse und
 
 ## Lizenz & Status
 
-- **Version:** 0.3.5 — siehe [CHANGELOG.md](CHANGELOG.md)
-- **Lizenz:** Noch nicht veröffentlicht (geplant: Open Source)
-- **Mitwirkung:** [AGENTS.md](AGENTS.md) · **Issues:** [GitHub Issues](https://github.com/emelpe78/marketmind/issues)
+- **Version:** 0.4.0 — siehe [CHANGELOG.md](CHANGELOG.md)
+- **Lizenz:** [MIT](LICENSE)
+- **Mitwirkung:** [CONTRIBUTING.md](CONTRIBUTING.md) · [AGENTS.md](AGENTS.md) · **Issues:** [GitHub Issues](https://github.com/emelpe78/marketmind/issues)

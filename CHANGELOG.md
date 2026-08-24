@@ -4,6 +4,30 @@ Alle wesentlichen Änderungen an MarketMind werden in dieser Datei dokumentiert.
 
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/) und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.4.0] — 2026-08-24
+
+Erste Open-Source-Veröffentlichung unter MIT-Lizenz.
+
+### Hinzugefügt
+
+- **MIT-Lizenz** — `LICENSE` im Repo-Root
+- **Mitwirkung** — `CONTRIBUTING.md` mit Dev-Setup, Tests und PR-Richtlinien
+- **Sicherheit** — `SECURITY.md` für verantwortungsvolle Schwachstellenmeldungen
+- **GitHub Issue-Templates** — Bug- und Feature-Vorlagen unter `.github/ISSUE_TEMPLATE/`
+- **GitHub-Link in der App** — Sidebar-Footer verweist auf das Repository (`shared/brand.ts`, `GITHUB_REPO_URL`)
+- **README-Badges** — Lizenz MIT und Version 0.4.0
+
+### Geändert
+
+- **`package.json`** — Version 0.4.0, Lizenz MIT, `private` entfernt
+- **README** — Open-Source-Status, Lizenz und Mitwirkungshinweise aktualisiert
+- **`.gitignore`** — `.settings-key`, `*.db` und `graphify-out/` ausgeschlossen
+- **`SECURITY.md`** — GitHub Private Security Advisories als bevorzugter Meldeweg
+
+### Entfernt
+
+- **`graphify-out/`** — nicht mehr versioniert; lokal per `graphify update .` erzeugbar (Agent-Regel in `.cursor/rules/graphify.mdc`)
+
 ## [0.3.5] — 2026-06-11
 
 Seitenmetadaten für alle Routen; Phosphor-Graph-Icon als Favicon und Brand-Logo in der Sidebar.
@@ -494,7 +518,8 @@ Erstes Release von **MarketMind** — lokales Reseller-Tool für Marktpreisreche
 - Lesbarkeit des Buttons im KI-Hinweis auf dem Dashboard (Kontrast auf Warning-Alert)
 - Strikte Null-Checks bei Array-, Regex- und Record-Zugriffen (u. a. `render-markdown.ts`, Scraper, Preisanalyse)
 
-[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.3.5...HEAD
+[Unreleased]: https://github.com/emelpe78/marketmind/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/emelpe78/marketmind/compare/v0.3.5...v0.4.0
 [0.3.5]: https://github.com/emelpe78/marketmind/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/emelpe78/marketmind/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/emelpe78/marketmind/compare/v0.3.2...v0.3.3

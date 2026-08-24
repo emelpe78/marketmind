@@ -10,7 +10,7 @@ import {
   LISTINGS_NAV_ITEMS,
   isListingsRoute,
 } from "shared/listings-nav";
-import { BRAND_ICON } from "shared/brand";
+import { BRAND_ICON, GITHUB_REPO_URL } from "shared/brand";
 import {
   RESEARCH_ICON,
   RESEARCH_NAV_ITEMS,
@@ -290,6 +290,22 @@ function toggleTheme() {
           {{ settingsNavItem.label }}
         </UButton>
       </nav>
+      <div class="mt-auto pt-4 border-t border-muted">
+        <UButton
+          :href="GITHUB_REPO_URL"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-testid="github-link"
+          icon="i-lucide-github"
+          variant="ghost"
+          color="neutral"
+          size="sm"
+          class="justify-start w-full"
+          block
+        >
+          GitHub
+        </UButton>
+      </div>
     </aside>
     <div class="flex-1 flex flex-col min-w-0">
       <header
