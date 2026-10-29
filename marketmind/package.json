@@ -63,7 +63,7 @@
     "@playwright/test": "^1.60.0",
     "@types/better-sqlite3": "^7.6.13",
     "@vue/test-utils": "^2.4.11",
-    "happy-dom": "^20.10.1",
+    "happy-dom": "^21.0.4",
     "vitest": "^4.1.8"
   }
 }
